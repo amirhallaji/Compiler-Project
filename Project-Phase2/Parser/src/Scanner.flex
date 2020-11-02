@@ -52,24 +52,24 @@ string = \"[^(\\n|\\r)]~\"
     "int"                {return token(sym.INT);}  
     "double"             {return token(sym.DOUBLE);}
     "bool"               {return token(sym.BOOL);}
-    "string"             {return token(sym.string);}
-    "class"              {return token(sym.class);}
-    "interface"          {return token(sym.interface);}
-    "null"               {return token(sym.null);}
-    "this"               {return token(sym.this);}
-    "extends"            {return token(sym.extends);}
-    "implements"         {return token(sym.implements);}
-    "for"                {return token(sym.for);}
-    "while"              {return token(sym.while);}
-    "if"                 {return token(sym.if);}
-    "else"               {return token(sym.else);}
-    "return"             {return token(sym.return);}
-    "break"              {return token(sym.break);}
-    "new"                {return token(sym.new);}
-    "NewArray"           {return token(sym.NewArray);}
-    "Print"              {return token(sym.Print);}
-    "ReadInteger"        {return token(sym.ReadInteger);}
-    "ReadLine"           {return token(sym.ReadLine);}
+    "string"             {return token(sym.STRING);}
+    "class"              {return token(sym.CLASS);}
+    "interface"          {return token(sym.INTERFACE);}
+    "null"               {return token(sym.NULL);}
+    "this"               {return token(sym.THIS);}
+    "extends"            {return token(sym.EXTENDS);}
+    "implements"         {return token(sym.IMPLEMENTS);}
+    "for"                {return token(sym.FOR);}
+    "while"              {return token(sym.WHILE);}
+    "if"                 {return token(sym.IF);}
+    "else"               {return token(sym.ELSE);}
+    "return"             {return token(sym.RETURN);}
+    "break"              {return token(sym.BREAK);}
+    "new"                {return token(sym.NEW);}
+    "NewArray"           {return token(sym.NEWARRAY);}
+    "Print"              {return token(sym.PRINT);}
+    "ReadInteger"        {return token(sym.READINTEGER);}
+    "ReadLine"           {return token(sym.READLINE);}
     "‫‪dtoi‬‬"               {return token(sym.‫‪DTOI‬‬);}
     "‫‪itod‬‬"               {return token(sym.‫‪ITOD‬‬);}
     "‫‪btoi‬‬"               {return token(sym.‫‪BTOI‬‬);}
