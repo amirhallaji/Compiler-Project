@@ -1,0 +1,22 @@
+import java_cup.runtime.*;
+
+parser code {:
+    private Scanner scanner;
+    Laxer laxer;
+    public parser (Laxer laxer){
+        this.laxer = laxer;
+    }
+:}
+scan with {:return scanner.next_token();:}
+init with {::}
+
+terminal SEMI ,PLUS ,MINUS, DiVIDE, TIMES, NUMBER;
+terminal String IDENT;
+nonterminal stmt , expr;
+nonterminal Integer term;
+
+precedence left PLUS,MINUS;
+precedence left TIMES,MINUS;
+
+stmt ::= expr SEMI;
+expr ::= expr PLUS expr | NUMBER;
