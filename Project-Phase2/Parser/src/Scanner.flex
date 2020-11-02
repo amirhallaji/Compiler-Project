@@ -15,6 +15,10 @@ import java_cup.runtime.*;
 	    System.out.println(yytext());
 	    return new Symbol(tokenType,yytext());
 	}
+    	public Symbol token (int tokenType , Object value) {
+	    System.out.println(yytext());
+	    return new Symbol(tokenType,yytext(),value);
+	}
     StringBuffer out = new StringBuffer();
 %}
 
@@ -39,72 +43,74 @@ string = \"[^(\\n|\\r)]~\"
 
 
 
+
+
+
 %%
 <YYINITIAL>{
-    "void"               {out.append("void\n");}
-    "int"                {out.append("int\n");}  
-    "double"             {out.append("double\n");}
-    "bool"               {out.append("bool\n");}
-    "string"             {out.append("string\n");}
-    "class"              {out.append("class\n");}
-    "interface"          {out.append("interface\n");}
-    "null"               {out.append("null\n");}
-    "this"               {out.append("this\n");}
-    "extends"            {out.append("extends\n");}
-    "implements"         {out.append("implements\n");}
-    "for"                {out.append("for\n");}
-    "while"              {out.append("while\n");}
-    "if"                 {out.append("if\n");}
-    "else"               {out.append("else\n");}
-    "return"             {out.append("return\n");}
-    "break"              {out.append("break\n");}
-    "new"                {out.append("new\n");}
-    "NewArray"           {out.append("NewArray\n");}
-    "Print"              {out.append("Print\n");}
-    "ReadInteger"        {out.append("ReadInteger\n");}
-    "ReadLine"           {out.append("ReadLine\n");}
-    "‫‪dtoi‬‬"               {out.append("‫‪dtoi‬‬\n");}
-    "‫‪itod‬‬"               {out.append("‫‪itod‬‬\n");}
-    "‫‪btoi‬‬"               {out.append("‫‪btoi‬‬\n");}
-    "‫‪itob‬‬"               {out.append("‫‪itob‬‬\n");}
-    "‫‪private‬‬"            {out.append("‫‪private\n");}
-    "‫‪protected‬‬"          {out.append("‫‪protected‬‬\n");}
-    "‫‪public‬‬"             {out.append("‫‪public‬‬\n");}
+    "void"               {return token(sym.VOID);}
+    "int"                {return token(sym.INT);}  
+    "double"             {return token(sym.DOUBLE);}
+    "bool"               {return token(sym.BOOL);}
+    "string"             {return token(sym.string);}
+    "class"              {return token(sym.class);}
+    "interface"          {return token(sym.interface);}
+    "null"               {return token(sym.null);}
+    "this"               {return token(sym.this);}
+    "extends"            {return token(sym.extends);}
+    "implements"         {return token(sym.implements);}
+    "for"                {return token(sym.for);}
+    "while"              {return token(sym.while);}
+    "if"                 {return token(sym.if);}
+    "else"               {return token(sym.else);}
+    "return"             {return token(sym.return);}
+    "break"              {return token(sym.break);}
+    "new"                {return token(sym.new);}
+    "NewArray"           {return token(sym.NewArray);}
+    "Print"              {return token(sym.Print);}
+    "ReadInteger"        {return token(sym.ReadInteger);}
+    "ReadLine"           {return token(sym.ReadLine);}
+    "‫‪dtoi‬‬"               {return token(sym.‫‪DTOI‬‬);}
+    "‫‪itod‬‬"               {return token(sym.‫‪ITOD‬‬);}
+    "‫‪btoi‬‬"               {return token(sym.‫‪BTOI‬‬);}
+    "‫‪itob‬‬"               {return token(sym.‫‪ITOB‬‬);}
+    "‫‪private‬‬"            {return token(sym.‫‪PRIVATE);}
+    "‫‪protected‬‬"          {return token(sym.‫‪PROTECTED‬‬);}
+    "‫‪public‬‬"             {return token(sym.‫‪PUBLIC‬‬);}
 
-    "false"              {out.append("T_BOOLEANLITERAL false\n");}
-    "true"               {out.append("T_BOOLEANLITERAL true\n");}
+    "false"              {return token(sym.FALSE);}
+    "true"               {return token(sym.TRUE);}
 
-    "=="				 {out.append("==\n");}
-    "!="				 {out.append("!=\n");}
-    "<="				 {out.append("<=\n");}
-    "<"					 {out.append("<\n");}
-    ">"					 {out.append(">\n");}
-    ">="				 {out.append(">=\n");}
-	"="					 {out.append("=\n");}
-	"&&"				 {out.append("&&\n");}
-	"!"				     {out.append("!\n");}
-	";"		    		 {out.append(";\n");}
-	"/"					 {out.append("/\n");}
-	"*"					 {out.append("*\n");}
-	"+"					 {out.append("+\n");}
-	"-"			    	 {out.append("-\n");}
-	"%"					 {out.append("%\n");}
-	","				     {out.append(",\n");}
-	"["				     {out.append("[\n");}
-	"."				     {out.append(".\n");}
-	"]"				     {out.append("]\n");}
-	"("				     {out.append("(\n");}
-	")"					 {out.append(")\n");}
-	")"					 {out.append(")\n");}
-	"{"					 {out.append("{\n");}
-	"}"					 {out.append("}\n");}
-	"||"				 {out.append("||\n");}
+    "=="				 {return token(sym.EQUAL);}
+    "!="				 {return token(sym.NOTEQUAL);}
+    "<="				 {return token(sym.LESSEQUAL);}
+    "<"					 {return token(sym.LESS);}
+    ">"					 {return token(sym.GREATER);}
+    ">="				 {return token(sym.GREATEREQUAL);}
+	"="					 {return token(sym.ASSIGN);}
+	"&&"				 {return token(sym.AND);}
+	"!"				     {return token(sym.NOT);}
+	";"		    		 {return token(sym.COLON);}
+	"/"					 {return token(sym.DIV);}
+	"*"					 {return token(sym.PROD);}
+	"+"					 {return token(sym.ADD);}
+	"-"			    	 {return token(sym.MINUS);}
+	"%"					 {return token(sym.MOD);}
+	","				     {return token(sym.COMMA);}
+	"["				     {return token(sym.LBRACK);}
+	"."				     {return token(sym.DOT);}
+	"]"				     {return token(sym.RBRACK);}
+	"("				     {return token(sym.LBRACES);}
+	")"					 {return token(sym.RBRACES);}
+	"{"					 {return token(sym.LCURLY);}
+	"}"					 {return token(sym.RCURLY);}
+	"||"				 {return token(sym.OR);}
 	
-    {Identifier}         { out.append("T_ID " + yytext() +"\n"); }
+    {Identifier}         { return token(sym.ID , new String(yytext())); }
     {WhiteSpace}         {/*ignore*/}
-    {DecInteger}         { out.append("T_INTLITERAL " + yytext() +"\n"); }
-    {HexNumber}          { out.append("T_INTLITERAL " + yytext() +"\n"); }
-    {FloatNumber}        { out.append("T_DOUBLELITERAL "+ yytext() +"\n");}
-    {string}             { out.append("T_STRINGLITERAL " + yytext() +"\n");}
+    {DecInteger}         { return token(sym.INT,new Integer(yytext())); }
+    {HexNumber}          { return token(sym.HEX , new String(yytext()));}
+    {FloatNumber}        { return token(sym.FLOAT , new Float(yytext()));}
+    {string}             { return token(sym.STRING, new String(yytext()));}
     {Comment}            {/*ignore*/} 
 }
