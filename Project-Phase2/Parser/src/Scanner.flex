@@ -17,7 +17,7 @@ import java_cup.runtime.*;
 	}
     	public Symbol token (int tokenType , Object value) {
 	    System.out.println(yytext());
-	    return new Symbol(tokenType,yytext(),value);
+	    return new Symbol(tokenType , value);
 	}
     StringBuffer out = new StringBuffer();
 %}
@@ -33,7 +33,7 @@ Identifier = [:jletter:][:jletterdigit:]*
 LineTerminator = \r|\n|\r\n
 WhiteSpace = {LineTerminator} | [ \t\f]
 
-DecInteger = [0-9]*
+DecInteger = [0-9][0-9]*
 
 HexNumber = "0"[xX][0-9a-fA-F]*
 
@@ -70,13 +70,15 @@ string = \"[^(\\n|\\r)]~\"
     "Print"              {return token(sym.PRINT);}
     "ReadInteger"        {return token(sym.READINTEGER);}
     "ReadLine"           {return token(sym.READLINE);}
-    "‫‪dtoi‬‬"               {return token(sym.‫‪DTOI‬‬);}
-    "‫‪itod‬‬"               {return token(sym.‫‪ITOD‬‬);}
-    "‫‪btoi‬‬"               {return token(sym.‫‪BTOI‬‬);}
-    "‫‪itob‬‬"               {return token(sym.‫‪ITOB‬‬);}
-    "‫‪private‬‬"            {return token(sym.‫‪PRIVATE);}
-    "‫‪protected‬‬"          {return token(sym.‫‪PROTECTED‬‬);}
-    "‫‪public‬‬"             {return token(sym.‫‪PUBLIC‬‬);}
+    "continue"           {return token(sym.CONTINUE);}
+
+    "dtoi"               {return token(sym.DTOI);}
+    "itod"               {return token(sym.ITOD);}
+    "btoi"               {return token(sym.BTOI);}
+    "itob"               {return token(sym.ITOB);}
+    "private"            {return token(sym.PRIVATE);}
+    "protected"          {return token(sym.PROTECTED);}
+    "public"             {return token(sym.PUBLIC);}
 
     "false"              {return token(sym.FALSE);}
     "true"               {return token(sym.TRUE);}
@@ -108,9 +110,9 @@ string = \"[^(\\n|\\r)]~\"
 	
     {Identifier}         { return token(sym.ID , new String(yytext())); }
     {WhiteSpace}         {/*ignore*/}
-    {DecInteger}         { return token(sym.INTCONST,new Integer(yytext())); }
+    {DecInteger}         { return token(sym.INTCONST, new Integer(yytext())); }
     {HexNumber}          { return token(sym.HEXCONST , new String(yytext()));}
-    {FloatNumber}        { return token(sym.FLOATCONST , new Float(yytext()));}
+    {FloatNumber}        { return token(sym.DOUBLECONST , new Float(yytext()));}
     {string}             { return token(sym.STRINGCONST, new String(yytext()));}
     {Comment}            {/*ignore*/} 
 }

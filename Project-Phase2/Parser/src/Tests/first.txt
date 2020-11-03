@@ -1,0 +1,13 @@
+class Main {
+	int x ;
+	int y ;
+	private void main(){
+		y = 0xf ;
+		x = 0xf ;
+		;
+		print (z,);
+		return 0 ;
+		
+	}
+}
+
