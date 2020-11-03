@@ -108,9 +108,9 @@ string = \"[^(\\n|\\r)]~\"
 	
     {Identifier}         { return token(sym.ID , new String(yytext())); }
     {WhiteSpace}         {/*ignore*/}
-    {DecInteger}         { return token(sym.INT,new Integer(yytext())); }
-    {HexNumber}          { return token(sym.HEX , new String(yytext()));}
-    {FloatNumber}        { return token(sym.FLOAT , new Float(yytext()));}
-    {string}             { return token(sym.STRING, new String(yytext()));}
+    {DecInteger}         { return token(sym.INTCONST,new Integer(yytext())); }
+    {HexNumber}          { return token(sym.HEXCONST , new String(yytext()));}
+    {FloatNumber}        { return token(sym.FLOATCONST , new Float(yytext()));}
+    {string}             { return token(sym.STRINGCONST, new String(yytext()));}
     {Comment}            {/*ignore*/} 
 }

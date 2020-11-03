@@ -10,6 +10,48 @@ parser code {:
 scan with {:return scanner.next_token();:}
 init with {::}
 
+
+//
+//reserved Words terminals
+
+terminal VOID, INT, DOUBLE,BOOL,STRING;
+terminal CLASS, INTERFACE, NULL, THIS, EXTENDS;
+terminal IMPLEMENTS, FOR, WHILE, IF, ELSE;
+terminal RETURN, BREAK, NEW, NEWARRAY, PRINT;
+terminal READINTEGER, READLINE,DTOI,ITOD, BTOI,ITOB;
+terminal PRIVATE, PROTECTED,PUBLIC;
+
+// booleans
+terminal FALSE,TRUE;
+
+//condition Symbols
+terminal EQUAL, NOTEQUAL, LESSEQUAL, LESS, GREATER, GREATEREQUAL;
+terminal AND,NOT,OR;
+
+//Arithmitic symbols
+terminal DIV, PROD, ADD,MINUS,MOD;
+
+//other symbols
+terminal ASSIGN, COLON, COMMA, LBRACK,RBRACK; // BRACK []
+terminal DOT,LBRACES, RBRACES, LCURLY, RCURLY;// BRACES () CURLY{}
+
+// identifier
+terminal ID;
+
+//constants 
+terminal INTCONST, HEXCONST, FLOATCONST, STRINGCONST;
+
+//
+
+
+
+
+
+
+
+
+
+
 terminal SEMI ,PLUS ,MINUS, DiVIDE, TIMES, NUMBER;
 terminal String IDENT;
 nonterminal stmt , expr;
