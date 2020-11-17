@@ -17,41 +17,41 @@ public class sym {
   public static final int MINUS = 44;
   public static final int LESS = 35;
   public static final int FOR = 13;
-  public static final int STRINGCONST = 60;
+  public static final int STRINGCONST = 61;
   public static final int NOT = 39;
   public static final int AND = 38;
   public static final int READINTEGER = 22;
-  public static final int HEXCONST = 58;
+  public static final int HEXCONST = 59;
   public static final int LESSEQUAL = 34;
-  public static final int INTCONST = 57;
-  public static final int RBRACES = 53;
-  public static final int LBRACES = 52;
+  public static final int INTCONST = 58;
+  public static final int RBRACES = 54;
+  public static final int LBRACES = 53;
   public static final int OR = 40;
   public static final int COMMA = 48;
   public static final int BOOL = 5;
-  public static final int DOUBLECONST = 59;
+  public static final int DOUBLECONST = 60;
   public static final int CLASS = 7;
   public static final int DIV = 41;
   public static final int NEWARRAY = 20;
   public static final int ASSIGN = 46;
   public static final int IF = 15;
   public static final int THIS = 10;
-  public static final int ID = 56;
-  public static final int DOT = 51;
+  public static final int ID = 57;
+  public static final int DOT = 52;
   public static final int EOF = 0;
   public static final int RETURN = 17;
   public static final int EQUAL = 32;
-  public static final int TRUE = 61;
+  public static final int TRUE = 62;
   public static final int NEW = 19;
   public static final int error = 1;
-  public static final int LCURLY = 54;
+  public static final int LCURLY = 55;
   public static final int ADD = 43;
   public static final int NULL = 9;
   public static final int MOD = 45;
   public static final int BREAK = 18;
   public static final int VOID = 2;
   public static final int DTOI = 24;
-  public static final int RCURLY = 55;
+  public static final int RCURLY = 56;
   public static final int LBRACK = 49;
   public static final int GREATEREQUAL = 37;
   public static final int COLON = 47;
@@ -66,7 +66,8 @@ public class sym {
   public static final int BTOI = 26;
   public static final int PROD = 42;
   public static final int STRING = 6;
-  public static final int FALSE = 62;
+  public static final int FALSE = 63;
+  public static final int LRBRACK = 51;
   public static final int IMPLEMENTS = 12;
   public static final int PRINT = 21;
   public static final String[] terminalNames = new String[] {
@@ -121,6 +122,7 @@ public class sym {
   "COMMA",
   "LBRACK",
   "RBRACK",
+  "LRBRACK",
   "DOT",
   "LBRACES",
   "RBRACES",

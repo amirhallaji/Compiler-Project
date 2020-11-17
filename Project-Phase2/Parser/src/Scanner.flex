@@ -5,11 +5,10 @@ import java_cup.runtime.*;
 %public
 %class Laxer
 %unicode
-%standalone
 %cup
 %char
 %type Symbol
-
+%standalone
 %{
 	public Symbol token (int tokenType) {
 	    System.out.println(yytext());
@@ -107,7 +106,8 @@ string = \"[^(\\n|\\r)]~\"
 	"{"					 {return token(sym.LCURLY);}
 	"}"					 {return token(sym.RCURLY);}
 	"||"				 {return token(sym.OR);}
-	
+	"[]"				 {return token(sym.LRBRACK);}
+
     {Identifier}         { return token(sym.ID , new String(yytext())); }
     {WhiteSpace}         {/*ignore*/}
     {DecInteger}         { return token(sym.INTCONST, new Integer(yytext())); }

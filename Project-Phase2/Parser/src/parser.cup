@@ -29,7 +29,7 @@ terminal AND,NOT,OR;
 terminal DIV, PROD, ADD,MINUS,MOD;
 
 //other symbols
-terminal ASSIGN, COLON, COMMA, LBRACK,RBRACK; // BRACK []
+terminal ASSIGN, COLON, COMMA, LBRACK,RBRACK , LRBRACK; // BRACK []
 terminal DOT,LBRACES, RBRACES, LCURLY, RCURLY;// BRACES () CURLY{}
 
 // identifier
@@ -99,7 +99,7 @@ precedence left LESS, LESSEQUAL, GREATER, GREATEREQUAL;
 precedence left ADD, MINUS;
 precedence left PROD, DIV, MOD;
 precedence right NOT;
-precedence right LBRACES, RBRACES;
+precedence right LBRACES, RBRACES,LBRACK,RBRACK;
 /**/
 
 start with program;
@@ -124,7 +124,7 @@ type ::= INT
        | BOOL
        | STRING
        | ID
-       | type RBRACK LBRACK;
+       | type LRBRACK;
 
 functionDecl ::= type ID LBRACES formals RBRACES stmtBlock
                | VOID ID LBRACES formals RBRACES stmtBlock
