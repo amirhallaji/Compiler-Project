@@ -1,0 +1,3 @@
+void main () {
+    id.id = 999;
+}

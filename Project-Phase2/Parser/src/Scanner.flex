@@ -40,6 +40,8 @@ FloatNumber = \d+\.\d*([eE]([+-])?\d+)?
 
 string = \"[^(\\n|\\r)]~\"
 
+Brackets = "\[" {WhiteSpace}*"\]"
+
 
 
 
@@ -106,7 +108,8 @@ string = \"[^(\\n|\\r)]~\"
 	"{"					 {return token(sym.LCURLY);}
 	"}"					 {return token(sym.RCURLY);}
 	"||"				 {return token(sym.OR);}
-	"[]"				 {return token(sym.LRBRACK);}
+//	"[]"				 {return token(sym.LRBRACK);}
+
 
     {Identifier}         { return token(sym.ID , new String(yytext())); }
     {WhiteSpace}         {/*ignore*/}
@@ -114,5 +117,6 @@ string = \"[^(\\n|\\r)]~\"
     {HexNumber}          { return token(sym.HEXCONST , new String(yytext()));}
     {FloatNumber}        { return token(sym.DOUBLECONST , new Float(yytext()));}
     {string}             { return token(sym.STRINGCONST, new String(yytext()));}
-    {Comment}            {/*ignore*/} 
+    {Comment}            {/*ignore*/}
+    {Brackets}           {return token(sym.LRBRACK);}
 }
