@@ -5,6 +5,8 @@ parser code {:
     public parser (Laxer laxer){
         this.laxer = laxer;
     }
+    @Override
+    protected void report_expected_token_ids(){ }
 :}
 scan with {:return laxer.next_token();:}
 init with {::}

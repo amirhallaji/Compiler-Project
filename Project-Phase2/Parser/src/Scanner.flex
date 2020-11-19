@@ -11,7 +11,7 @@ import java_cup.runtime.*;
 %standalone
 %{
 	public Symbol token (int tokenType) {
-	    System.out.println(yytext());
+	 //   System.out.println(yytext());
 	    return new Symbol(tokenType,yytext());
 	}
     	public Symbol token (int tokenType , Object value) {

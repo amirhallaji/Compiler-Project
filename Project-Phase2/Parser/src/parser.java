@@ -935,6 +935,8 @@ return laxer.next_token();
     public parser (Laxer laxer){
         this.laxer = laxer;
     }
+    @Override
+    protected void report_expected_token_ids(){ }
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
