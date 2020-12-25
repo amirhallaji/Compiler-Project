@@ -1,0 +1,3 @@
+int global;
+type id;
+string[] names;
