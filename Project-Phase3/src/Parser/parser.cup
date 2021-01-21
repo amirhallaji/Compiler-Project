@@ -1,4 +1,8 @@
+package Parser;
+
 import java_cup.runtime.*;
+
+import ast.*;
 
 parser code {:
     public Laxer laxer;
@@ -7,6 +11,12 @@ parser code {:
     }
     @Override
     protected void report_expected_token_ids(){ }
+
+    protected Program root;
+
+    void setRoot(Program p) { this.root = p; }
+
+    public Program getRoot() { return this.root; }
 :}
 scan with {:return laxer.next_token();:}
 init with {::}
@@ -45,48 +55,57 @@ terminal INTCONST, HEXCONST, DOUBLECONST, STRINGCONST,TRUE,FALSE;
 /* Non terminals */
 
 //whole program nonterminal
-nonterminal program;
+nonterminal ASTNode program;
+nonterminal ASTNode program2;
 // declarations
-nonterminal decl;
+nonterminal ASTNode decl;
 // Types of declarations
-nonterminal variableDecl, functionDecl, classDecl, interfaceDecl;
-nonterminal variableDecl_plus;
+nonterminal ASTNode variableDecl;
+nonterminal ASTNode functionDecl;
+nonterminal ASTNode classDecl;
+nonterminal ASTNode interfaceDecl;
+nonterminal ASTNode variableDecl_plus;
 // define variable
-nonterminal variable;
+nonterminal ASTNode variable;
 // types of definitions except void
-nonterminal type;
+nonterminal ASTNode type;
 // args of functions
-nonterminal formals;
+nonterminal ASTNode formals;
 //statement block
-nonterminal stmtBlock;
+nonterminal ASTNode stmtBlock;
 // methods and variables in class
-nonterminal field;
-nonterminal field_plus;
+nonterminal ASTNode field;
+nonterminal ASTNode field_plus;
 //public or private of protected
-nonterminal accessMode;
+nonterminal ASTNode accessMode;
 //protoypes in interface
-nonterminal prototype;
-nonterminal prototype_plus;
+nonterminal ASTNode prototype;
+nonterminal ASTNode prototype_plus;
 // id1, id2, .... (minimum 1 id)
-nonterminal id_plus;
+nonterminal ASTNode id_plus;
 //statement
-nonterminal stmt;
-nonterminal stmt_plus;
+nonterminal ASTNode stmt;
+nonterminal ASTNode stmt_plus;
 //IF and While and for
-nonterminal ifStmt , whileStmt , forStmt;
+nonterminal ASTNode ifStmt;
+nonterminal ASTNode whileStmt;
+nonterminal ASTNode forStmt;
 // break continue return print
-nonterminal breakStmt , continueStmt ,returnStmt ,printStmt;
+nonterminal ASTNode breakStmt;
+nonterminal ASTNode continueStmt;
+nonterminal ASTNode returnStm;
+nonterminal ASTNode printStmt;
 //expressions
-nonterminal expr;
-nonterminal expr_plus;
+nonterminal ASTNode expr;
+nonterminal ASTNode expr_plus;
 
-nonterminal lValue;
+nonterminal ASTNode lValue;
 
-nonterminal constant;
+nonterminal ASTNode constant;
 
-nonterminal call;
+nonterminal ASTNode call;
 
-nonterminal actuals;
+nonterminal ASTNode actuals;
 
 
 
@@ -106,20 +125,39 @@ precedence right LBRACES, RBRACES,LBRACK,RBRACK;
 
 start with program;
 
-program  ::= program decl
-           | decl;
+program ::=
+    program2:t
+        {:
+           Program p = new Program();
+           p.addChild(t);
+           setRoot(p);
+        :};
 
-decl ::= variableDecl
-       | functionDecl
-       | classDecl
-       | interfaceDecl ;
+program2  ::= program2:p decl:t
+        {:
+           RESULT = p;
+           RESULT.addChild(t);
+        :}
+           | decl:t
+           {: RESULT = t; :};
 
-variableDecl ::= variable COLON;
+decl ::= variableDecl:t
+           {: RESULT = t; :}
+       | functionDecl:t
+           {: RESULT = t; :}
+       | classDecl:t
+           {: RESULT = t; :}
+       | interfaceDecl:t
+           {: RESULT = t; :}; 
+
+variableDecl ::= 
+    variable:v COLON
+        {: RESULT = v; :};
 
 variableDecl_plus ::= variableDecl_plus variableDecl
                     | variableDecl;
 
-variable ::= type ID;
+variable ::= type:t ID:i;
 
 type ::= INT
        | DOUBLE
@@ -224,7 +262,20 @@ call ::= ID LBRACES actuals RBRACES | expr DOT ID LBRACES actuals RBRACES
 
 actuals ::= expr_plus;
 
-constant ::= INTCONST | DOUBLECONST | HEXCONST | TRUE
-           | FALSE | STRINGCONST | NULL;
+constant ::= 
+    INTCONST:i
+        {: RESULT = new IntegerLiteralNode(i); :} 
+    | DOUBLECONST:d
+        {: RESULT = new DoubleLiteralNode(d); :} 
+    | HEXCONST:h
+        {: RESULT = new HexLiteralNode(h); :}
+    | TRUE
+        {: RESULT = new BooleanLiteralNode(true); :}    
+    | FALSE 
+        {: RESULT = new BooleanLiteralNode(false); :}
+    | STRINGCONST:s
+        {: RESULT = new StringLiteralNode(s); :}
+    | NULL;
+        {: RESULT = new BaseASTNode(NodeType.NULL_LITERAL); :};
 
 
