@@ -2,15 +2,15 @@ package Parser;
 
 import java_cup.runtime.*;
 
-import ast.*;
+import AST.*;
 
 parser code {:
-    public Laxer laxer;
-    public parser (Laxer laxer){
-        this.laxer = laxer;
-    }
-    @Override
-    protected void report_expected_token_ids(){ }
+//    public Laxer laxer;
+//    public parser (Laxer laxer){
+//        this.laxer = laxer;
+//    }
+//    @Override
+//    protected void report_expected_token_ids(){ }
 
     protected Program root;
 
@@ -18,8 +18,8 @@ parser code {:
 
     public Program getRoot() { return this.root; }
 :}
-scan with {:return laxer.next_token();:}
-init with {::}
+//scan with {:return laxer.next_token();:}
+//init with {::}
 
 
 /* terminals */
@@ -48,7 +48,12 @@ terminal DOT,LBRACES, RBRACES, LCURLY, RCURLY;// BRACES () CURLY{}
 terminal ID;
 
 //constants 
-terminal INTCONST, HEXCONST, DOUBLECONST, STRINGCONST,TRUE,FALSE;
+terminal Integer INTCONST;
+terminal String HEXCONST;
+terminal Double DOUBLECONST;
+terminal String STRINGCONST;
+terminal Boolean TRUE;
+terminal Boolean FALSE;
 
 /**/
 
@@ -93,8 +98,8 @@ nonterminal ASTNode forStmt;
 // break continue return print
 nonterminal ASTNode breakStmt;
 nonterminal ASTNode continueStmt;
-nonterminal ASTNode returnStm;
 nonterminal ASTNode printStmt;
+nonterminal ASTNode returnStmt;
 //expressions
 nonterminal ASTNode expr;
 nonterminal ASTNode expr_plus;
@@ -266,9 +271,9 @@ constant ::=
     INTCONST:i
         {: RESULT = new IntegerLiteralNode(i); :} 
     | DOUBLECONST:d
-        {: RESULT = new DoubleLiteralNode(d); :} 
+        // {: RESULT = new DoubleLiteralNode(d); :} 
     | HEXCONST:h
-        {: RESULT = new HexLiteralNode(h); :}
+        // {: RESULT = new HexLiteralNode(h); :}
     | TRUE
         {: RESULT = new BooleanLiteralNode(true); :}    
     | FALSE 
@@ -276,6 +281,6 @@ constant ::=
     | STRINGCONST:s
         {: RESULT = new StringLiteralNode(s); :}
     | NULL;
-        {: RESULT = new BaseASTNode(NodeType.NULL_LITERAL); :};
+        // {: RESULT = new BaseASTNode(NodeType.NULL_LITERAL); :};
 
 

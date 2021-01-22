@@ -3,7 +3,7 @@ import java_cup.runtime.*;
 
 %%
 %public
-%class Laxer
+%class Lexer
 %unicode
 %cup
 %char
@@ -120,3 +120,7 @@ Brackets = "\[" {WhiteSpace}*"\]"
     {Comment}            {/*ignore*/}
     {Brackets}           {return token(sym.LRBRACK);}
 }
+
+
+/* error fallback */
+[^] { throw new Error("Illegal character <" + yytext() + ">"); }
