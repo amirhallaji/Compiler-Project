@@ -49,6 +49,8 @@ public enum NodeType {
     VOID,
     AUTO_TYPE,
 
+    THIS,
+
     /*Declarations*/
     FIELD_DECLARATION,
     LOCAL_VAR_DECLARATION,
@@ -66,6 +68,7 @@ public enum NodeType {
     DIV_ASSIGN,
 
     /*Statements*/
+    STATEMENTS,
     EXPRESSION_STATEMENT,
     BREAK_STATEMENT,
     CONTINUE_STATEMENT,
@@ -75,7 +78,8 @@ public enum NodeType {
     SWITCH_STATEMENT,
     CASE_STATEMENT,
     FOR_STATEMENT,
-    FOREACH_STATEMENT,
+    WHILE_STATEMENT,
+    PRINT_STATEMENT,
 
     LITERAL,
     ARGUMENT,

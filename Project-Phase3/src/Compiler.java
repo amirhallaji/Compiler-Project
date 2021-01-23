@@ -1,3 +1,4 @@
+import AST.ASTNode;
 import AST.Program;
 //import codegen.CodeGenVisitor;
 import Parser.Parser;
@@ -25,6 +26,16 @@ public class Compiler {
         processFile();
     }
 
+    private void printTree(ASTNode node) {
+        for (ASTNode child : node.getChildren()) {
+            System.out.println(child + " ---------> " + node);
+        }
+        for (ASTNode child : node.getChildren()) {
+            printTree(child);
+        }
+
+    }
+
     private void processFile() throws Exception {
         PrintStream stream = new PrintStream(new FileOutputStream("src/tests/Result.ll"));
 //        PrintStream stream = System.out;
@@ -41,9 +52,7 @@ public class Compiler {
         Parser parser = new Parser(new Scanner(distress));
         parser.parse();
         System.out.println("--------------");
-        System.out.println(parser.getRoot());
-        System.out.println(parser.getRoot().getChildren());
-        System.out.println(parser.getRoot().getChildren().get(0).getChildren());
+        printTree(parser.getRoot());
         System.out.println("--------------");
 
         System.out.println("parsing done\n");

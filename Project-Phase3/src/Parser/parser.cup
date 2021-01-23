@@ -50,7 +50,7 @@ terminal String ID;
 //constants 
 terminal Integer INTCONST;
 terminal String HEXCONST;
-terminal Double DOUBLECONST;
+terminal Float DOUBLECONST;
 terminal String STRINGCONST;
 terminal Boolean TRUE;
 terminal Boolean FALSE;
@@ -247,7 +247,7 @@ formals ::=  variable:v COMMA formals:f
                 a.addChild(v);
                 v.setParent(a);
             :}  ;
-
+//TODO
 classDecl ::= CLASS identifier:i1 LCURLY field_plus:fs  RCURLY
             | CLASS identifier:i1 EXTENDS identifier:i2 LCURLY field_plus:fs RCURLY
             | CLASS identifier:i1 IMPLEMENTS id_plus  LCURLY field_plus  RCURLY
@@ -279,44 +279,234 @@ prototype ::= type ID LBRACES formals RBRACES COLON
              | VOID ID LBRACES formals RBRACES COLON
              | type ID LBRACES RBRACES COLON
              | VOID ID LBRACES RBRACES COLON;
+//TODO
+stmtBlock ::=
+             LCURLY RCURLY
+                {:
+                    RESULT = new BaseASTNode(NodeType.BLOCK);
+                :}
+            | LCURLY variableDecl_plus:vs RCURLY
+                {:
+                 RESULT = new BaseASTNode(NodeType.BLOCK);
+                 RESULT.addChild(vs);
+                 vs.setParent(RESULT);
+                :}
+            | LCURLY stmt_plus:sp RCURLY
+                {: 
+                RESULT = new BaseASTNode(NodeType.BLOCK); 
+                RESULT.addChild(sp);
+                sp.setParent(RESULT);
+                :}
+            | LCURLY variableDecl_plus:vs stmt_plus:sp RCURLY
+                {: 
+                 RESULT = new BaseASTNode(NodeType.BLOCK);
+                 RESULT.addChild(vs);
+                 RESULT.addChild(sp);
+                 vs.setParent(RESULT);
+                 sp.setParent(RESULT); 
+                :};
 
-stmtBlock ::= LCURLY RCURLY
-            | LCURLY variableDecl_plus RCURLY
-            | LCURLY stmt_plus RCURLY
-            | LCURLY variableDecl_plus stmt_plus RCURLY;
+stmt_plus ::= stmt_plus:sp stmt:s
+             {: 
+                 RESULT = sp;
+                 RESULT.addChild(s);
+                 s.setParent(RESULT); 
+             :}
 
-stmt_plus ::= stmt_plus stmt
-            | stmt;
-
-stmt ::= expr COLON | COLON | ifStmt | whileStmt | forStmt
-            | breakStmt | continueStmt | returnStmt | printStmt
-            | stmtBlock ;
-
-ifStmt ::= IF LBRACES expr RBRACES  stmt
-         | IF LBRACES expr RBRACES stmt ELSE stmt;
-
-whileStmt::= WHILE LBRACES expr RBRACES stmt;
-
-forStmt ::= FOR LBRACES COLON expr COLON RBRACES stmt
-          | FOR LBRACES expr COLON expr COLON RBRACES stmt
-          | FOR LBRACES  COLON expr COLON expr RBRACES stmt
-          | FOR LBRACES expr COLON expr COLON expr RBRACES stmt;
-
-returnStmt ::= RETURN COLON
-             | RETURN expr COLON;
-
-breakStmt ::= BREAK COLON;
-
-continueStmt ::= CONTINUE COLON;
-
-printStmt ::= PRINT LBRACES expr_plus RBRACES COLON;
-
-expr_plus ::= expr COMMA expr
-            | expr ;
+            | stmt:s
+              {: 
+                 RESULT = new BaseASTNode(NodeType.STATEMENTS);
+                 RESULT.addChild(s);
+                 s.setParent(RESULT); 
+             :};
 
 
-expr ::= lValue ASSIGN expr | constant | lValue
-        | THIS | call | LBRACES expr RBRACES
+stmt ::= 
+        expr:e COLON 
+         {: 
+            RESULT = e;
+         :}
+        | COLON 
+          {: 
+            RESULT = new BaseASTNode(NodeType.EMPTY_STATEMENT);
+          :}
+        | ifStmt: ifs 
+         {: 
+           RESULT = ifs;
+         :}
+        | whileStmt :whs
+         {: 
+           RESULT = whs;
+         :}
+        | forStmt :fs
+         {: 
+           RESULT = fs;
+         :}
+        | breakStmt :bs
+         {: 
+           RESULT = bs;
+         :}
+        | continueStmt :cs
+         {: 
+           RESULT = cs;
+         :}
+        | returnStmt:rs 
+         {: 
+           RESULT = rs;
+         :}
+        | printStmt:ps
+         {: 
+           RESULT = ps;
+         :}
+        | stmtBlock : sb
+         {: 
+           RESULT = sb;
+         :};
+
+ifStmt ::= 
+        IF LBRACES expr:e RBRACES  stmt:s
+            {:
+                RESULT = new BaseASTNode(NodeType.IF_STATEMENT);
+                RESULT.addChild(e, s);
+                e.setParent(RESULT);
+                s.setParent(RESULT);
+            :}
+         | IF LBRACES expr:e RBRACES stmt:s1 ELSE stmt:s2
+              {:
+                RESULT = new BaseASTNode(NodeType.IF_STATEMENT);
+                RESULT.addChild(e, s1,s2);
+                e.setParent(RESULT);
+                s1.setParent(RESULT);
+                s2.setParent(RESULT);
+             :};
+
+whileStmt::= 
+        WHILE LBRACES expr:e RBRACES stmt:s
+          {:
+            RESULT = new BaseASTNode(NodeType.WHILE_STATEMENT);
+            RESULT.addChild(e, s);
+            e.setParent(RESULT);
+            s.setParent(RESULT);
+         :};
+
+forStmt ::= 
+            FOR LBRACES COLON expr:e COLON RBRACES stmt:s
+            {:
+                RESULT = new BaseASTNode(NodeType.FOR_STATEMENT);
+                RESULT.addChild(e, s);
+                e.setParent(RESULT);
+                s.setParent(RESULT);
+            :}
+          | FOR LBRACES expr:e1 COLON expr:e2 COLON RBRACES stmt:s
+            {:
+                RESULT = new BaseASTNode(NodeType.FOR_STATEMENT);
+                RESULT.addChild(e1,e2,s);
+                e1.setParent(RESULT);
+                e2.setParent(RESULT);
+                s.setParent(RESULT);
+            :}
+          | FOR LBRACES COLON expr:e1 COLON expr:e2 RBRACES stmt:s
+            {:
+                RESULT = new BaseASTNode(NodeType.FOR_STATEMENT);
+                RESULT.addChild(e1,s,e2);
+                e1.setParent(RESULT);
+                e2.setParent(RESULT);
+                s.setParent(RESULT);
+            :}
+          | FOR LBRACES expr:e1 COLON expr:e2 COLON expr:e3 RBRACES stmt:s
+            {:
+                RESULT = new BaseASTNode(NodeType.FOR_STATEMENT);
+                RESULT.addChild(e1,e2,s,e3);
+                e1.setParent(RESULT);
+                e2.setParent(RESULT);
+                e3.setParent(RESULT);
+                s.setParent(RESULT);
+            :};
+
+returnStmt ::= 
+            RETURN COLON
+                {:
+                    RESULT = new BaseASTNode(NodeType.RETURN_STATEMENT);
+                :}
+             |RETURN expr:e COLON
+                {:
+                    RESULT = new BaseASTNode(NodeType.RETURN_STATEMENT);
+                    RESULT.addChild(e);
+                    e.setParent(RESULT);
+                :};
+                
+
+breakStmt ::= 
+            BREAK COLON
+                {:
+                    RESULT = new BaseASTNode(NodeType.BREAK_STATEMENT);
+                :};
+
+continueStmt ::= 
+            CONTINUE COLON
+                {:
+                    RESULT = new BaseASTNode(NodeType.CONTINUE_STATEMENT);
+                :};
+
+printStmt ::= 
+            PRINT LBRACES expr_plus:es RBRACES COLON
+                {:
+                    RESULT = new BaseASTNode(NodeType.PRINT_STATEMENT);
+                    RESULT.addChild(es);
+                    es.setParent(RESULT);
+                :};
+
+expr_plus ::= 
+            expr:e1 COMMA expr:e2
+                {:
+                    RESULT = e1;
+                    RESULT.addChild(e2);
+                    e2.setParent(RESULT);
+                :}
+            | expr:e1
+                {:
+                    RESULT = new ExpressionNode();
+                    RESULT.addChild(e1);
+                    e1.setParent(RESULT);
+                :}; 
+
+
+expr ::= 
+        lValue:l ASSIGN expr:e
+         {:
+            RESULT = new ExpressionNode();
+            RESULT.addChild(l);
+            RESULT.addChild(e);
+            l.setParent(RESULT);
+            e.setParent(RESULT);
+        :}
+        | constant:c
+        {:
+            RESULT = new ExpressionNode();
+            RESULT.addChild(c);
+            c.setParent(RESULT);
+        :}
+        | lValue:l
+        {:
+            RESULT = new ExpressionNode();
+            RESULT.addChild(l);
+            l.setParent(RESULT);
+
+        :}
+        | THIS
+        {:
+            RESULT = new ExpressionNode();
+            ASTNode t = new BaseASTNode(NodeType.THIS);
+            RESULT.addChild(t);
+            t.setParent(RESULT);
+        :} 
+        | call:c
+         {:
+            RESULT = new ExpressionNode();
+            RESULT.addChild(c);
+            c.setParent(RESULT);
+        :}
+        | LBRACES expr RBRACES
         | expr ADD expr | expr MINUS expr | expr PROD expr
         | expr DIV expr | expr MOD expr | MINUS expr
         | expr LESS expr | expr LESSEQUAL expr
@@ -340,7 +530,7 @@ constant ::=
     INTCONST:i
         {: RESULT = new IntegerLiteralNode(i); :} 
     | DOUBLECONST:d
-        // {: RESULT = new DoubleLiteralNode(d); :} 
+        {: RESULT = new DoubleLiteralNode(d); :} 
     | HEXCONST:h
         // {: RESULT = new HexLiteralNode(h); :}
     | TRUE
@@ -349,8 +539,8 @@ constant ::=
         {: RESULT = new BooleanLiteralNode(false); :}
     | STRINGCONST:s
         {: RESULT = new StringLiteralNode(s); :}
-    | NULL;
-        // {: RESULT = new BaseASTNode(NodeType.NULL_LITERAL); :};
+    | NULL
+        {: RESULT = new BaseASTNode(NodeType.NULL_LITERAL); :};
 
 
 identifier ::=
