@@ -42,8 +42,10 @@ public class Compiler {
         parser.parse();
         System.out.println("--------------");
         System.out.println(parser.getRoot());
-        System.out.println("--------------");
         System.out.println(parser.getRoot().getChildren());
+        System.out.println(parser.getRoot().getChildren().get(0).getChildren());
+        System.out.println("--------------");
+
         System.out.println("parsing done\n");
         return parser.getRoot();
     }

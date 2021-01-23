@@ -45,7 +45,7 @@ terminal ASSIGN, COLON, COMMA, LBRACK,RBRACK , LRBRACK; // BRACK []
 terminal DOT,LBRACES, RBRACES, LCURLY, RCURLY;// BRACES () CURLY{}
 
 // identifier
-terminal ID;
+terminal String ID;
 
 //constants 
 terminal Integer INTCONST;
@@ -61,7 +61,7 @@ terminal Boolean FALSE;
 
 //whole program nonterminal
 nonterminal ASTNode program;
-nonterminal ASTNode program2;
+
 // declarations
 nonterminal ASTNode decl;
 // Types of declarations
@@ -112,7 +112,7 @@ nonterminal ASTNode call;
 
 nonterminal ASTNode actuals;
 
-
+nonterminal ASTNode identifier; 
 
 /**/
 
@@ -130,21 +130,18 @@ precedence right LBRACES, RBRACES,LBRACK,RBRACK;
 
 start with program;
 
-program ::=
-    program2:t
-        {:
-           Program p = new Program();
-           p.addChild(t);
-           setRoot(p);
-        :};
 
-program2  ::= program2:p decl:t
+program  ::= program:p decl:t
         {:
            RESULT = p;
            RESULT.addChild(t);
         :}
            | decl:t
-           {: RESULT = t; :};
+           {: 
+                RESULT = new Program();
+                RESULT.addChild(t);
+                setRoot((Program)RESULT);
+            :};
 
 decl ::= variableDecl:t
            {: RESULT = t; :}
@@ -159,34 +156,106 @@ variableDecl ::=
     variable:v COLON
         {: RESULT = v; :};
 
-variableDecl_plus ::= variableDecl_plus variableDecl
-                    | variableDecl;
+variableDecl_plus ::= 
+                variableDecl_plus:vp variableDecl:v
+                    {://TODO
+                    :}
+                | variableDecl:v
+                    {: //TODO
+                    :};
 
-variable ::= type:t ID:i;
-
-type ::= INT
+variable ::= type:t identifier:i
+             {: 
+                RESULT = new BaseASTNode(NodeType.VARIABLE_DECLARATION);
+                RESULT.addChild(t);
+                RESULT.addChild(i);
+                t.setParent(RESULT);
+                i.setParent(RESULT);
+            :};
+type ::= 
+        INT
+            {: RESULT = new TypeNode(NodeType.INT_TYPE, PrimitiveType.INT); :}
        | DOUBLE
+            {: RESULT = new TypeNode(NodeType.DOUBLE_TYPE, PrimitiveType.DOUBLE); :}
        | BOOL
+            {: RESULT = new TypeNode(NodeType.BOOLEAN_TYPE, PrimitiveType.BOOL); :}
        | STRING
-       | ID
-       | type LRBRACK;
+            {: RESULT = new TypeNode(NodeType.STRING_TYPE, PrimitiveType.STRING); :}
+       | identifier:t
+            {: RESULT = t; :}
+       | type LRBRACK
+            {:
+            //TODO 
+            :};
 
-functionDecl ::= type ID LBRACES formals RBRACES stmtBlock
-               | VOID ID LBRACES formals RBRACES stmtBlock
-               | type ID LBRACES RBRACES stmtBlock
-               | VOID ID LBRACES RBRACES stmtBlock;
+functionDecl ::= type:t identifier:i LBRACES formals:f RBRACES stmtBlock:s
+         {:
+			RESULT = new BaseASTNode(NodeType.METHOD_DECLARATION);
+			RESULT.addChild(t, i, f, s);
+			t.setParent(RESULT);
+			i.setParent(RESULT);
+			f.setParent(RESULT);
+			s.setParent(RESULT);
+        :}
+               | VOID identifier:i LBRACES formals:f RBRACES stmtBlock:s
+         {:
+            RESULT = new BaseASTNode(NodeType.METHOD_DECLARATION);
+            ASTNode t = new TypeNode(NodeType.VOID, PrimitiveType.VOID); 
+            RESULT.addChild(t, i, f, s);
+            t.setParent(RESULT);
+            i.setParent(RESULT);
+            f.setParent(RESULT);
+            s.setParent(RESULT);
+        :}
+               | type:t identifier:i LBRACES RBRACES stmtBlock:s
+         {:
+            RESULT = new BaseASTNode(NodeType.METHOD_DECLARATION);
+            ASTNode f = new BaseASTNode(NodeType.ARGUMENTS);
+            RESULT.addChild(t, i, f, s);
+            t.setParent(RESULT);
+            i.setParent(RESULT);
+            f.setParent(RESULT);
+            s.setParent(RESULT);
+        :}
+               | VOID identifier:i LBRACES RBRACES stmtBlock:s
+        {:
+            RESULT = new BaseASTNode(NodeType.METHOD_DECLARATION);
+            ASTNode t = new TypeNode(NodeType.VOID, PrimitiveType.VOID); 
+            ASTNode f = new BaseASTNode(NodeType.ARGUMENTS);
+            RESULT.addChild(t, i, f, s);
+            t.setParent(RESULT);
+            i.setParent(RESULT);
+            f.setParent(RESULT);
+            s.setParent(RESULT);
+        :};
 
-formals ::=  variable COMMA formals
-           | variable  ;
+formals ::=  variable:v COMMA formals:f
+            {:
+                RESULT = f;
+                ASTNode a = new BaseASTNode(NodeType.ARGUMENT);
+                RESULT.addChild(a);
+                a.setParent(RESULT);
+                a.addChild(v);
+                v.setParent(a);
+            :}
+           | variable:v
+            {:
+                RESULT = new BaseASTNode(NodeType.ARGUMENTS);
+                ASTNode a = new BaseASTNode(NodeType.ARGUMENT);
+                RESULT.addChild(a);
+                a.setParent(RESULT);
+                a.addChild(v);
+                v.setParent(a);
+            :}  ;
 
-classDecl ::= CLASS ID LCURLY field_plus  RCURLY
-            | CLASS ID EXTENDS ID LCURLY field_plus RCURLY
-            | CLASS ID IMPLEMENTS id_plus  LCURLY field_plus  RCURLY
-            | CLASS ID EXTENDS ID IMPLEMENTS id_plus LCURLY field_plus RCURLY
-            | CLASS ID LCURLY RCURLY
-            | CLASS ID EXTENDS ID LCURLY RCURLY
-            | CLASS ID IMPLEMENTS id_plus  LCURLY RCURLY
-            | CLASS ID EXTENDS ID IMPLEMENTS id_plus LCURLY RCURLY;
+classDecl ::= CLASS identifier:i1 LCURLY field_plus:fs  RCURLY
+            | CLASS identifier:i1 EXTENDS identifier:i2 LCURLY field_plus:fs RCURLY
+            | CLASS identifier:i1 IMPLEMENTS id_plus  LCURLY field_plus  RCURLY
+            | CLASS identifier:i1 EXTENDS identifier:i2 IMPLEMENTS id_plus LCURLY field_plus RCURLY
+            | CLASS identifier:i1 LCURLY RCURLY
+            | CLASS identifier:i1 EXTENDS identifier:i2 LCURLY RCURLY
+            | CLASS identifier:i1 IMPLEMENTS id_plus  LCURLY RCURLY
+            | CLASS identifier:i1 EXTENDS identifier:i2 IMPLEMENTS id_plus LCURLY RCURLY;
 
 id_plus ::= ID
           | ID COMMA id_plus ;
@@ -284,3 +353,6 @@ constant ::=
         // {: RESULT = new BaseASTNode(NodeType.NULL_LITERAL); :};
 
 
+identifier ::=
+    ID:i
+        {: RESULT = new IdentifierNode(i); :};
