@@ -39,138 +39,89 @@ public class CodeGenVisitor implements SimpleVisitor {
     public void visit(ASTNode node) throws Exception {
         switch (node.getNodeType()) {
             case ADDITION:
-                visitAdditionNode(node);
-                break;
-//
-//            case ASSIGN:
-//                visitAssignNode(node);
-//                break;
-
-            case BOOLEAN_AND:
-                visitBooleanAndNode(node);
-                break;
-
-//            case BOOLEAN_LITERAL:
-//                visitBooleanLiteralNode(node);
-//                break;
-
-            case BOOLEAN_NOT:
-                visitBooleanNotNode(node);
-                break;
-
-            case BOOLEAN_OR:
-                visitBooleanOrNode(node);
-                break;
-
-            case CLASS:
-                visitClassNode(node);
-                break;
-
-            case DIVISION:
-                visitDivisionNode(node);
-                break;
-
-            case EQUAL:
-                visitEqualNode(node);
-                break;
-
-            case GREATER_THAN:
-                visitGreaterThanNode(node);
-                break;
-
-            case GREATER_THAN_OR_EQUAL:
-                visitGreaterThanOrEqualNode(node);
-                break;
-
-            case IF_STATEMENT:
-                visitIfStatementNode(node);
-                break;
-
-//            case INTEGER_LITERAL:
-//                visitIntegerLiteralNode(node);
-//                break;
-
-            case LESS_THAN:
-                visitLessThanNode(node);
-                break;
-
-            case LESS_THAN_OR_EQUAL:
-                visitLessThanOrEqualNode(node);
-                break;
-
-            case METHOD_ACCESS:
-                visitMethodAccessNode(node);
-                break;
-
-//            case METHOD_DECLARATION:
-//                visitMethodDeclarationNode(node);
-//                break;
-
-            case MULTIPLICATION:
-                visitMultiplicationNode(node);
-                break;
-
-            case NOT_EQUAL:
-                visitNotEqualNode(node);
-                break;
-
-            case PARAMETER:
-                visitParameterNode(node);
-                break;
-
-            case RETURN_STATEMENT:
-                visitReturnStatementNode(node);
-                break;
-
             case SUBTRACTION:
-                visitSubtractionNode(node);
-                break;
-
-            case UNARY_MINUS:
-                visitUnaryMinusNode(node);
-                break;
-
-            case UNARY_PLUS:
-                visitUnaryPlusNode(node);
-                break;
-
-            case VAR_USE:
-                visitVarUse(node);
-                break;
-
-            case WHILE_STATEMENT:
-                visitWhileStatementNode(node);
-                break;
-
-            case ARGUMENTS:
-            case BLOCK:
+            case MULTIPLICATION:
+            case DIVISION:
+            case MOD:
+            case NEGATIVE:
+            case READ_INTEGER:
+            case READ_LINE:
+            case NEW_ARRAY:
+            case NEW_IDENTIFIER:
+            case ITOB:
+            case ITOD:
+            case DTOI:
+            case BTOI:
+            case LVALUE:
+            case CALL:
+            case EMPTY_ARRAY:
+            case LESS_THAN:
+            case LESS_THAN_OR_EQUAL:
+            case GREATER_THAN:
+            case GREATER_THAN_OR_EQUAL:
+            case EQUAL:
+            case NOT_EQUAL:
+            case BOOLEAN_AND:
+            case BOOLEAN_NOT:
+            case BOOLEAN_OR:
             case BOOLEAN_TYPE:
-//            case CAST:
-//            case CHAR_LITERAL:
-            case CHAR_TYPE:
-//            case CLASS_BODY:
-//            case COMPILATION_UNIT:
-            case DECLARATIONS:
-                getDecl(node);
-                break;
             case DOUBLE_TYPE:
-            case EMPTY_STATEMENT:
-            case EXPRESSION_STATEMENT:
-            case FIELD_DECLARATION:
-//            case FLOAT_LITERAL:
-            case IDENTIFIER:
+            case CHAR_TYPE:
             case INT_TYPE:
-            case LOCAL_VAR_DECLARATION:
-            case NULL_LITERAL:
-            case PARAMETERS:
-            case POST_DECREMENT:
-            case POST_INCREMENT:
-            case PRE_DECREMENT:
-            case PRE_INCREMENT:
-//            case STRING_LITERAL:
-            case VARIABLE_DECLARATION:
-//            case VARIABLE_DECLARATIONS:
+            case FLOAT_TYPE:
+            case LONG_TYPE:
+            case STRING_TYPE:
             case VOID:
+            case AUTO_TYPE:
+            case FIELD_DECLARATION:
+            case LOCAL_VAR_DECLARATION:
+            case VARIABLE_DECLARATION:
+            case VARIABLE_CONST_DECLARATION:
+            case METHOD_DECLARATION:
+            case Class_DECLARATION:
+            case DECLARATIONS:
+            case ASSIGN:
+            case ADD_ASSIGN:
+            case SUB_ASSIGN:
+            case MULT_ASSIGN:
+            case DIV_ASSIGN:
+            case STATEMENT:
+            case STATEMENTS:
+            case EXPRESSION_STATEMENT:
+            case BREAK_STATEMENT:
+            case CONTINUE_STATEMENT:
+            case RETURN_STATEMENT:
+            case IF_STATEMENT:
+            case REPEAT_STATEMENT:
+            case SWITCH_STATEMENT:
+            case CASE_STATEMENT:
+            case FOR_STATEMENT:
+            case WHILE_STATEMENT:
+            case PRINT_STATEMENT:
+            case LITERAL:
+            case ARGUMENT:
+            case ARGUMENTS:
+            case EMPTY_STATEMENT:
+            case IDENTIFIER:
+            case METHOD_ACCESS:
+            case PRIVATE_ACCESS:
+            case PUBLIC_ACCESS:
+            case PROTECTED_ACCESS:
+            case VARIABLES:
+            case ACTUALS:
+            case PARAMETER:
+            case PARAMETERS:
+            case BLOCK:
+            case VAR_USE:
+            case CLASS:
+            case Interface:
+            case NULL_LITERAL:
+            case EXTEND:
+            case IMPLEMENT:
+            case FIELDS:
+            case PROTOTYPES:
+            case PROTOTYPE:
+            case START:
             default:
                 visitAllChildren(node);
         }
