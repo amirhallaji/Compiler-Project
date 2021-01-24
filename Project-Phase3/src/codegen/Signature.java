@@ -65,32 +65,32 @@ public class Signature {
         return args;
     }
 
-    boolean checkArguments(Signature signature) {
-        Argument[] args1 = args.toArray(new Argument[0]);
-        Argument[] args2 = signature.args.toArray(new Argument[0]);
-        if (args1.length != args2.length)
-            return false;
-        for (int i = 0; i < args1.length; i++)
-            try {
-                ExpressionNode e=new ExpressionNode();
-                e.setType(args2[i].getType());
-                new CodeGenVisitor(new PrintStream("")).cast(args1[i].getType().getPrimitive(),e);
-            } catch (Exception e) {
-                return false;
-            }
+//    boolean checkArguments(Signature signature) {
+//        Argument[] args1 = args.toArray(new Argument[0]);
+//        Argument[] args2 = signature.args.toArray(new Argument[0]);
+//        if (args1.length != args2.length)
+//            return false;
+//        for (int i = 0; i < args1.length; i++)
+//            try {
+//                ExpressionNode e=new ExpressionNode();
+//                e.setType(args2[i].getType());
+//                new CodeGenVisitor(new PrintStream("")).cast(args1[i].getType().getPrimitive(),e);
+//            } catch (Exception e) {
+//                return false;
+//            }
+//
+//        return true;
+//    }
 
-        return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Signature signature = (Signature) o;
-
-        return Objects.equals(name, signature.name) &&
-                checkArguments(signature);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Signature signature = (Signature) o;
+//
+//        return Objects.equals(name, signature.name) &&
+//                checkArguments(signature);
+//    }
 
     @Override
     public int hashCode() {
