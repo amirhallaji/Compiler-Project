@@ -1,1 +1,7 @@
-int mamad;
+int main(){
+}
+class hamid{
+void ahmad(){
+
+}
+}

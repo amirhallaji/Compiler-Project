@@ -45,6 +45,7 @@ public class Compiler {
         generateCode(cu, stream);
     }
 
+
     private Program parse() throws Exception {
         System.out.println("parsing");
         FileInputStream inStream = new FileInputStream(source);
@@ -60,7 +61,7 @@ public class Compiler {
         return parser.getRoot();
     }
 
-//    private void performSemanticAnalysis(Program cu) throws Exception {
+    //    private void performSemanticAnalysis(Program cu) throws Exception {
 //        System.out.println("in type visitor");
 //        cu.accept(new MethodVisitor());
 //        System.out.println("TV done\n");

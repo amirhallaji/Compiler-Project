@@ -1019,6 +1019,7 @@ class CUP$Parser$actions {
 		 
                 RESULT = new Program();
                 RESULT.addChild(t);
+                t.setParent(RESULT);
                 setRoot((Program)RESULT);
             
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1198,9 +1199,9 @@ class CUP$Parser$actions {
 		ASTNode t = (ASTNode)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		
              RESULT = t;
-             ASTNode E = new BaseASTNode(NodeType.EMPTY_ARRAY);
-             RESULT.addChild(E);
-             E.setParent(RESULT);
+             ASTNode e = new BaseASTNode(NodeType.EMPTY_ARRAY);
+             RESULT.addChild(e);
+             e.setParent(RESULT);
             
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

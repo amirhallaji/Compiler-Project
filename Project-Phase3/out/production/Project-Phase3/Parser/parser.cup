@@ -144,6 +144,7 @@ program  ::= program:p decl:t
            {: 
                 RESULT = new Program();
                 RESULT.addChild(t);
+                t.setParent(RESULT);
                 setRoot((Program)RESULT);
             :};
 
@@ -196,9 +197,9 @@ type ::=
        | type:t LRBRACK
             {:
              RESULT = t;
-             ASTNode E = new BaseASTNode(NodeType.EMPTY_ARRAY);
-             RESULT.addChild(E);
-             E.setParent(RESULT);
+             ASTNode e = new BaseASTNode(NodeType.EMPTY_ARRAY);
+             RESULT.addChild(e);
+             e.setParent(RESULT);
             :};
 
 functionDecl ::= type:t identifier:i LBRACES formals:f RBRACES stmtBlock:s

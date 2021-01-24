@@ -1,6 +1,6 @@
 package codegen;
 
-import AST.ClassNode;
+import AST.*;
 import codegen.SimpleVisitor;
 
 import java.io.PrintStream;
@@ -8,15 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import AST.ASTNode;
-import AST.BooleanLiteralNode;
 import AST.ClassNode;
-import AST.IdentifierNode;
-import AST.IntegerLiteralNode;
-import AST.TypeNode;
 import semantic.SymbolInfo;
-//import cse431.lab5.semantic.SymbolInfo;
-//import cse431.lab5.visitor.SimpleVisitor;
+
 
 /**
  * An AST visitor which generates Jasmin code.
@@ -29,6 +23,8 @@ public class CodeGenVisitor implements SimpleVisitor {
     private boolean returnGenerated;
     // Fix all of the FIXMEs below.
 
+    private static String dataSegment = ".data \n";
+    private static String textSegment = ".text \n" + "      .globl main\n";
 
     public CodeGenVisitor(PrintStream stream) {
         this.stream = stream;
@@ -41,369 +37,215 @@ public class CodeGenVisitor implements SimpleVisitor {
             case ADDITION:
                 break;
             case SUBTRACTION:
+                break;
             case MULTIPLICATION:
+                break;
             case DIVISION:
+                break;
             case MOD:
+                break;
             case NEGATIVE:
+                break;
             case READ_INTEGER:
+                break;
             case READ_LINE:
+                break;
             case NEW_ARRAY:
+                break;
             case NEW_IDENTIFIER:
+                break;
             case ITOB:
+                break;
             case ITOD:
+                break;
             case DTOI:
+                break;
             case BTOI:
+                break;
             case LVALUE:
+                break;
             case CALL:
+                break;
             case EMPTY_ARRAY:
+                break;
             case LESS_THAN:
+                break;
             case LESS_THAN_OR_EQUAL:
+                break;
             case GREATER_THAN:
+                break;
             case GREATER_THAN_OR_EQUAL:
+                break;
             case EQUAL:
+                break;
             case NOT_EQUAL:
+                break;
             case BOOLEAN_AND:
+                break;
             case BOOLEAN_NOT:
+                break;
             case BOOLEAN_OR:
+                break;
             case BOOLEAN_TYPE:
+                break;
             case DOUBLE_TYPE:
+                break;
             case CHAR_TYPE:
+                break;
             case INT_TYPE:
+                break;
             case FLOAT_TYPE:
+                break;
             case LONG_TYPE:
+                break;
             case STRING_TYPE:
+                break;
             case VOID:
+                break;
             case AUTO_TYPE:
+                break;
             case FIELD_DECLARATION:
+                visitAllChildren(node);
+                //TODO
+                break;
             case LOCAL_VAR_DECLARATION:
+                break;
             case VARIABLE_DECLARATION:
+                break;
             case VARIABLE_CONST_DECLARATION:
+                break;
             case METHOD_DECLARATION:
+                visitMethodDeclarationNode(node);
+                break;
             case Class_DECLARATION:
+                visitAllChildren(node);
+                break;
             case DECLARATIONS:
+                break;
             case ASSIGN:
+                break;
             case ADD_ASSIGN:
+                break;
             case SUB_ASSIGN:
+                break;
             case MULT_ASSIGN:
+                break;
             case DIV_ASSIGN:
+                break;
             case STATEMENT:
+                break;
             case STATEMENTS:
+                break;
             case EXPRESSION_STATEMENT:
+                break;
             case BREAK_STATEMENT:
+                break;
             case CONTINUE_STATEMENT:
+                break;
             case RETURN_STATEMENT:
+                break;
             case IF_STATEMENT:
+                break;
             case REPEAT_STATEMENT:
+                break;
             case SWITCH_STATEMENT:
+                break;
             case CASE_STATEMENT:
+                break;
             case FOR_STATEMENT:
+                break;
             case WHILE_STATEMENT:
+                break;
             case PRINT_STATEMENT:
+                break;
             case LITERAL:
+                break;
             case ARGUMENT:
+                break;
             case ARGUMENTS:
+                break;
             case EMPTY_STATEMENT:
+                break;
             case IDENTIFIER:
+                break;
             case METHOD_ACCESS:
+                break;
             case PRIVATE_ACCESS:
+                break;
             case PUBLIC_ACCESS:
+                break;
             case PROTECTED_ACCESS:
+                break;
             case VARIABLES:
+                break;
             case ACTUALS:
+                break;
             case PARAMETER:
+                break;
             case PARAMETERS:
+                break;
             case BLOCK:
+                break;
             case VAR_USE:
+                break;
             case CLASS:
+                break;
             case Interface:
+                break;
             case NULL_LITERAL:
+                break;
             case EXTEND:
+                break;
             case IMPLEMENT:
+                break;
             case FIELDS:
+                visitAllChildren(node);
+                //TODO
+                break;
             case PROTOTYPES:
+                break;
             case PROTOTYPE:
+                break;
             case START:
+                visitAllChildren(node);
+                stream.print(dataSegment + '\n' + textSegment);
+                break;
             default:
                 visitAllChildren(node);
         }
     }
 
-    private void getDecl(ASTNode node) {
-        System.out.println("ALLOC");
+    private void visitMethodDeclarationNode(ASTNode node) throws Exception {
+        //type
+        System.out.println("node:" + node);
+        TypeNode returnType = (TypeNode) node.getChild(0);
+        String returnSig = returnType.getType().getSignature();
+        System.out.println(returnSig);
+        //identifier
+        IdentifierNode idNode = (IdentifierNode) node.getChild(1);
+        String methodName = idNode.getValue();
+        System.out.println(methodName);
+        String label;
+        System.out.println(node.getParent());
+        if (node.getParent().getNodeType().equals(NodeType.START))
+            label = methodName + ":";
+        else {
+            IdentifierNode ClassNode = (IdentifierNode) node.getParent().getParent().getParent().getChild(0);
+            String className = ClassNode.getValue();
+            label = className + "_" + methodName + ":";
+        }
+        System.out.println("la " + label);
+        textSegment += label + "\n";
+        node.getChild(2).accept(this);
+        node.getChild(3).accept(this);
     }
 
-    ////////////////////  My Helpers  /////////////////////////////
-
-    private int getVarIndexFromIDNode(ASTNode idNode)
-    {
-        return ((IdentifierNode) idNode).getSymbolInfo().getLocalVarIndex();
+    private void visitArgumentNode(ASTNode child) throws Exception {
     }
 
-    private int getValueFromIntNode(ASTNode intLitNode)
-    {
-        return ((IntegerLiteralNode) intLitNode).getValue();
-    }
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
     private void visitAllChildren(ASTNode node) throws Exception {
         for (ASTNode child : node.getChildren()) {
             child.accept(this);
         }
-    }
-
-    private void visitAdditionNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
-        stream.println("  iadd");
-
-    }
-
-    //Assigns thing at top of stack,
-    //OR if it's a literal, pushes the literal then assigns that val
-    //OR if it's an ID loads the ID's value and assigns
-//    private void visitAssignNode(ASTNode node) throws Exception {
-//        IdentifierNode idNode = (IdentifierNode) node.getChild(0);
-//        SymbolInfo si = idNode.getSymbolInfo();
-//        int lvIndex = si.getLocalVarIndex();
-//
-//        List<ASTNode> children = node.getChildren();
-//
-//        //Push vals of the R value node(s)?
-//        for(int i =1; i< children.size(); i++)
-//        {
-//            children.get(i).accept(this);
-//        }
-//        stream.println("  istore "+lvIndex);
-//
-//    }
-
-    private void visitBooleanAndNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitBooleanLiteralNode(ASTNode node) {
-        BooleanLiteralNode boolNode = (BooleanLiteralNode) node;
-        if(boolNode.getValue())
-        {
-            stream.println("  iconst_1");
-        }
-        else{
-            stream.println("  iconst_0");
-        }
-    }
-
-    private void visitBooleanNotNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitBooleanOrNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitClassNode(ASTNode node) throws Exception {
-        classNode = (ClassNode) node;
-
-        IdentifierNode idNode = (IdentifierNode) node.getChild(0);
-        className = idNode.getValue();
-
-        stream.println(".class public " + className);
-        stream.println(".super java/lang/Object");
-        stream.println("");
-
-        outputDefaultConstructor();
-        outputMainMethod();
-        outputPrintlnMethod();
-
-        returnGenerated = false;
-
-        node.getChild(1).accept(this);
-
-    }
-
-    private void visitDivisionNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
-        stream.println("  idiv");
-    }
-
-    private void visitEqualNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitGreaterThanNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitGreaterThanOrEqualNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitIfStatementNode(ASTNode node) throws Exception {
-        stream.println("; if statement");
-        node.getChild(0).accept(this); //predicate
-        stream.println("  iconst_0");
-        String endIfLabel = generateLabel();
-        stream.println("ifeq "+endIfLabel);//if predicate false, then skip the "do if true" block
-
-
-        node.getChild(0).accept(this); //print the "do if true" block
-        stream.println("  goto "+ endIfLabel); //bypass the "do If True" Block
-
-        if(node.getChildren().size()==3) //We have an else statement
-        {
-            String elseLabel = generateLabel();
-            stream.println(elseLabel); //The else block
-            node.getChild(2).accept(this);
-        }
-
-    }
-
-    private void visitIntegerLiteralNode(ASTNode node) {
-        int val =  getValueFromIntNode(node);
-        stream.println("  ldc "+val);
-    }
-
-    private void visitLessThanNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitLessThanOrEqualNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitMethodAccessNode(ASTNode node) throws Exception {
-        node.getChild(1).accept(this);
-
-        IdentifierNode idNode = (IdentifierNode) node.getChild(0);
-        String methodName = idNode.getValue();
-        String sig = classNode.getMethodSig(methodName);
-        stream.println("  invokestatic " + className + "/" + sig);
-        returnGenerated = false;
-    }
-
-//    private void visitMethodDeclarationNode(ASTNode node) throws Exception {
-//        IdentifierNode idNode =  node.getChild(0);
-//        String methodName = idNode.getValue();
-//
-//        TypeNode typeNode = (TypeNode) node.getChild(2);
-//        String returnType = typeNode.getType().getSignature();
-//
-//        stream.println("");
-//        stream.println(";");
-//        stream.println("; method");
-//        stream.println(";");
-//
-//        stream.print(".method public static " + methodName + "(");
-//        node.getChild(1).accept(this);
-//        stream.println(")" + returnType);
-//
-//        stream.println("  .limit locals 10");
-//        stream.println("  .limit stack 10");
-//
-//        node.getChild(3).accept(this);
-//
-//        if (!returnGenerated) {
-//            stream.println("  return");
-//            returnGenerated = true;
-//        }
-//
-//        stream.println(".end method");
-//    }
-
-    private void visitMultiplicationNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
-        stream.println("  imul");
-    }
-
-    private void visitNotEqualNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private void visitParameterNode(ASTNode node) throws Exception {
-        TypeNode typeNode = (TypeNode) node.getChild(1);
-        String typeSig = typeNode.getType().getSignature();
-        stream.print(typeSig);
-        returnGenerated = false;
-    }
-
-    private void visitReturnStatementNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
-
-        returnGenerated = true;
-        if(node.getChildren().size() == 0 )
-        {
-            stream.println("  return");
-        }
-        else{
-            stream.println("  ireturn");
-        }
-    }
-
-    private void visitSubtractionNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
-        stream.println("  isub");
-    }
-
-    private void visitUnaryMinusNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
-        stream.println("  ineg");
-    }
-
-    private void visitUnaryPlusNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
-    }
-
-    private void visitVarUse(ASTNode node) {
-        IdentifierNode idNode = (IdentifierNode) node.getChild(0);
-        SymbolInfo si = idNode.getSymbolInfo();
-        int lvIndex = si.getLocalVarIndex();
-        stream.println("  iload " + lvIndex);
-        returnGenerated = false;
-    }
-
-    private void visitWhileStatementNode(ASTNode node) throws Exception {
-        // FIXME
-    }
-
-    private String generateLabel() {
-        return "label" + (++labelIndex);
-    }
-
-    private void outputDefaultConstructor() {
-        stream.println("");
-        stream.println(";");
-        stream.println("; standard constructor");
-        stream.println(";");
-        stream.println(".method public <init>()V");
-        stream.println("  aload_0");
-        stream.println("  invokenonvirtual java/lang/Object/<init>()V");
-        stream.println("  return");
-        stream.println(".end method");
-        stream.println("");
-    }
-
-    private void outputMainMethod() {
-        stream.println("");
-        stream.println(";");
-        stream.println("; main method");
-        stream.println(";");
-        stream.println(".method public static main([Ljava/lang/String;)V");
-        stream.println("  invokestatic " + className + "/program()V");
-        stream.println("  return");
-        stream.println(".end method");
-        stream.println("");
-    }
-
-    private void outputPrintlnMethod() {
-        stream.println("");
-        stream.println(";");
-        stream.println("; println method");
-        stream.println(";");
-        stream.println(".method public static println(I)V");
-        stream.println("  .limit stack 2");
-        stream.println("  getstatic java/lang/System/out Ljava/io/PrintStream;");
-        stream.println("  iload_0");
-        stream.println("  invokevirtual java/io/PrintStream/println(I)V");
-        stream.println("  return");
-        stream.println(".end method");
-        stream.println("");
     }
 }
