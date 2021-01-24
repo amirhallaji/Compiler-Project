@@ -39,6 +39,7 @@ public class CodeGenVisitor implements SimpleVisitor {
     public void visit(ASTNode node) throws Exception {
         switch (node.getNodeType()) {
             case ADDITION:
+                break;
             case SUBTRACTION:
             case MULTIPLICATION:
             case DIVISION:
