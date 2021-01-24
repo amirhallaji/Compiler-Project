@@ -1,0 +1,6 @@
+int mamad ;
+int reza;
+void hamed (int vahid){
+;
+if (1) 2;
+}
