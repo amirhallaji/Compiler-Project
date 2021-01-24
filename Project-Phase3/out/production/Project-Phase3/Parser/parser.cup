@@ -260,7 +260,6 @@ formals ::=  variable:v COMMA formals:f
                 a.addChild(v);
                 v.setParent(a);
             :}  ;
-//TODO
 classDecl ::= CLASS identifier:i1 LCURLY field_plus:fs  RCURLY
             {:
                 RESULT = new ClassNode();
@@ -1064,7 +1063,7 @@ constant ::=
     | DOUBLECONST:d
         {: RESULT = new DoubleLiteralNode(d); :} 
     | HEXCONST:h
-        // {: RESULT = new HexLiteralNode(h); :}
+        //TODO {: RESULT = new HexLiteralNode(h); :}
     | TRUE
         {: RESULT = new BooleanLiteralNode(true); :}    
     | FALSE 
