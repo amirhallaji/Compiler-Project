@@ -3,6 +3,7 @@ import AST.Program;
 //import codegen.CodeGenVisitor;
 import Parser.Parser;
 import Scanner.Scanner;
+import codegen.CodeGenVisitor;
 //import codegen.MethodVisitor;
 
 import java.io.*;
@@ -10,7 +11,7 @@ import java.io.*;
 public class Compiler {
     public static void main(String[] args) throws Exception {
         System.out.println(('a' + 1));
-        String source = "src/Tests/t017-interface.d";
+        String source = "src/tests/1.txt";
 
         Compiler compiler = new Compiler(source);
         compiler.run();
@@ -41,7 +42,7 @@ public class Compiler {
 //        PrintStream stream = System.out;
         Program cu = parse();
 //        performSemanticAnalysis(cu);
-//        generateCode(cu, stream);
+        generateCode(cu, stream);
     }
 
     private Program parse() throws Exception {
@@ -65,10 +66,10 @@ public class Compiler {
 //        System.out.println("TV done\n");
 //    }
 //
-//    private void generateCode(Program cu, PrintStream stream) throws Exception {
-//        System.out.println("in code gen");
-//        cu.accept(new CodeGenVisitor(stream));
-//        stream.close();
-//        System.out.println("CG done\n");
-//    }
+    private void generateCode(Program cu, PrintStream stream) throws Exception {
+        System.out.println("in code gen");
+        cu.accept(new CodeGenVisitor(stream));
+        stream.close();
+        System.out.println("CG done\n");
+    }
 }
