@@ -24,6 +24,19 @@ public enum NodeType {
     DECREMENT,
     BITWISE_NEGATIVE,
     SIZEOF,
+    NEGATIVE,
+    READ_INTEGER,
+    READ_LINE,
+    NEW_ARRAY,
+    NEW_IDENTIFIER,
+
+    ITOB,
+    ITOD,
+    DTOI,
+    BTOI,
+    LVALUE,
+    CALL,
+    EMPTY_ARRAY,
 
     /*Condition operations*/
     LESS_THAN,
@@ -68,6 +81,7 @@ public enum NodeType {
     DIV_ASSIGN,
 
     /*Statements*/
+    STATEMENT,
     STATEMENTS,
     EXPRESSION_STATEMENT,
     BREAK_STATEMENT,
@@ -87,11 +101,22 @@ public enum NodeType {
     EMPTY_STATEMENT,
     IDENTIFIER,
     METHOD_ACCESS,
+    PRIVATE_ACCESS,
+    PUBLIC_ACCESS,
+    PROTECTED_ACCESS,
+    VARIABLES,
+    ACTUALS,
     PARAMETER,
     PARAMETERS,
     BLOCK,
     VAR_USE,
     CLASS,
+    Interface,
     NULL_LITERAL,
+    EXTEND,
+    IMPLEMENT,
+    FIELDS,
+    PROTOTYPES,
+    PROTOTYPE,
     START
 }

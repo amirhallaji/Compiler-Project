@@ -21,7 +21,7 @@ do
         echo "Compile Error"
     else
         echo "Code Compiled Successfully"
-        /home/hamed/.jdks/openjdk-14.0.2/bin/java -classpath /home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/out/production/Project-Phase2:/home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/Parser/out/production/Parser/jflex-full-1.8.2.jar:/home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/Parser/out/production/Parser/java-cup-11b-runtime.jar:/home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/Parser/out/production/Parser/java-cup-11b.jar:/home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/Parser/src/jflex-full-1.8.2.jar:/home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/Parser/src/java-cup-11b.jar:/home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/Parser/src/java-cup-11b-runtime.jar main -i $filelist -o $output_filename 
+     /home/hamed/.jdks/openjdk-14.0.2/bin/java  -classpath /home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/Parser/out/production/Parser:/home/hamed/Documents/University/Term5/Compiler/Assignments/Project/Final/Project-Phase2/Parser/src/java-cup-11b-runtime.jar main -i $filelist -o $output_filename 
         if [ $? -eq 0 ]; then
             echo "Code Executed Successfuly!"
             if command -v python3; then

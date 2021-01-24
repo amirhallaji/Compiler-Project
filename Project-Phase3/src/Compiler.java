@@ -10,7 +10,7 @@ import java.io.*;
 public class Compiler {
     public static void main(String[] args) throws Exception {
         System.out.println(('a' + 1));
-        String source = "src/tests/1.txt";
+        String source = "src/Tests/t017-interface.d";
 
         Compiler compiler = new Compiler(source);
         compiler.run();
