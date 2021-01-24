@@ -4,9 +4,7 @@ import AST.*;
 import codegen.SimpleVisitor;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import AST.ClassNode;
 import semantic.SymbolInfo;
@@ -25,6 +23,10 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private static String dataSegment = ".data \n";
     private static String textSegment = ".text \n" + "      .globl main\n";
+
+    static Map<String, HashSet<Signature>> signatures = new HashMap<>();
+    private SymbolTable symbolTable = new SymbolTable();
+    private int blockIndex;
 
     public CodeGenVisitor(PrintStream stream) {
         this.stream = stream;
@@ -116,6 +118,7 @@ public class CodeGenVisitor implements SimpleVisitor {
                 break;
             case METHOD_DECLARATION:
                 visitMethodDeclarationNode(node);
+                //DONE
                 break;
             case Class_DECLARATION:
                 visitAllChildren(node);
@@ -161,8 +164,11 @@ public class CodeGenVisitor implements SimpleVisitor {
             case LITERAL:
                 break;
             case ARGUMENT:
+                visitArgumentNode(node);
                 break;
             case ARGUMENTS:
+                visitAllChildren(node);
+                //DONE
                 break;
             case EMPTY_STATEMENT:
                 break;
@@ -217,16 +223,13 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitMethodDeclarationNode(ASTNode node) throws Exception {
         //type
-        System.out.println("node:" + node);
+        symbolTable.enterScopeType(getBlock());
         TypeNode returnType = (TypeNode) node.getChild(0);
         String returnSig = returnType.getType().getSignature();
-        System.out.println(returnSig);
         //identifier
         IdentifierNode idNode = (IdentifierNode) node.getChild(1);
         String methodName = idNode.getValue();
-        System.out.println(methodName);
         String label;
-        System.out.println(node.getParent());
         if (node.getParent().getNodeType().equals(NodeType.START))
             label = methodName + ":";
         else {
@@ -238,14 +241,20 @@ public class CodeGenVisitor implements SimpleVisitor {
         textSegment += label + "\n";
         node.getChild(2).accept(this);
         node.getChild(3).accept(this);
+        symbolTable.leaveScopeType(blockIndex - 1 + "");
     }
 
-    private void visitArgumentNode(ASTNode child) throws Exception {
+    private void visitArgumentNode(ASTNode node) throws Exception {
+
     }
 
     private void visitAllChildren(ASTNode node) throws Exception {
         for (ASTNode child : node.getChildren()) {
             child.accept(this);
         }
+    }
+
+    private String getBlock() {
+        return "" + blockIndex++;
     }
 }
