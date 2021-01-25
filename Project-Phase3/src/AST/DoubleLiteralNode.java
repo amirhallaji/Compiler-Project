@@ -5,7 +5,7 @@ public class DoubleLiteralNode extends Literal {
 
 
     public DoubleLiteralNode(float value) {
-        super(PrimitiveType.FLOAT);
+        super(PrimitiveType.DOUBLE);
         this.value = value;
     }
 

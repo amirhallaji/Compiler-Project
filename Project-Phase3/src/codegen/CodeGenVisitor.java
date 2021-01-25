@@ -132,14 +132,6 @@ public class CodeGenVisitor implements SimpleVisitor {
             case ASSIGN:
                 visitAssignNode(node);
                 break;
-            case ADD_ASSIGN:
-                break;
-            case SUB_ASSIGN:
-                break;
-            case MULT_ASSIGN:
-                break;
-            case DIV_ASSIGN:
-                break;
             case STATEMENT:
                 visitStatementNode(node);
                 break;
@@ -174,7 +166,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case ARGUMENT:
                 break;
             case ARGUMENTS:
-                visitArgumentsNode(node);
+//                visitArgumentsNode(node);
                 break;
             case EMPTY_STATEMENT:
                 break;
@@ -221,13 +213,18 @@ public class CodeGenVisitor implements SimpleVisitor {
             case PROTOTYPE:
                 break;
             case START:
-                symbolTable.enterScope("global");
-                visitAllChildren(node);
-                stream.print(dataSegment + '\n' + textSegment);
+                visitStartNode(node);
+
                 break;
             default:
                 visitAllChildren(node);
         }
+    }
+
+    private void visitStartNode(ASTNode node) throws Exception {
+        symbolTable.enterScope("global");
+        visitAllChildren(node);
+        stream.print(dataSegment + '\n' + textSegment);
     }
 
     private void visitLValueNode(ASTNode node) {
@@ -235,31 +232,15 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void visitAssignNode(ASTNode node) throws Exception {
-//        System.err.println(node);
+        System.err.println(node.getChildren());
+        System.out.println(node.getChild(1).getChildren());
         IdentifierNode idNode = (IdentifierNode) node.getChild(0).getChild(0);
         String varName = idNode.getValue();
-        System.out.println(((SymbolInfo) symbolTable.get(varName)).getType());
+        SymbolInfo varType = (SymbolInfo) symbolTable.get(varName);
+        SymbolInfo exprType = node.getChild(1).getSymbolInfo();
+        System.out.println(varType);
+        System.out.println(exprType);
 
-//        visitAllChildren(node);
-//
-//        ExpressionNode rightSide = (ExpressionNode) node.getChild(1);
-//
-//        ExpressionNode resultOfCast = cast(leftSide.getType().getPrimitive(), rightSide);
-//
-//        stream.println("\tstore " + resultOfCast.getType() + " " + rightSide.getResultName() + ", " + resultOfCast.getType() + "* %" + idNode.getValue() + ", align " + resultOfCast.getType().getAlign());
-//
-//        System.out.println("assign children are " + node.getChildren());
-//
-//
-//        SymbolInfo si = idNode.getSymbolInfo();
-//
-//        if (si == null)
-//            throw new Exception(idNode.getValue() + " not declared");
-//
-//        /* Expression node */
-//        node.getChild(1).accept(this);
-//
-////        System.err.println(node.getChildren());
     }
 
     private void visitExpressionNode(ASTNode node) throws Exception {
@@ -279,9 +260,36 @@ public class CodeGenVisitor implements SimpleVisitor {
 //        System.err.println(node.getChildren());
     }
 
-    private void visitArgumentsNode(ASTNode node) {
-//        System.err.println(node.getChildren());
-    }
+//    private void visitArgumentsNode(ASTNode node) throws Exception {
+//        int argumentsLen = node.getChildren().size() * (-4);
+//        System.out.println(argumentsLen);
+//        textSegment += "\t\t addi $sp,$sp," + argumentsLen + "\n";
+//
+//        visitAllChildren(node);
+//        System.out.println(node.getChild(0).getChild(0).getChildren());
+//        int stackDepth = 0;
+//        for (int i = argumentsLen / (-4); i >= 1; i--) {
+//
+//            IdentifierNode idNode = (IdentifierNode) node.getChild(i - 1).getChild(0).getChild(1);
+//            String idName = idNode.getValue();
+//            SymbolInfo si = (SymbolInfo) symbolTable.get(idName);
+//
+//            if (si.getType().getAlign() == 10) {
+//
+//                textSegment += "\t\t lw $t1," + i * (-4) + "($sp)\n";
+//
+//            } else {
+//                PrimitiveType typePrimitive = (PrimitiveType) (((TypeNode) node.getChild(0)).getType());
+//                if (typePrimitive.getSignature().equals("")) ;
+//            }
+//
+//
+//            System.out.println(idName);
+//            textSegment += "\t\t sw $s1," + i * 4 + "($sp),";
+//
+//        }
+//        textSegment += "\t\t sw $ra,0($sp)," + argumentsLen + "\n";
+//    }
 
     private void visitBlockNode(ASTNode node) throws Exception {
         if (node.getParent().getNodeType() != NodeType.METHOD_DECLARATION) {
@@ -305,7 +313,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         if (!node.getChild(0).getNodeType().equals(NodeType.IDENTIFIER)) {
             PrimitiveType typePrimitive = (PrimitiveType) (((TypeNode) node.getChild(0)).getType());
 
-            if (!isArray) {
+            if (!isArray && !typePrimitive.getSignature().equals("ascii")) {
 
                 ASTNode parent = node.getParent();
 
@@ -320,7 +328,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         } else {
             IdentifierNode typeIdNode = (IdentifierNode) node.getChild(0);
             String idName = typeIdNode.getValue();
-            IdentifierType identifierType = new IdentifierType(idName, 4);
+            IdentifierType identifierType = new IdentifierType(idName, 10);
 
             dataSegment += "\t" + label + "\t" + ".word" + "\t" + 0 + "\n";
 
@@ -384,11 +392,17 @@ public class CodeGenVisitor implements SimpleVisitor {
 
         textSegment += "\t" + label + "\n";
 
-        node.getChild(2).accept(this);
-        node.getChild(3).accept(this);
 
-        symbolTable.leaveScopeType(blockIndex - 1 + "");
-        textSegment += "\t\tjr $ra\n";
+        if (methodName.equals("main") && node.getParent().getNodeType().equals(NodeType.START)) {
+            node.getChild(3).accept(this);
+            textSegment += "\t\tli $v0,10\n\t\tsyscall\n";
+        } else {
+            node.getChild(2).accept(this);
+            node.getChild(3).accept(this);
+            textSegment += "\t\t lw $ra 0($sp)\n";
+            textSegment += "\t\tjr $ra\n";
+        }
+        symbolTable.leaveScopeType(symbolTable.getCurrentScopeName() + "_" + methodName);
     }
 
     private void visitArgumentNode(ASTNode child) throws Exception {
