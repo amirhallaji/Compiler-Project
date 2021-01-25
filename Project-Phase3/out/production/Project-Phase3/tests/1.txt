@@ -2,9 +2,7 @@ int a;
 int c;
 double b;
 string g;
-reza f;
 int main(){
    int a;
    string c;
-   a = 0;
 }

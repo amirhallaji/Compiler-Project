@@ -156,6 +156,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case RETURN_STATEMENT:
                 break;
             case IF_STATEMENT:
+                visitIfStatement(node);
                 break;
             case REPEAT_STATEMENT:
                 break;
@@ -260,6 +261,10 @@ public class CodeGenVisitor implements SimpleVisitor {
 //        node.getChild(1).accept(this);
 //
 ////        System.err.println(node.getChildren());
+    }
+
+    private void visitIfStatement(ASTNode node) throws Exception {
+
     }
 
     private void visitExpressionNode(ASTNode node) throws Exception {
