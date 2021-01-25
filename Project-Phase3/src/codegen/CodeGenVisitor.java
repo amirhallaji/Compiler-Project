@@ -264,6 +264,18 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void visitIfStatement(ASTNode node) throws Exception {
+        System.out.println("in if");
+
+        String ifType;
+        if (node.getChildren().size() == 2) {
+            ifType = "if";
+        } else {
+            ifType = (node.getChildren().size() == 3) ? "if_else" : "invalid";
+        }
+        node.getChild(0).accept(this);
+//        String result = ((IdentifierNode) node.getChild(0).getChild(0).getChild(0)).getValue();
+
+        textSegment += "\tbne\t$" + + "\t$" + labelIndex;
 
     }
 

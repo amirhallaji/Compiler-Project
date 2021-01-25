@@ -4,4 +4,4 @@
 .text 
 	.globl main
 	main:
-		jr $ra
+	bne	$global_main	$global_main		jr $ra
