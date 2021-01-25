@@ -8,57 +8,57 @@ import java.util.HashMap;
  */
 
 class SymbolTable implements Symbol {
-    private ArrayList<HashMap<String, Symbol>> scopes = new ArrayList<>();
-    private HashMap<String, Symbol> currentScope = new HashMap<>();
+    private ArrayList<Scope> scopes = new ArrayList<>();
+    private Scope currentScope;
 
-    void enterScopeType(String id) {
-        if (currentScope != null) {
-            scopes.add(currentScope);
-            SymbolTable newScope = new SymbolTable();
-            currentScope.put(id, newScope);
-            currentScope = newScope.currentScope;
-        } else
-            currentScope = new HashMap<>();
+    void enterScope(String id) {
+        Scope newScope = new Scope(id);
+        scopes.add(newScope);
+        currentScope = newScope;
+
+    }
+
+    void leaveCurrentScope() {
+        if (currentScope != null)
+            scopes.remove(currentScope);
     }
 
     void leaveScopeType(String id) {
-        scopes.remove(currentScope);
-
-        currentScope = scopes.get(scopes.size()-1);
-
-        scopes.remove(currentScope);
-
-        currentScope.remove(id);
+        for (Scope scope : scopes) {
+            if (scope.getName().equals(id)) {
+                scopes.remove(currentScope);
+                if (scopes.size() > 1)
+                    currentScope = scopes.get(scopes.size() - 1);
+                break;
+            }
+        }
     }
 
     void put(String id, SymbolInfo si) throws Exception {
-        if (currentScope.containsKey(id)) {
+        if (currentScope.getVariables().containsKey(id)) {
             throw new Exception("current scope already contains an entry for " + id);
         }
 
-        currentScope.put(id, si);
+        currentScope.getVariables().put(id, si);
     }
 
     Symbol get(String id) {
-        for (HashMap<String, Symbol> scope : scopes) {
-            if(scope.get(id)!=null)
-                return scope.get(id);
+        for (int i = scopes.size() - 1; i >= 0; i--) {
+            if (scopes.get(i).getVariables().containsKey(id))
+                return scopes.get(i).getVariables().get(id);
         }
-        return currentScope.get(id);
+        return currentScope.getVariables().get(id);
     }
 
-    boolean getSI(String id) {
-        for (HashMap<String, Symbol> scope : scopes) {
-            if(scope.get(id)!=null)
-                return ((SymbolInfo) scope.get(id)).isConst();
-        }
-        return ((SymbolInfo) currentScope.get(id)).isConst();
+    String getCurrentScopeName() {
+        return currentScope.getName();
     }
 
     boolean contains(String id) {
-        for (HashMap<String, Symbol> scope : scopes)
-            if (scope.containsKey(id))
+        for (int i = scopes.size() - 1; i >= 0; i--) {
+            if (scopes.get(i).getVariables().containsKey(id))
                 return true;
+        }
         return false;
     }
 }
