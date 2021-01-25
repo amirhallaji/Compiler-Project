@@ -3,6 +3,7 @@
 	global_c	.word	0
 	global_b	.double	0.0
 	global_g	.ascii	""
+	global_f	.word	0
 	global_main_a	.word	0
 	global_main_c	.ascii	""
 

@@ -236,7 +236,9 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitAssignNode(ASTNode node) throws Exception {
 //        System.err.println(node);
-        IdentifierNode idNode = (IdentifierNode) node.getChild(0).getChild(0).getChild(0);
+        IdentifierNode idNode = (IdentifierNode) node.getChild(0).getChild(0);
+        String varName = idNode.getValue();
+        System.out.println(((SymbolInfo) symbolTable.get(varName)).getType());
 
 //        visitAllChildren(node);
 //
@@ -287,36 +289,48 @@ public class CodeGenVisitor implements SimpleVisitor {
             visitAllChildren(node);
             symbolTable.leaveScopeType(blockIndex - 1 + "");
         } else {
-            System.out.println(node.getChildren());
             visitAllChildren(node);
         }
     }
 
     private void visitVariableDeclaration(ASTNode node) throws Exception {
-        PrimitiveType typePrimitive = (PrimitiveType) (((TypeNode) node.getChild(0)).getType());
-        boolean isArray = true;
-
         IdentifierNode idNode = (IdentifierNode) node.getChild(1);
         String varName = idNode.getValue();
+        String label = symbolTable.getCurrentScopeName() + "_" + varName;
 
-        if (node.getChild(0).getChildren().isEmpty()) {
+        boolean isArray = true;
+        if (node.getChild(0).getChildren().isEmpty())
             isArray = false;
 
-            ASTNode parent = node.getParent();
-            NodeType parentType = parent.getNodeType();
+        if (!node.getChild(0).getNodeType().equals(NodeType.IDENTIFIER)) {
+            PrimitiveType typePrimitive = (PrimitiveType) (((TypeNode) node.getChild(0)).getType());
 
-            String label = symbolTable.getCurrentScopeName() + "_" + varName;
-            dataSegment += "\t" + label + "\t" + typePrimitive.getSignature() + "\t" + typePrimitive.getPrimitive().getInitialValue() + "\n";
+            if (!isArray) {
 
+                ASTNode parent = node.getParent();
+
+                dataSegment += "\t" + label + "\t" + typePrimitive.getSignature() + "\t" + typePrimitive.getPrimitive().getInitialValue() + "\n";
+
+            }
+            typePrimitive.setArray(isArray);
+            SymbolInfo si = new SymbolInfo(idNode);
+            si.setType(typePrimitive);
+            idNode.setSymbolInfo(si);
+            symbolTable.put(varName, si);
+        } else {
+            IdentifierNode typeIdNode = (IdentifierNode) node.getChild(0);
+            String idName = typeIdNode.getValue();
+            IdentifierType identifierType = new IdentifierType(idName, 4);
+
+            dataSegment += "\t" + label + "\t" + ".word" + "\t" + 0 + "\n";
+
+            identifierType.setArray(isArray);
+            SymbolInfo si = new SymbolInfo(idNode);
+            si.setType(identifierType);
+            idNode.setSymbolInfo(si);
+            symbolTable.put(varName, si);
         }
-        typePrimitive.setArray(isArray);
-        SymbolInfo si = new SymbolInfo(idNode);
-        si.setType(typePrimitive);
-        idNode.setSymbolInfo(si);
 
-
-        symbolTable.put(varName, si);
-        System.out.println(varName + " .... " + symbolTable.get(varName));
     }
 
     private void visitUnaryOperation() {
