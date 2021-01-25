@@ -24,11 +24,18 @@ public class CodeGenVisitor implements SimpleVisitor {
     private int blockIndex;
     // Fix all of the FIXMEs below.
 
+    private int tempRegsNumber = 8;
     List<String> regs = Arrays.asList(
-            "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3", "t0", "t1",
-            "t2", "t3", "t4", "t5", "t6", "t7", "s0", "s1", "s2", "s3", "s4",
-            "s5", "s6", "t7", "t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"
+            "$zero", "$at", //0
+            "$v0", "$v1", //2
+            "$a0", "$a1", "$a2", "$a3", //4
+            "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", //8
+            "$s0", "$s1", "$s2", "$s3", "$s4", "$s5", "$s6", //16
+            "$t7", "$t8", "$t9", //23
+            "$k0", "$k1", //26
+            "$gp", "$sp", "fp", "ra" //28
     );
+
 
     private static String dataSegment = ".data \n";
     private static String textSegment = ".text \n" + "\t.globl main\n";
@@ -42,15 +49,19 @@ public class CodeGenVisitor implements SimpleVisitor {
     public void visit(ASTNode node) throws Exception {
         switch (node.getNodeType()) {
             case ADDITION:
+                visitAdditionNode(node);
                 break;
             case SUBTRACTION:
+                visitSubtractionNode(node);
                 break;
             case MULTIPLICATION:
+                visitMultiplicationNode(node);
                 break;
             case DIVISION:
+                visitDivisionNode(node);
                 break;
             case MOD:
-                break;
+                visitModNode(node);
             case NEGATIVE:
                 break;
             case READ_INTEGER:
@@ -166,7 +177,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case ARGUMENT:
                 break;
             case ARGUMENTS:
-//                visitArgumentsNode(node);
+                visitArgumentsNode(node);
                 break;
             case EMPTY_STATEMENT:
                 break;
@@ -221,44 +232,113 @@ public class CodeGenVisitor implements SimpleVisitor {
         }
     }
 
+    private void visitModNode(ASTNode node) {
+    }
+
+    private void visitDivisionNode(ASTNode node) {
+    }
+
+    private void visitMultiplicationNode(ASTNode node) {
+    }
+
+    private void visitSubtractionNode(ASTNode node) throws Exception {
+        ExpressionNode first = (ExpressionNode) node.getChild(0);
+        ExpressionNode second = (ExpressionNode) node.getChild(1);
+        operations(first, second, "sub");
+        visitAllChildren(node);
+    }
+
+    private void visitAdditionNode(ASTNode node) throws Exception {
+        ExpressionNode first = (ExpressionNode) node.getChild(0);
+        ExpressionNode second = (ExpressionNode) node.getChild(1);
+        operations(first, second, "add");
+        visitAllChildren(node);
+    }
+
+    private void operations(ExpressionNode first, ExpressionNode second, String op) {
+        if (first.getChild(0).getNodeType() == NodeType.LITERAL && second.getChild(0).getNodeType() == NodeType.LITERAL) {
+            System.err.println("4444444444");
+            textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
+            textSegment += "\t\tli " + regs.get(tempRegsNumber + 2) + ", " + second.getChild(0) + "\n";
+            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 2) + "\n";
+        } else if (first.getChild(0).getNodeType() == NodeType.LITERAL) {
+            textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
+            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            if (second.getChild(0).getNodeType() == NodeType.LVALUE) {
+                textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) second.getChild(0).getChild(0)).getValue() + "\n";
+                textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            }
+        } else if (second.getChild(0).getNodeType() == NodeType.LITERAL) {
+            System.err.println("66666666666");
+            textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + second.getChild(0) + "\n";
+            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            if (first.getChild(0).getNodeType() == NodeType.LVALUE) {
+                textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
+                textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            }
+        } else if (first.getChild(0).getNodeType() == NodeType.LVALUE && second.getChild(0).getNodeType() == NodeType.LVALUE) {
+            System.err.println("777777777777");
+            textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
+            textSegment += "\t\tlw " + regs.get(tempRegsNumber + 2) + ", " + ((IdentifierNode) second.getChild(0).getChild(0)).getValue() + "\n";
+            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 2) + "\n";
+        } else if (first.getChild(0).getNodeType() == NodeType.LVALUE) {
+            System.err.println("8888888888888");
+            textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
+            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            if (second.getChild(0).getNodeType() == NodeType.LITERAL) {
+                textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + second.getChild(0) + "\n";
+                textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            }
+        } else if (second.getChild(0).getNodeType() == NodeType.LVALUE) {
+            System.err.println("9999999999999");
+            textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) second.getChild(0).getChild(0)).getValue() + "\n";
+            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            if (first.getChild(0).getNodeType() == NodeType.LITERAL) {
+                textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
+                textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            }
+        } else {
+            System.err.println("hoooooooooooooooooo");
+        }
+    }
+
+
+    private void visitLValueNode(ASTNode node) throws Exception {
+        System.err.println("errrrrr");
+
+    }
+
+    private void visitAssignNode(ASTNode node) throws Exception {
+        visitAllChildren(node);
+    }
+
+    private void visitExpressionNode(ASTNode node) throws Exception {
+        tempRegsNumber = 8;
+        visitAllChildren(node);
+    }
+
+    private void visitStatementNode(ASTNode node) throws Exception {
+        System.err.println(node);
+
+        visitAllChildren(node);
+    }
+
+    private void visitStatementsNode(ASTNode node) throws Exception {
+        visitAllChildren(node);
+    }
+
+    private void visitArgumentsNode(ASTNode node) throws Exception {
+        visitAllChildren(node);
+    }
     private void visitStartNode(ASTNode node) throws Exception {
         symbolTable.enterScope("global");
         visitAllChildren(node);
         stream.print(dataSegment + '\n' + textSegment);
     }
 
-    private void visitLValueNode(ASTNode node) {
-        System.err.println(node.getChildren());
-    }
 
-    private void visitAssignNode(ASTNode node) throws Exception {
-        System.err.println(node.getChildren());
-        System.out.println(node.getChild(1).getChildren());
-        IdentifierNode idNode = (IdentifierNode) node.getChild(0).getChild(0);
-        String varName = idNode.getValue();
-        SymbolInfo varType = (SymbolInfo) symbolTable.get(varName);
-        SymbolInfo exprType = node.getChild(1).getSymbolInfo();
-        System.out.println(varType);
-        System.out.println(exprType);
-
-    }
-
-    private void visitExpressionNode(ASTNode node) throws Exception {
-//        System.err.println(node.getChildren());
-        visitAllChildren(node);
-
-    }
-
-    private void visitStatementNode(ASTNode node) throws Exception {
-//        System.err.println(node.getChildren());
-        visitAllChildren(node);
-
-    }
-
-    private void visitStatementsNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
-//        System.err.println(node.getChildren());
-    }
 
 //    private void visitArgumentsNode(ASTNode node) throws Exception {
 //        int argumentsLen = node.getChildren().size() * (-4);
