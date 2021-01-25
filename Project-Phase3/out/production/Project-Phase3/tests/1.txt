@@ -1,7 +1,4 @@
 int main(){
-}
-class hamid{
-void ahmad(){
-
-}
+    double hello;
+    hello = hello + 2;
 }

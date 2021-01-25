@@ -6,6 +6,7 @@ import java.util.HashMap;
 /**
  * A simple symbol table implementation.
  */
+
 class SymbolTable implements Symbol {
     private ArrayList<HashMap<String, Symbol>> scopes = new ArrayList<>();
     private HashMap<String, Symbol> currentScope = new HashMap<>();

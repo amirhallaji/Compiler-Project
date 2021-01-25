@@ -1,13 +1,12 @@
 package codegen;
 
 import AST.*;
-import codegen.SimpleVisitor;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import AST.ClassNode;
-import semantic.SymbolInfo;
 
 
 /**
@@ -19,14 +18,19 @@ public class CodeGenVisitor implements SimpleVisitor {
     private String className;
     private ClassNode classNode;
     private boolean returnGenerated;
+
+    private SymbolTable symbolTable = new SymbolTable();
+    private int blockIndex;
     // Fix all of the FIXMEs below.
+
+    List<String> regs = Arrays.asList(
+            "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3", "t0", "t1",
+            "t2", "t3", "t4", "t5", "t6", "t7", "s0", "s1", "s2", "s3", "s4",
+            "s5", "s6", "t7", "t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"
+    );
 
     private static String dataSegment = ".data \n";
     private static String textSegment = ".text \n" + "      .globl main\n";
-
-    static Map<String, HashSet<Signature>> signatures = new HashMap<>();
-    private SymbolTable symbolTable = new SymbolTable();
-    private int blockIndex;
 
     public CodeGenVisitor(PrintStream stream) {
         this.stream = stream;
@@ -65,6 +69,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case BTOI:
                 break;
             case LVALUE:
+                visitLValueNode(node);
                 break;
             case CALL:
                 break;
@@ -107,25 +112,24 @@ public class CodeGenVisitor implements SimpleVisitor {
             case AUTO_TYPE:
                 break;
             case FIELD_DECLARATION:
-                visitAllChildren(node);
                 //TODO
                 break;
             case LOCAL_VAR_DECLARATION:
                 break;
             case VARIABLE_DECLARATION:
+                visitVariableDeclaration(node);
                 break;
             case VARIABLE_CONST_DECLARATION:
                 break;
             case METHOD_DECLARATION:
                 visitMethodDeclarationNode(node);
-                //DONE
                 break;
             case Class_DECLARATION:
-                visitAllChildren(node);
                 break;
             case DECLARATIONS:
                 break;
             case ASSIGN:
+                visitAssignNode(node);
                 break;
             case ADD_ASSIGN:
                 break;
@@ -136,10 +140,13 @@ public class CodeGenVisitor implements SimpleVisitor {
             case DIV_ASSIGN:
                 break;
             case STATEMENT:
+                visitStatementNode(node);
                 break;
             case STATEMENTS:
+                visitStatementsNode(node);
                 break;
             case EXPRESSION_STATEMENT:
+                visitExpressionNode(node);
                 break;
             case BREAK_STATEMENT:
                 break;
@@ -164,11 +171,9 @@ public class CodeGenVisitor implements SimpleVisitor {
             case LITERAL:
                 break;
             case ARGUMENT:
-                visitArgumentNode(node);
                 break;
             case ARGUMENTS:
-                visitAllChildren(node);
-                //DONE
+                visitArgumentsNode(node);
                 break;
             case EMPTY_STATEMENT:
                 break;
@@ -183,6 +188,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case PROTECTED_ACCESS:
                 break;
             case VARIABLES:
+
                 break;
             case ACTUALS:
                 break;
@@ -191,6 +197,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case PARAMETERS:
                 break;
             case BLOCK:
+                visitBlockNode(node);
                 break;
             case VAR_USE:
                 break;
@@ -205,7 +212,6 @@ public class CodeGenVisitor implements SimpleVisitor {
             case IMPLEMENT:
                 break;
             case FIELDS:
-                visitAllChildren(node);
                 //TODO
                 break;
             case PROTOTYPES:
@@ -221,15 +227,117 @@ public class CodeGenVisitor implements SimpleVisitor {
         }
     }
 
+    private void visitLValueNode(ASTNode node) {
+        System.err.println(node.getChildren());
+    }
+
+    private void visitAssignNode(ASTNode node) throws Exception {
+//        System.err.println(node);
+        visitAllChildren(node);
+
+//        System.err.println(node.getChildren());
+    }
+
+    private void visitExpressionNode(ASTNode node) throws Exception {
+//        System.err.println(node.getChildren());
+        visitAllChildren(node);
+
+    }
+
+    private void visitStatementNode(ASTNode node) throws Exception {
+//        System.err.println(node.getChildren());
+        visitAllChildren(node);
+
+    }
+
+    private void visitStatementsNode(ASTNode node) throws Exception {
+        visitAllChildren(node);
+//        System.err.println(node.getChildren());
+    }
+
+    private void visitArgumentsNode(ASTNode node) {
+//        System.err.println(node.getChildren());
+    }
+
+    private void visitBlockNode(ASTNode node) throws Exception {
+        if (node.getParent().getNodeType() != NodeType.METHOD_DECLARATION) {
+            symbolTable.enterScopeType("" + blockIndex++);
+            visitAllChildren(node);
+            symbolTable.leaveScopeType(blockIndex - 1 + "");
+        } else {
+            visitAllChildren(node);
+        }
+    }
+
+    private void visitVariableDeclaration(ASTNode node) {
+
+        System.out.println(node);
+        System.out.println(node.getChildren());
+
+        NodeType typeOfData = node.getChild(0).getNodeType();
+        System.out.println(typeOfData);
+
+        Type typePrimitive = ((TypeNode) node.getChild(0)).getType();
+        System.out.println(typePrimitive);
+
+
+        switch (typeOfData) {
+            case INT_TYPE:
+
+        }
+        System.out.println(node.getChild(0));
+        String label;
+
+        IdentifierNode idNode = (IdentifierNode) node.getChild(1);
+        String varName = idNode.getValue();
+        System.out.println(varName);
+
+        if (node.getParent().getNodeType().equals(NodeType.START))
+            label = node.getChild(0) + ":";
+
+
+        System.out.println(node.getChild(1) + "       .word ");
+
+    }
+
+    private void visitUnaryOperation() {
+    }
+
+    private void visitBinaryOperation(ASTNode node) {
+
+        ExpressionNode parent = (ExpressionNode) node.getParent();
+
+
+//        String result = "";
+//
+//        switch (resultType){
+//            case BOOL:
+//                break;
+//            case INT:
+//                break;
+//            case DOUBLE:
+//                break;
+//            case STRING:
+//                break;
+//
+//        }
+
+
+    }
+
+
     private void visitMethodDeclarationNode(ASTNode node) throws Exception {
         //type
-        symbolTable.enterScopeType(getBlock());
+        System.out.println("node:" + node);
         TypeNode returnType = (TypeNode) node.getChild(0);
         String returnSig = returnType.getType().getSignature();
+        System.out.println(returnSig);
         //identifier
         IdentifierNode idNode = (IdentifierNode) node.getChild(1);
         String methodName = idNode.getValue();
+        System.out.println(methodName);
         String label;
+        System.out.println(node.getParent());
         if (node.getParent().getNodeType().equals(NodeType.START))
             label = methodName + ":";
         else {
@@ -241,20 +349,18 @@ public class CodeGenVisitor implements SimpleVisitor {
         textSegment += label + "\n";
         node.getChild(2).accept(this);
         node.getChild(3).accept(this);
-        symbolTable.leaveScopeType(blockIndex - 1 + "");
+        visitAllChildren(node);
+        System.err.println(node.getChildren());
     }
 
-    private void visitArgumentNode(ASTNode node) throws Exception {
-
+    private void visitArgumentNode(ASTNode child) throws Exception {
+        System.out.println(child.getChildren());
     }
 
     private void visitAllChildren(ASTNode node) throws Exception {
         for (ASTNode child : node.getChildren()) {
+            System.out.println("#"+child);
             child.accept(this);
         }
-    }
-
-    private String getBlock() {
-        return "" + blockIndex++;
     }
 }

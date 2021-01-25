@@ -1,13 +1,16 @@
 package codegen;
 
 import AST.ASTNode;
-import AST.PrimitiveType;
 import AST.Type;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Descriptor of identifiers
  */
-public class SymbolInfo implements Symbol{
+public class SymbolInfo implements Symbol {
     private ASTNode node;
     private Type type;
     private boolean isConst;
