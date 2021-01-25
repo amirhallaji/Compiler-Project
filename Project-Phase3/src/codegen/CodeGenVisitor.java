@@ -302,33 +302,10 @@ public class CodeGenVisitor implements SimpleVisitor {
         if (node.getChild(0).getChildren().isEmpty()) {
             isArray = false;
 
-
-
             ASTNode parent = node.getParent();
             NodeType parentType = parent.getNodeType();
 
-//            if (parentType.equals(NodeType.START))
-//                label = "global_" + varName + ":";
-//            else if (parentType.equals(NodeType.FIELD_DECLARATION)) {
-//                IdentifierNode idNode1 = (IdentifierNode) parent.getParent().getParent().getChild(0);
-//                String varName1 = idNode1.getValue();
-//                label = varName1 + "_" + varName + ":";
-//            } else if (parentType.equals(NodeType.VARIABLES)) {
-//                ASTNode func_parent = parent.getParent().getParent();
-//                System.out.println(func_parent);
-//                IdentifierNode idNode1 = (IdentifierNode) func_parent.getChild(1);
-//                String varName1 = idNode1.getValue();
-//
-//                ASTNode parentOfParent = func_parent.getParent();
-//                if (func_parent.getParent().getNodeType().equals(NodeType.START))
-//                    label = "global_" + varName1 + "_" + varName + ":";
-//                else if (func_parent.getParent().getNodeType().equals(NodeType.FIELD_DECLARATION)) {
-//                    IdentifierNode idNode2 = (IdentifierNode) parentOfParent.getParent().getParent().getChild(1);
-//                    String varName2 = idNode2.getValue();
-//                    label = varName2 + "_" + varName1 + "_" + varName + ":";
-//                }
-//            }
-            label = symbolTable.getCurrentScopeName() + "_" + varName;
+            String label = symbolTable.getCurrentScopeName() + "_" + varName;
             dataSegment += "\t" + label + "\t" + typePrimitive.getSignature() + "\t" + typePrimitive.getPrimitive().getInitialValue() + "\n";
 
         }
