@@ -9,8 +9,7 @@ import java.util.List;
 public enum PrimitiveType implements Type {
     BOOL(".word", 1),
     INT(".word", 4),
-    DOUBLE(".double", 8),
-    FLOAT("double", 4),
+    DOUBLE(".float", 8),
     //todo
     VOID("void", 0),
     STRING(".ascii", 0);
@@ -55,9 +54,10 @@ public enum PrimitiveType implements Type {
         String value = "";
         switch (this.signature) {
             case ".word" -> value = "0";
-            case ".double" -> value = "0.0";
+            case ".float" -> value = "0.0";
             case ".ascii" -> value = "\"\"";
         }
         return value;
     }
+
 }
