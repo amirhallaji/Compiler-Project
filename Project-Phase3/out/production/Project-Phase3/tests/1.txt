@@ -1,4 +1,7 @@
+int a;
+int d;
+double b;
+string g;
 int main(){
-    double hello;
-    hello = hello + 2;
+string c;
 }

@@ -139,6 +139,7 @@ program  ::= program:p decl:t
         {:
            RESULT = p;
            RESULT.addChild(t);
+           t.setParent(RESULT);
         :}
            | decl:t
            {: 

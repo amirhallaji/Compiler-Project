@@ -1004,6 +1004,7 @@ class CUP$Parser$actions {
 		
            RESULT = p;
            RESULT.addChild(t);
+           t.setParent(RESULT);
         
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

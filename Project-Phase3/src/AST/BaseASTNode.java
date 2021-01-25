@@ -2,7 +2,7 @@ package AST;
 
 
 import codegen.SimpleVisitor;
-import semantic.SymbolInfo;
+import codegen.SymbolInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;

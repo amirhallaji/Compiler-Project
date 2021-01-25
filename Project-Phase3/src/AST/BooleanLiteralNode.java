@@ -1,6 +1,7 @@
 package AST;
 
 
+
 public class BooleanLiteralNode extends Literal {
     private boolean value;
     

@@ -1,7 +1,7 @@
 package AST;
 
 
-import semantic.SymbolInfo;
+import codegen.SymbolInfo;
 import codegen.SimpleVisitor;
 
 import java.util.List;
