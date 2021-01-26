@@ -38,7 +38,7 @@ public class CodeGenVisitor implements SimpleVisitor {
     );
 
 
-    private static String dataSegment = ".data \n";
+    private static String dataSegment = ".data \n\ttrue: .asciiz \"true\"\n\tfalse : .asciiz \"false\"\n";
     private static String textSegment = ".text \n" + "\t.globl main\n";
 
     public CodeGenVisitor(PrintStream stream) {
@@ -66,6 +66,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case NEGATIVE:
                 break;
             case READ_INTEGER:
+                visitReadIntegerNode(node);
                 break;
             case READ_LINE:
                 break;
@@ -240,6 +241,13 @@ public class CodeGenVisitor implements SimpleVisitor {
         }
     }
 
+    private void visitReadIntegerNode(ASTNode node) {
+        SymbolInfo si = new SymbolInfo(node, PrimitiveType.INT);
+        node.setSymbolInfo(si);
+        textSegment += "\t\tli $v0, 5\n\t\tsyscall\n";
+        textSegment += "\t\tmove $t0, $v0\n\n";
+    }
+
     private String labelGenerator() {
         return "L" + (++labelIndex);
     }
@@ -296,12 +304,15 @@ public class CodeGenVisitor implements SimpleVisitor {
             child.accept(this);
             Type exprType = child.getSymbolInfo().getType();
             switch (exprType.getAlign()) {
-                case 4:
+                case 1: //bool
+                    // TODO: 1/26/21
+                    break;
+                case 4: //int
                     textSegment += "\t\tli $v0, 1\n";
                     textSegment += "\t\tadd $a0, $t0, $zero\n";
                     textSegment += "\t\tsyscall\n";
                     break;
-                case 8:
+                case 8://float
                     textSegment += "\t\tli $v0, 3\n";
                     textSegment += "\t\tmov.s\t$f12, $f0\n";
                     textSegment += "\t\tsyscall\n";
@@ -550,7 +561,7 @@ public class CodeGenVisitor implements SimpleVisitor {
 
             }
             typePrimitive.setArray(isArray);
-            SymbolInfo si = new SymbolInfo(idNode);
+            SymbolInfo si = new SymbolInfo(idNode, PrimitiveType.INT);
             si.setType(typePrimitive);
             idNode.setSymbolInfo(si);
             symbolTable.put(varName, si);

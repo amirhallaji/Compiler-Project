@@ -1,4 +1,6 @@
 .data 
+	true: .asciiz "true"
+	false : .asciiz "false"
 	global_a :	.word	0
 
 .text 
