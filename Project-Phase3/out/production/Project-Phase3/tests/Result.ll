@@ -5,5 +5,9 @@
 .text 
 	.globl main
 	main:
+		lw $t1, a
+		lw $t2, a
+		add $t0, $t0, $t1
+		sub $t0, $t0, $t2
 		li $v0,10
 		syscall

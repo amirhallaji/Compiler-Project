@@ -256,15 +256,20 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void operations(ExpressionNode first, ExpressionNode second, String op) {
+        boolean firstIsNegative = (first.getChild(0).getNodeType() == NodeType.NEGATIVE);
+        String op2 = firstIsNegative ? "sub" : "add";
+        first = firstIsNegative ? (ExpressionNode) first.getChild(0).getChild(0) : first;
+
         if (first.getChild(0).getNodeType() == NodeType.LITERAL && second.getChild(0).getNodeType() == NodeType.LITERAL) {
             System.err.println("4444444444");
             textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
             textSegment += "\t\tli " + regs.get(tempRegsNumber + 2) + ", " + second.getChild(0) + "\n";
-            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            textSegment += "\t\t" + op2 + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n"; //check
             textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 2) + "\n";
         } else if (first.getChild(0).getNodeType() == NodeType.LITERAL) {
+            System.err.println("55555555555");
             textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
-            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            textSegment += "\t\t" + op2 + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n"; //check
             if (second.getChild(0).getNodeType() == NodeType.LVALUE) {
                 textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) second.getChild(0).getChild(0)).getValue() + "\n";
                 textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
@@ -275,18 +280,18 @@ public class CodeGenVisitor implements SimpleVisitor {
             textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
             if (first.getChild(0).getNodeType() == NodeType.LVALUE) {
                 textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
-                textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+                textSegment += "\t\t" + op2 + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";  //check
             }
         } else if (first.getChild(0).getNodeType() == NodeType.LVALUE && second.getChild(0).getNodeType() == NodeType.LVALUE) {
             System.err.println("777777777777");
             textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
             textSegment += "\t\tlw " + regs.get(tempRegsNumber + 2) + ", " + ((IdentifierNode) second.getChild(0).getChild(0)).getValue() + "\n";
-            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            textSegment += "\t\t" + op2 + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";  //check
             textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 2) + "\n";
         } else if (first.getChild(0).getNodeType() == NodeType.LVALUE) {
             System.err.println("8888888888888");
             textSegment += "\t\tlw " + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
-            textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+            textSegment += "\t\t" + op2 + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n"; //check
             if (second.getChild(0).getNodeType() == NodeType.LITERAL) {
                 textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + second.getChild(0) + "\n";
                 textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
@@ -297,7 +302,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
             if (first.getChild(0).getNodeType() == NodeType.LITERAL) {
                 textSegment += "\t\tli " + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
-                textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
+                textSegment += "\t\t" + op2 + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n"; //check
             }
         } else {
             System.err.println("hoooooooooooooooooo");
