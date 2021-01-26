@@ -1,22 +1,28 @@
 package AST;
 
-public class IdentifierType  implements Type{
+public class IdentifierType implements Type {
     private String signature;
-    private int align;
+    private int align = 10;
     private boolean isArray;
 
     public IdentifierType(String signature, int align) {
         this.signature = signature;
         this.align = align;
     }
+
+    public IdentifierType(String signature) {
+        this.signature = signature;
+        this.align = 10;
+    }
+
     @Override
     public String getSignature() {
-        return null;
+        return signature;
     }
 
     @Override
     public int getAlign() {
-        return 0;
+        return align;
     }
 
     @Override

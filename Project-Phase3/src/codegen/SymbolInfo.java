@@ -13,17 +13,24 @@ import java.util.List;
 public class SymbolInfo implements Symbol {
     private ASTNode node;
     private Type type;
-    private boolean isConst;
 
-    public boolean isConst() {
-        return isConst;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SymbolInfo that = (SymbolInfo) o;
+
+        if (node != null ? !node.equals(that.node) : that.node != null) return false;
+        return type != null ? type.equals(that.type) : that.type == null;
     }
 
-    public void setConst(boolean aConst) {
-        isConst = aConst;
+    @Override
+    public int hashCode() {
+        int result = node != null ? node.hashCode() : 0;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
     }
-
-    private int localVarIndex = -1;
 
     SymbolInfo(ASTNode node) {
         this.node = node;
@@ -41,21 +48,9 @@ public class SymbolInfo implements Symbol {
         this.type = type;
     }
 
-    public int getLocalVarIndex() {
-        return localVarIndex;
-    }
-
-    void setLocalVarIndex(int index) {
-        this.localVarIndex = index;
-    }
 
     public String toString() {
-        String str = "SymbolInfo: " + type;
-
-        if (localVarIndex != -1) {
-            str += ", lv = " + localVarIndex;
-        }
-
+        String str = "SymbolInfo: " + type ;
         return str;
     }
 }

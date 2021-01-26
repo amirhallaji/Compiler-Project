@@ -708,7 +708,7 @@ printStmt ::=
 expr_plus ::= 
              expr:e1
                 {:
-                    RESULT = new ExpressionNode();
+                    RESULT = new BaseASTNode(NodeType.EXPRESSIONS);
                     RESULT.addChild(e1);
                     e1.setParent(RESULT);
                 :}

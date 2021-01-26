@@ -81,7 +81,6 @@ public enum NodeType {
     FOR_STATEMENT,
     WHILE_STATEMENT,
     PRINT_STATEMENT,
-
     LITERAL,
     ARGUMENT,
     ARGUMENTS,
@@ -105,5 +104,6 @@ public enum NodeType {
     FIELDS,
     PROTOTYPES,
     PROTOTYPE,
+    EXPRESSIONS,
     START
 }
