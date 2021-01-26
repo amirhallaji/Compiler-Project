@@ -1,11 +1,9 @@
 int main() {
     int a;
     int b;
-    a = b;
-//    a = ReadInteger();
-//    b = ReadInteger();
 
-    Print(a);
-    Print(b);
-    Print(a);
+    a = ReadInteger();
+    b = ReadInteger();
+
+    Print(a,b);
 }

@@ -1,11 +1,8 @@
 package codegen;
 
 import AST.ASTNode;
+import AST.PrimitiveType;
 import AST.Type;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Descriptor of identifiers
@@ -36,6 +33,11 @@ public class SymbolInfo implements Symbol {
         this.node = node;
     }
 
+    SymbolInfo(ASTNode node, PrimitiveType type) {
+        this.node = node;
+        this.type = type;
+    }
+
     public ASTNode getNode() {
         return node;
     }
@@ -50,7 +52,7 @@ public class SymbolInfo implements Symbol {
 
 
     public String toString() {
-        String str = "SymbolInfo: " + type ;
+        String str = "SymbolInfo: " + type;
         return str;
     }
 }
