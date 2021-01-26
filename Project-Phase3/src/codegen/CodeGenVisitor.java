@@ -21,7 +21,7 @@ public class CodeGenVisitor implements SimpleVisitor {
     private ClassNode classNode;
     private boolean returnGenerated;
     private List<Function> functions = new ArrayList<>();
-
+    private List<String> stringLiterals = new ArrayList<>();
     private SymbolTable symbolTable = new SymbolTable();
     private int blockIndex;
 
@@ -178,6 +178,7 @@ public class CodeGenVisitor implements SimpleVisitor {
                 visitPrintNode(node);
                 break;
             case LITERAL:
+                visitLiteralNode(node);
                 break;
             case ARGUMENT:
                 break;
@@ -234,10 +235,25 @@ public class CodeGenVisitor implements SimpleVisitor {
                 break;
             case START:
                 visitStartNode(node);
-
                 break;
             default:
                 visitAllChildren(node);
+        }
+    }
+
+    private void visitLiteralNode(ASTNode node) {
+        Literal literalNode = (Literal) node;
+        node.setSymbolInfo(new SymbolInfo(node, literalNode.getType()));
+        switch (literalNode.getType().getAlign()) {
+            case 6: //string
+                String str = ((StringLiteralNode) literalNode).getValue();
+                String str_raw = str.substring(1, str.length() - 1);
+                System.out.println(str);
+                if (!stringLiterals.contains(str_raw)) {
+                    stringLiterals.add(str_raw);
+                    dataSegment += "\tStringLiteral_" + str_raw + ": .asciiz " + str + "\n";
+                }
+                textSegment += "\t\tla $t0, StringLiteral_" + str_raw + "\n";
         }
     }
 
@@ -248,10 +264,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         Function method = findFunction(varName);
         SymbolInfo returnType = func.getChild(0).getSymbolInfo();
         node.getChild(0).accept(this);
-        System.out.println(returnType);
-        if (isTypesEqual(returnType, node.getChild(0).getSymbolInfo())) {
-            System.out.println("yes");
-        } else
+        if (!isTypesEqual(returnType, node.getChild(0).getSymbolInfo()))
             throw new Exception("Return type of " + varName + " is incorrect");
 
     }
@@ -266,7 +279,7 @@ public class CodeGenVisitor implements SimpleVisitor {
                 varName = idNode.getValue();
                 method = findFunction(varName);
                 if (method == null)
-                    throw new Exception("this function doesn't exist");
+                    throw new Exception(varName + " function doesn't exist");
             }
             if (child.getNodeType().equals(NodeType.ACTUALS)) {
 
@@ -280,6 +293,7 @@ public class CodeGenVisitor implements SimpleVisitor {
                     switch (si.getType().getAlign()) {
                         case 1: //bool
                         case 4: // int
+                        case 6: //String
                         case 10:
                             //TODO
                             textSegment += "\t\taddi $sp, $sp, " + 4 + "\n";
@@ -371,6 +385,11 @@ public class CodeGenVisitor implements SimpleVisitor {
                     break;
                 case 4: //int
                     textSegment += "\t\tli $v0, 1\n";
+                    textSegment += "\t\tadd $a0, $t0, $zero\n";
+                    textSegment += "\t\tsyscall\n";
+                    break;
+                case 6://string
+                    textSegment += "\t\tli $v0, 4\n";
                     textSegment += "\t\tadd $a0, $t0, $zero\n";
                     textSegment += "\t\tsyscall\n";
                     break;
@@ -492,6 +511,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         switch (varType.getType().getAlign()) {
             case 1: //bool
             case 4: // int
+            case 6: //String
                 textSegment += "\t\tla $a0, " + findNameOfId(varName) + '\n';
                 textSegment += "\t\tlw $t0, 0($a0)\n";
                 break;
@@ -518,6 +538,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         if (isTypesEqual(varType, exprType)) {
 
             switch (varType.getType().getAlign()) {
+                case 6: //string
                 case 1: //bool
                 case 4: // int
                     textSegment += "\t\tla $a0, " + findNameOfId(varName) + '\n';
@@ -571,6 +592,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             switch (si.getType().getAlign()) {
                 case 1: //bool
                 case 4: // int
+                case 6: //String
                 case 10:
                     //TODO
                     textSegment += "\t\tla $a1, " + findNameOfId(idName) + '\n';
@@ -626,12 +648,14 @@ public class CodeGenVisitor implements SimpleVisitor {
         if (!node.getChild(0).getNodeType().equals(NodeType.IDENTIFIER)) {
             PrimitiveType typePrimitive = (PrimitiveType) (((TypeNode) node.getChild(0)).getType());
 
-            if (!isArray && !typePrimitive.getSignature().equals("ascii")) {
+            if (!isArray && !typePrimitive.getSignature().equals(".ascii")) {
 
                 ASTNode parent = node.getParent();
 
-                dataSegment += "\t" + label + "\t" + typePrimitive.getSignature() + "\t" + typePrimitive.getPrimitive().getInitialValue() + "\n";
+                dataSegment += "\t" + label + " " + typePrimitive.getSignature() + " " + typePrimitive.getPrimitive().getInitialValue() + "\n";
 
+            } else if (typePrimitive.getSignature().equals(".ascii")) {
+                dataSegment += "\t" + label + " .word 0" + "\n";
             }
             typePrimitive.setArray(isArray);
             SymbolInfo si = new SymbolInfo(idNode, PrimitiveType.INT);
@@ -689,7 +713,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         String methodName = idNode.getValue();
         Function method = new Function(methodName, returnType, symbolTable.getCurrentScope());
         if (functions.contains(method)) {
-            throw new Exception("this function declared before");
+            throw new Exception(methodName + " function declared before");
         }
         functions.add(method);
         String label = symbolTable.getCurrentScopeName() + "_" + methodName;
