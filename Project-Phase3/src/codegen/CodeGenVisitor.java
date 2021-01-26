@@ -4,6 +4,7 @@ import AST.*;
 
 
 import java.io.PrintStream;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
@@ -160,7 +161,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case RETURN_STATEMENT:
                 break;
             case IF_STATEMENT:
-                visitIfStatement();
+                visitIfStatement(node);
                 break;
             case REPEAT_STATEMENT:
                 break;
@@ -243,31 +244,49 @@ public class CodeGenVisitor implements SimpleVisitor {
         return "L" + (++labelIndex);
     }
 
-    private void visitIfStatement(ASTNode node) throws Exception{
-        String ifType;
-        if(node.getChildren().size() == 2){
-            ifType = "if";
-        }
-        else {
-            if(node.getChildren().size() == 3){
-                ifType = "if_else";
-            }
-            else {
-                ifType = "invalid";
-            }
-        }
+    private void visitIfStatement(ASTNode node) throws Exception {
 
-        //visiting the exp_stmt in the if
-        node.getChild(0).accept(this);
-        String ifTrueLabel =  labelGenerator();
+        String ifTrueLabel = labelGenerator();
+        String ifFalseLabel = labelGenerator();
+
         tempRegsNumber = 8; // assigning the expStmt into register $t0
-        visitAllChildren(node);
+        String ifType;
+        if (node.getChildren().size() == 2) {
+            ifType = "if";
+        } else {
+            ifType = node.getChildren().size() == 3 ? "if_else" : "invalid";
+        }
 
-        textSegment += "\t\tbeq "  + regs.get(tempRegsNumber) + ", 0  " + ifTrueLabel + "\n";
-        textSegment += ifTrueLabel + ":\n";
+
+        if (ifType.equals("if")) {
+            //it is if statement, so next child is expStmt which is the 0 child
+            node.getChild(0).accept(this);
+            visitExpressionNode(node);
+
+            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0, " + ifTrueLabel + "\n";
+            textSegment += ifTrueLabel + ":\n";
+
+            node.getChild(1).accept(this);
+            visitStatementNode(node);
+
+
+        } else if (ifType.equals("if_else")) {
+
+            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0," + ifFalseLabel + "\n";
+            textSegment += ifFalseLabel + "\n";
+
+            //it is if_else stmt, so the third child must be visited
+            node.getChild(2).accept(this);
+            visitStatementNode(node);
+        } else {
+            System.out.println("***ERROR - INVALID IF***");
+        }
+
+
+//        textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0  " + ifTrueLabel + "\n";
+//        textSegment += ifTrueLabel + ":\n";
+
     }
-
-
 
 
     private void visitPrintNode(ASTNode node) throws Exception {

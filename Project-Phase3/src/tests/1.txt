@@ -1,11 +1,6 @@
-int main() {
-    int a;
-    int b;
-    a = b;
-//    a = ReadInteger();
-//    b = ReadInteger();
-
-    Print(a);
-    Print(b);
-    Print(a);
+int a;
+int main(){
+    if(a == 2){
+        print(2);
+    }
 }
