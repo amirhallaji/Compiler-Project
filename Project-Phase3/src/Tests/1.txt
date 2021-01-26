@@ -1,6 +1,19 @@
+int temp1(int c,int d){
+   Print(c,d);
+}
+
+int temp2(double c,int d){
+   Print(c,d);
+}
 
 int main() {
-    int b ;
-    int a ;
-    a = b;
+   int a;
+   int b;
+   double c;
+   a = ReadInteger();
+   b = ReadInteger();
+   temp1(a,b);
+   temp2(c,b);
+
 }
+
