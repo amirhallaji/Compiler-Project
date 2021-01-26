@@ -1,6 +1,0 @@
-int a;
-int main(){
-    if(a == 2){
-        print(2);
-    }
-}
