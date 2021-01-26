@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Function {
     String Name;
-    Type returnType;
+    SymbolInfo returnType;
     Scope scope;
     List<SymbolInfo> argumentsType = new ArrayList<>();
     String accessMode;
@@ -17,13 +17,13 @@ public class Function {
         Name = name;
     }
 
-    public Function(String name, Type returnType, Scope scope) {
+    public Function(String name, SymbolInfo returnType, Scope scope) {
         Name = name;
         this.returnType = returnType;
         this.scope = scope;
     }
 
-    public Function(String name, Type returnType, Scope scope, List<SymbolInfo> argumentsType) {
+    public Function(String name, SymbolInfo returnType, Scope scope, List<SymbolInfo> argumentsType) {
         Name = name;
         this.returnType = returnType;
         this.scope = scope;
@@ -31,7 +31,7 @@ public class Function {
     }
 
 
-    public Function(String name, Type returnType, List<SymbolInfo> argumentsType) {
+    public Function(String name, SymbolInfo returnType, List<SymbolInfo> argumentsType) {
         Name = name;
         this.returnType = returnType;
         this.argumentsType = argumentsType;
@@ -45,11 +45,11 @@ public class Function {
         Name = name;
     }
 
-    public Type getReturnType() {
+    public SymbolInfo getReturnType() {
         return returnType;
     }
 
-    public void setReturnType(Type returnType) {
+    public void setReturnType(SymbolInfo returnType) {
         this.returnType = returnType;
     }
 

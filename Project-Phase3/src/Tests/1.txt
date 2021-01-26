@@ -1,9 +1,10 @@
 int temp1(int c,int d){
    Print(c,d);
+   return c;
 }
 
 int temp2(double c,int d){
-   Print(c,d);
+   return d;
 }
 
 int main() {
@@ -12,8 +13,6 @@ int main() {
    double c;
    a = ReadInteger();
    b = ReadInteger();
-   temp1(a,b);
-   temp2(c,b);
-
+   Print(temp1(temp2(c,b),a));
 }
 

@@ -159,6 +159,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case CONTINUE_STATEMENT:
                 break;
             case RETURN_STATEMENT:
+                visitReturnNode(node);
                 break;
             case IF_STATEMENT:
                 visitIfStatement(node);
@@ -240,28 +241,30 @@ public class CodeGenVisitor implements SimpleVisitor {
         }
     }
 
+    private void visitReturnNode(ASTNode node) throws Exception {
+        ASTNode func = node.getParent().getParent().getParent().getParent();
+        IdentifierNode idNode = (IdentifierNode) func.getChild(1);
+        String varName = idNode.getValue();
+        Function method = findFunction(varName);
+        SymbolInfo returnType = func.getChild(0).getSymbolInfo();
+        node.getChild(0).accept(this);
+        System.out.println(returnType);
+        if (isTypesEqual(returnType, node.getChild(0).getSymbolInfo())) {
+            System.out.println("yes");
+        } else
+            throw new Exception("Return type of " + varName + " is incorrect");
+
+    }
+
     private void visitCallNode(ASTNode node) throws Exception {
-        String varName = "";
+        String varName;
         Function method = null;
-        String scopeName = symbolTable.getCurrentScopeName();
         int argNumber = 0;
-        System.out.println(functions);
         for (ASTNode child : node.getChildren()) {
             if (child.getNodeType().equals(NodeType.IDENTIFIER)) {
                 IdentifierNode idNode = (IdentifierNode) child;
                 varName = idNode.getValue();
-                for (Function function : functions) {
-                    if (function.getName().equals(varName)) {
-                        for (Scope scope : symbolTable.getScopes()) {
-                            if (scope.equals(function.getScope())) {
-                                method = function;
-                                break;
-                            }
-                        }
-                        if (method != null)
-                            break;
-                    }
-                }
+                method = findFunction(varName);
                 if (method == null)
                     throw new Exception("this function doesn't exist");
             }
@@ -270,9 +273,9 @@ public class CodeGenVisitor implements SimpleVisitor {
                 for (ASTNode childChild : child.getChild(0).getChildren()) {
                     childChild.accept(this);
                     SymbolInfo si = childChild.getSymbolInfo();
-                    if (!isTypesEqual(si, method.getArgumentsType().get(argNumber))) {
+                    if (!isTypesEqual(si, method.getArgumentsType().get(argNumber)))
                         throw new Exception("types doesn't match");
-                    }
+
                     argNumber++;
                     switch (si.getType().getAlign()) {
                         case 1: //bool
@@ -293,9 +296,13 @@ public class CodeGenVisitor implements SimpleVisitor {
 
             }
         }
+        if (argNumber != method.getArgumentsType().size())
+            throw new Exception("expected " + method.getArgumentsType().size() + " args but " + argNumber + " passed");
         textSegment += "\t\taddi $sp, $sp, 4\n";
         textSegment += "\t\tjal " + method.getScope().getName() + "_" + method.getName() + "\n";
         textSegment += "\t\taddi $sp, $sp, " + (argNumber + 1) * (-4) + "\n";
+
+        node.setSymbolInfo(method.returnType);
     }
 
     private void visitReadIntegerNode(ASTNode node) {
@@ -476,7 +483,6 @@ public class CodeGenVisitor implements SimpleVisitor {
 
 
     private void visitLValueNode(ASTNode node) throws Exception {
-        System.err.println(node.getChildren());
         node.getChild(0).accept(this);
         IdentifierNode idNode = (IdentifierNode) node.getChild(0);
         String varName = idNode.getValue();
@@ -506,12 +512,11 @@ public class CodeGenVisitor implements SimpleVisitor {
         node.getChild(1).accept(this);
         SymbolInfo varType = (SymbolInfo) symbolTable.get(varName);
         SymbolInfo exprType = node.getChild(1).getSymbolInfo();
+        if (exprType == null)
+            throw new Exception("Assign Error");
         //TODO
         if (isTypesEqual(varType, exprType)) {
 
-            if (varType.getType().getAlign() == 10) {
-                //TODO
-            }
             switch (varType.getType().getAlign()) {
                 case 1: //bool
                 case 4: // int
@@ -522,12 +527,14 @@ public class CodeGenVisitor implements SimpleVisitor {
                     textSegment += "\t\tla $a0, " + findNameOfId(varName) + '\n';
                     textSegment += "\t\ts.s $f0, 0($a0)\n";
                     break;
-                //todo
+                case 10:
+                    //todo
+                    break;
                 default:
                     break;
             }
         } else {
-            throw new Exception("Types Doesnt Match");
+            throw new Exception("Type " + varName + " Doesnt Match");
         }
 
     }
@@ -675,7 +682,7 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitMethodDeclarationNode(ASTNode node) throws Exception {
         node.getChild(0).accept(this);
-        Type returnType = node.getChild(0).getSymbolInfo().getType();
+        SymbolInfo returnType = node.getChild(0).getSymbolInfo();
 
         //identifier
         IdentifierNode idNode = (IdentifierNode) node.getChild(1);
@@ -725,5 +732,22 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private String findNameOfId(String id) {
         return symbolTable.getScopeNameOfIdentifier(id) + "_" + id;
+    }
+
+    private Function findFunction(String varName) {
+        Function method = null;
+        for (Function function : functions) {
+            if (function.getName().equals(varName)) {
+                for (Scope scope : symbolTable.getScopes()) {
+                    if (scope.equals(function.getScope())) {
+                        method = function;
+                        break;
+                    }
+                }
+                if (method != null)
+                    break;
+            }
+        }
+        return method;
     }
 }
