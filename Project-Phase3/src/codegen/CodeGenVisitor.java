@@ -254,8 +254,6 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitIfStatement(ASTNode node) throws Exception {
 
-        String ifTrueLabel = labelGenerator();
-        String ifFalseLabel = labelGenerator();
 
         tempRegsNumber = 8; // assigning the expStmt into register $t0
         String ifType;
@@ -267,18 +265,20 @@ public class CodeGenVisitor implements SimpleVisitor {
 
 
         if (ifType.equals("if")) {
+            String ifTrueLabel = labelGenerator();
+
             //it is if statement, so next child is expStmt which is the 0 child
-            node.getChild(0).accept(this);
-            visitExpressionNode(node);
+            node.getChild(0).getChild(0).accept(this);
+            visitStatementNode(node.getChild(0));
 
             textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0, " + ifTrueLabel + "\n";
             textSegment += ifTrueLabel + ":\n";
 
             node.getChild(1).accept(this);
-            visitStatementNode(node);
 
 
         } else if (ifType.equals("if_else")) {
+            String ifFalseLabel = labelGenerator();
 
             textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0," + ifFalseLabel + "\n";
             textSegment += ifFalseLabel + "\n";
