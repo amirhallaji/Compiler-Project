@@ -21,14 +21,19 @@ class SymbolTable implements Symbol {
     void leaveCurrentScope() {
         if (currentScope != null)
             scopes.remove(currentScope);
+        currentScope = scopes.get(scopes.size() - 1);
     }
 
     void leaveScopeType(String id) {
         for (Scope scope : scopes) {
+            System.out.println("finded Scope: " + scope.getName());
             if (scope.getName().equals(id)) {
-                scopes.remove(currentScope);
-                if (scopes.size() > 1)
+                scopes.remove(scope);
+                System.out.println("scope find:" + scope);
+                if (scope.equals(currentScope)) {
+
                     currentScope = scopes.get(scopes.size() - 1);
+                }
                 break;
             }
         }
