@@ -160,6 +160,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case RETURN_STATEMENT:
                 break;
             case IF_STATEMENT:
+                visitIfStatement();
                 break;
             case REPEAT_STATEMENT:
                 break;
@@ -237,6 +238,36 @@ public class CodeGenVisitor implements SimpleVisitor {
                 visitAllChildren(node);
         }
     }
+
+    private String labelGenerator() {
+        return "L" + (++labelIndex);
+    }
+
+    private void visitIfStatement(ASTNode node) throws Exception{
+        String ifType;
+        if(node.getChildren().size() == 2){
+            ifType = "if";
+        }
+        else {
+            if(node.getChildren().size() == 3){
+                ifType = "if_else";
+            }
+            else {
+                ifType = "invalid";
+            }
+        }
+
+        //visiting the exp_stmt in the if
+        node.getChild(0).accept(this);
+        String ifTrueLabel =  labelGenerator();
+        tempRegsNumber = 8; // assigning the expStmt into register $t0
+        visitAllChildren(node);
+
+        textSegment += "\t\tbeq "  + regs.get(tempRegsNumber) + ", 0  " + ifTrueLabel + "\n";
+        textSegment += ifTrueLabel + ":\n";
+    }
+
+
 
 
     private void visitPrintNode(ASTNode node) throws Exception {
