@@ -2,12 +2,8 @@ package codegen;
 
 import AST.*;
 
-
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
-
-import AST.ClassNode;
+import java.io.*;
+import java.util.*;
 
 
 /**
@@ -43,6 +39,7 @@ public class CodeGenVisitor implements SimpleVisitor {
     public CodeGenVisitor(PrintStream stream) {
         this.stream = stream;
     }
+
 
 
     @Override
@@ -323,19 +320,31 @@ public class CodeGenVisitor implements SimpleVisitor {
         visitAllChildren(node);
     }
 
+    private String labelGenerator(){
+        return "L" + (++labelIndex);
+    }
+
     private void visitIfStatement(ASTNode node) throws Exception {
         System.out.println("in if");
 
         String ifType;
-        if (node.getChildren().size() == 2) {
+        if(node.getChildren().size() == 2){
             ifType = "if";
-        } else {
-            ifType = (node.getChildren().size() == 3) ? "if_else" : "invalid";
         }
-        node.getChild(0).accept(this);
-//        String result = ((IdentifierNode) node.getChild(0).getChild(0).getChild(0)).getValue();
+        else {
+            if(node.getChildren().size() == 3){
+                ifType = "if_else";
+            }
+            else {
+                ifType = "invalid";
+            }
+        }
 
-        textSegment += "\tbne\t$" + + "\t$" + labelIndex;
+        //visiting the exp_stmt in the if
+        node.getChild(0).accept(this);
+
+
+        textSegment += "\t\tbne\t" + ", " + regs.get(tempRegsNumber + 2) + ", "+ "result" + labelGenerator() + "\n";
 
     }
 

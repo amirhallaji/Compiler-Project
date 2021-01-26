@@ -1,17 +1,7 @@
-<<<<<<< HEAD
-int a;
-int main () {
-    if(a == 3){
-        print(a);
-    }
-    else {
-        print(2);
-    }
-=======
 int main(){
-  int a;
-  int b;
-  b = a ;
+    int a;
+    if(a < 3){
+        int b;
+    }
 
->>>>>>> origin/master
 }
