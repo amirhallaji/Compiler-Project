@@ -347,9 +347,12 @@ public class CodeGenVisitor implements SimpleVisitor {
 
         //visiting the exp_stmt in the if
         node.getChild(0).accept(this);
+        String ifTrueLabel =  labelGenerator();
+        tempRegsNumber = 8; // assigning the expStmt into register $t0
+        visitAllChildren(node);
 
-
-        textSegment += "\t\tbne\t" + ", " + regs.get(tempRegsNumber + 2) + ", "+ "result" + labelGenerator() + "\n";
+        textSegment += "\t\tbeq "  + regs.get(tempRegsNumber) + ", 0  " + ifTrueLabel + "\n";
+        textSegment += ifTrueLabel + ":\n";
 
     }
 

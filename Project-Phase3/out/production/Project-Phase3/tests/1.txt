@@ -1,15 +1,10 @@
+int a;
 int main(){
-<<<<<<< HEAD
-    int a;
-    if(a < 3){
-        int b;
-    }
-=======
-  int a;
-  int b;
-
-
-  a =  - a + 1 + 2 - a + 5 - a - a - 1;
->>>>>>> origin/master
-
+   a = 2;
+   if(a == 2){
+       print(a);
+   }
+   else{
+        print(3);
+   }
 }
