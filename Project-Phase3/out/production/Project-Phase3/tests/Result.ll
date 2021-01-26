@@ -5,11 +5,17 @@
 .text 
 	.globl main
 	main:
+		la	$a0, global_main_b
+		lw	$t0  0($a0)
 		la	$a0, global_main_a
 		sw	$t0  0($a0)
+		la	$a0, global_main_a
+		lw	$t0  0($a0)
 		li $v0, 1
 		add $a0, $t0, $zero
 		syscall
+		la	$a0, global_main_b
+		lw	$t0  0($a0)
 		li $v0, 1
 		add $a0, $t0, $zero
 		syscall

@@ -7,4 +7,5 @@ int main() {
 
     Print(a);
     Print(b);
+    Print(a);
 }

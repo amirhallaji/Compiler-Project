@@ -602,8 +602,7 @@ public class CodeGenVisitor implements SimpleVisitor {
     private boolean isTypesEqual(SymbolInfo a, SymbolInfo b) {
         if (a.getType().getAlign() == b.getType().getAlign()) {
             if (a.getType().getSignature().equals(b.getType().getSignature())) {
-                if (a.getType().getPrimitive().equals(b.getType().getPrimitive()))
-                    return true;
+                return a.getType().getPrimitive().equals(b.getType().getPrimitive());
             }
         }
         return false;
