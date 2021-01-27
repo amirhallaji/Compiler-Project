@@ -1,8 +1,10 @@
-int a;
-int b;
-int c;
-int d;
-int[] f;
+int[][] f;
+int[] g;
 int main() {
-    d = 1 + 2 * 3;
+    int a ;
+    a = ReadInteger();
+    g = NewArray(6, int);
+    f = NewArray(5, int[]);
+    f[3][4] = a;
+    Print(f[3][4]);
 }
