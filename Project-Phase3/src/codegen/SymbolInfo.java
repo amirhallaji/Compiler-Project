@@ -10,6 +10,16 @@ import AST.Type;
 public class SymbolInfo implements Symbol {
     private ASTNode node;
     private Type type;
+    private int dimensionArray = 0;
+
+
+    public int getDimensionArray() {
+        return dimensionArray;
+    }
+
+    public void setDimensionArray(int dimensionArray) {
+        this.dimensionArray = dimensionArray;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -29,8 +39,9 @@ public class SymbolInfo implements Symbol {
         return result;
     }
 
-    SymbolInfo(ASTNode node) {
+    SymbolInfo(ASTNode node, Type type) {
         this.node = node;
+        this.type = type;
     }
 
     SymbolInfo(ASTNode node, PrimitiveType type) {

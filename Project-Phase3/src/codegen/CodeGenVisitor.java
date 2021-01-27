@@ -24,7 +24,7 @@ public class CodeGenVisitor implements SimpleVisitor {
     private List<String> stringLiterals = new ArrayList<>();
     private SymbolTable symbolTable = new SymbolTable();
     private int blockIndex;
-
+    private int arrayNumbers = 0;
 
     private int tempRegsNumber = 8;
     List<String> regs = Arrays.asList(
@@ -72,6 +72,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             case READ_LINE:
                 break;
             case NEW_ARRAY:
+                visitNewArrayNode(node);
                 break;
             case NEW_IDENTIFIER:
                 break;
@@ -111,18 +112,23 @@ public class CodeGenVisitor implements SimpleVisitor {
                 break;
             case BOOLEAN_TYPE:
                 node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
+                node.getSymbolInfo().setDimensionArray(node.getChildren().size());
                 break;
             case DOUBLE_TYPE:
                 node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.DOUBLE));
+                node.getSymbolInfo().setDimensionArray(node.getChildren().size());
                 break;
             case INT_TYPE:
                 node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.INT));
+                node.getSymbolInfo().setDimensionArray(node.getChildren().size());
                 break;
             case STRING_TYPE:
                 node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.STRING));
+                node.getSymbolInfo().setDimensionArray(node.getChildren().size());
                 break;
             case VOID:
                 node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.VOID));
+                node.getSymbolInfo().setDimensionArray(node.getChildren().size());
                 break;
             case FIELD_DECLARATION:
                 //TODO
@@ -188,6 +194,9 @@ public class CodeGenVisitor implements SimpleVisitor {
             case EMPTY_STATEMENT:
                 break;
             case IDENTIFIER:
+                IdentifierNode idNode = (IdentifierNode) node;
+                node.setSymbolInfo(new SymbolInfo(node, new IdentifierType(idNode.getValue())));
+                node.getSymbolInfo().setDimensionArray(node.getChildren().size());
                 break;
             case METHOD_ACCESS:
                 break;
@@ -239,6 +248,20 @@ public class CodeGenVisitor implements SimpleVisitor {
             default:
                 visitAllChildren(node);
         }
+    }
+
+    private void visitNewArrayNode(ASTNode node) throws Exception {
+
+        int literalNumber = ((IntegerLiteralNode) node.getChild(0).getChild(0)).getValue();
+
+        setParentSymbolInfo(node, node.getChild(1));
+        node.getSymbolInfo().setDimensionArray(node.getSymbolInfo().getDimensionArray() + 1);
+        if (literalNumber <= 0)
+            throw new Exception("array size must be greater than zero");
+        String label = symbolTable.getCurrentScopeName() + "_NEW_ARRAY_" + arrayNumbers;
+        arrayNumbers++;
+        dataSegment += "\t" + label + " .space " + literalNumber * 4 + "\n";
+        textSegment += "\t\tla $t0, " + label + "\n";
     }
 
     private void visitLiteralNode(ASTNode node) {
@@ -536,7 +559,6 @@ public class CodeGenVisitor implements SimpleVisitor {
             throw new Exception("Assign Error");
         //TODO
         if (isTypesEqual(varType, exprType)) {
-
             switch (varType.getType().getAlign()) {
                 case 6: //string
                 case 1: //bool
@@ -640,41 +662,18 @@ public class CodeGenVisitor implements SimpleVisitor {
         IdentifierNode idNode = (IdentifierNode) node.getChild(1);
         String varName = idNode.getValue();
         String label = symbolTable.getCurrentScopeName() + "_" + varName + " :";
-
-        boolean isArray = true;
-        if (node.getChild(0).getChildren().isEmpty())
-            isArray = false;
-
+        setParentSymbolInfo(node, node.getChild(0));
+        int dimensionArray = node.getSymbolInfo().getDimensionArray();
         if (!node.getChild(0).getNodeType().equals(NodeType.IDENTIFIER)) {
-            PrimitiveType typePrimitive = (PrimitiveType) (((TypeNode) node.getChild(0)).getType());
-
-            if (!isArray && !typePrimitive.getSignature().equals(".ascii")) {
-
-                ASTNode parent = node.getParent();
-
+            Type typePrimitive = node.getSymbolInfo().getType();
+            if (dimensionArray == 0 || !typePrimitive.getSignature().equals(".ascii"))
                 dataSegment += "\t" + label + " " + typePrimitive.getSignature() + " " + typePrimitive.getPrimitive().getInitialValue() + "\n";
-
-            } else if (typePrimitive.getSignature().equals(".ascii")) {
+            else
                 dataSegment += "\t" + label + " .word 0" + "\n";
-            }
-            typePrimitive.setArray(isArray);
-            SymbolInfo si = new SymbolInfo(idNode, PrimitiveType.INT);
-            si.setType(typePrimitive);
-            idNode.setSymbolInfo(si);
-            symbolTable.put(varName, si);
         } else {
-            IdentifierNode typeIdNode = (IdentifierNode) node.getChild(0);
-            String idName = typeIdNode.getValue();
-            IdentifierType identifierType = new IdentifierType(idName);
-
             dataSegment += "\t" + label + "\t" + ".word" + "\t" + 0 + "\n";
-
-            identifierType.setArray(isArray);
-            SymbolInfo si = new SymbolInfo(idNode);
-            si.setType(identifierType);
-            idNode.setSymbolInfo(si);
-            symbolTable.put(varName, si);
         }
+        symbolTable.put(varName, node.getSymbolInfo());
 
     }
 
@@ -748,7 +747,8 @@ public class CodeGenVisitor implements SimpleVisitor {
     private boolean isTypesEqual(SymbolInfo a, SymbolInfo b) {
         if (a.getType().getAlign() == b.getType().getAlign()) {
             if (a.getType().getSignature().equals(b.getType().getSignature())) {
-                return a.getType().getPrimitive().equals(b.getType().getPrimitive());
+                if (a.getDimensionArray() == b.getDimensionArray())
+                    return a.getType().getPrimitive().equals(b.getType().getPrimitive());
             }
         }
         return false;
@@ -773,5 +773,13 @@ public class CodeGenVisitor implements SimpleVisitor {
             }
         }
         return method;
+    }
+
+    private void setParentSymbolInfo(ASTNode node, ASTNode child) throws Exception {
+        child.accept(this);
+        Type type = child.getSymbolInfo().getType();
+        SymbolInfo si = new SymbolInfo(node, type);
+        si.setDimensionArray(child.getSymbolInfo().getDimensionArray());
+        node.setSymbolInfo(si);
     }
 }

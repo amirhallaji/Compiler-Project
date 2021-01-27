@@ -1,11 +1,9 @@
-void temp (string a , int b){
-    Print(a,b);
-}
 int main() {
-    int b ;
-    string a;
-    b = ReadInteger();
-    a = "salam";
-    temp(a,b);
+    int[] a ;
+    int[] b;
+    a = b;
+    a = NewArray(1,int);
+    b = NewArray(2,int);
+    a = NewArray(2,int);
 }
 

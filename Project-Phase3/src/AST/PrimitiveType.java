@@ -16,7 +16,9 @@ public enum PrimitiveType implements Type {
 
     private final String signature;
     private final int align;
-    private boolean isArray;
+
+
+
 
     PrimitiveType(String signature, int align) {
         this.signature = signature;
@@ -27,14 +29,6 @@ public enum PrimitiveType implements Type {
         return signature;
     }
 
-
-    public boolean isArray() {
-        return isArray;
-    }
-
-    public void setArray(boolean array) {
-        isArray = array;
-    }
 
     @Override
     public String toString() {
