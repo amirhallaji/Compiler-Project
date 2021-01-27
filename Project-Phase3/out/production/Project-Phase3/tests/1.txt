@@ -1,7 +1,8 @@
+int a;
+int b;
+int c;
+int d;
+int[] f;
 int main() {
-    float b;
-    int a;
-    a = 1 + 2 + a;
-
+    d = 1 + 2 * 3;
 }
-
