@@ -53,9 +53,15 @@ public enum PrimitiveType implements Type {
     public String getInitialValue() {
         String value = "";
         switch (this.signature) {
-            case ".word" -> value = "0";
-            case ".float" -> value = "0.0";
-            case ".ascii" -> value = "\"\"";
+            case ".word":
+                value = "0";
+                break;
+            case ".float":
+                value = "0.0";
+                break;
+            case ".ascii":
+                value = "\"\"";
+                break;
         }
         return value;
     }

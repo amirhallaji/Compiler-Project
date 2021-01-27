@@ -1,7 +1,6 @@
-int main(){
-    int a;
-    a = ReadInteger();
-    if(a == 1){
-        Print(a);
-    }
+
+int main() {
+    int b ;
+    int a ;
+    a = b;
 }

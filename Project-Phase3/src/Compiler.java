@@ -11,7 +11,7 @@ import java.io.*;
 public class Compiler {
     public static void main(String[] args) throws Exception {
         System.out.println(('a' + 1));
-        String source = "src/tests/1.txt";
+        String source = "src/Tests/1.txt";
 
         Compiler compiler = new Compiler(source);
         compiler.run();
@@ -38,7 +38,7 @@ public class Compiler {
     }
 
     private void processFile() throws Exception {
-        PrintStream stream = new PrintStream(new FileOutputStream("src/tests/Result.ll"));
+        PrintStream stream = new PrintStream(new FileOutputStream("src/Tests/Result.ll"));
 //        PrintStream stream = System.out;
         Program cu = parse();
 //        performSemanticAnalysis(cu);

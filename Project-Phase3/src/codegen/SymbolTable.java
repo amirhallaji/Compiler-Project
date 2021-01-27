@@ -55,6 +55,14 @@ class SymbolTable implements Symbol {
         return currentScope.getVariables().get(id);
     }
 
+    String getScopeNameOfIdentifier(String id) {
+        for (int i = scopes.size() - 1; i >= 0; i--) {
+            if (scopes.get(i).getVariables().containsKey(id))
+                return scopes.get(i).getName();
+        }
+        return currentScope.getName();
+    }
+
     String getCurrentScopeName() {
         return currentScope.getName();
     }
