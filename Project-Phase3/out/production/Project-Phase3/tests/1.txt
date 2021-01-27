@@ -1,12 +1,7 @@
 int main() {
+    float b;
     int a;
-    a = ReadInteger();
-    a = 1;
-    if(a == 1){
-        Print(3);
-    }
-    else{
-        Print("in else");
-    }
+    a = 1 + 2 + a;
+
 }
 
