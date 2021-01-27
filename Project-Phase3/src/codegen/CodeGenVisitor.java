@@ -355,7 +355,8 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitIfStatement(ASTNode node) throws Exception {
 
-
+        String ifTrueLabel = labelGenerator();
+        String ifFalseLabel = labelGenerator();
         tempRegsNumber = 8; // assigning the expStmt into register $t0
         String ifType;
         if (node.getChildren().size() == 2) {
@@ -364,31 +365,24 @@ public class CodeGenVisitor implements SimpleVisitor {
             ifType = node.getChildren().size() == 3 ? "if_else" : "invalid";
         }
 
-
-        if (ifType.equals("if")) {
-            String ifTrueLabel = labelGenerator();
-
             //it is if statement, so next child is expStmt which is the 0 child
-            node.getChild(0).getChild(0).accept(this);
-            visitStatementNode(node.getChild(0));
-
-            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0, " + ifTrueLabel + "\n";
+            node.getChild(0).accept(this);
+            String result = (node.getChild(0).getChild(0).getChild(1).getChild(0)).toString();
+            node.getChild(0).accept(this);
+            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + "," + result + ", " + ifTrueLabel + ", " + ifFalseLabel + "\n";
             textSegment += ifTrueLabel + ":\n";
 
             node.getChild(1).accept(this);
 
+            textSegment += ifFalseLabel + ":\n";
 
-        } else if (ifType.equals("if_else")) {
-            String ifFalseLabel = labelGenerator();
-
-            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0," + ifFalseLabel + "\n";
-            textSegment += ifFalseLabel + "\n";
+         if (ifType.equals("if_else")) {
 
             //it is if_else stmt, so the third child must be visited
             node.getChild(2).accept(this);
-            visitStatementNode(node);
         } else {
             System.out.println("***ERROR - INVALID IF***");
+            throw new Exception();
         }
 
 

@@ -1,6 +1,12 @@
-
 int main() {
-    int b ;
-    int a ;
-    a = b;
+    int a;
+    a = ReadInteger();
+    a = 1;
+    if(a == 1){
+        Print(3);
+    }
+    else{
+        Print("in else");
+    }
 }
+
