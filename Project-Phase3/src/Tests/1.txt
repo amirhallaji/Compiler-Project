@@ -1,6 +1,9 @@
-
 int main() {
-    int b ;
-    int a ;
+    int[] a ;
+    int[] b;
     a = b;
+    a = NewArray(1,int);
+    b = NewArray(2,int);
+    a = NewArray(2,int);
 }
+

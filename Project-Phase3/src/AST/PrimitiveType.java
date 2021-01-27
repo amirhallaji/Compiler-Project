@@ -12,11 +12,13 @@ public enum PrimitiveType implements Type {
     DOUBLE(".float", 8),
     //todo
     VOID("void", 0),
-    STRING(".ascii", 0);
+    STRING(".ascii", 6);
 
     private final String signature;
     private final int align;
-    private boolean isArray;
+
+
+
 
     PrimitiveType(String signature, int align) {
         this.signature = signature;
@@ -27,14 +29,6 @@ public enum PrimitiveType implements Type {
         return signature;
     }
 
-
-    public boolean isArray() {
-        return isArray;
-    }
-
-    public void setArray(boolean array) {
-        isArray = array;
-    }
 
     @Override
     public String toString() {
