@@ -1,7 +1,9 @@
-int main() {
-    float b;
-    int a;
-    a = 1 + 2 + a;
 
+int main() {
+    int a;
+    int b;
+    a = ReadInteger();
+    b = ReadInteger();
+    Print(a==b);
 }
 
