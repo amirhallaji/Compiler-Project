@@ -574,7 +574,15 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void visitWhileNode(ASTNode node) throws Exception{
+        String whileLabel = labelGenerator();
 
+        //while Exp_stmt is the first child of the while statement so,
+        node.getChild(0).accept(this);
+        //should check that it's an expression
+        if(node.getChild(0).getSymbolInfo().getType().getAlign() == 1){
+            String result = (node.getChild(0).getChild(0).getChild(1).getChild(0)).toString();
+            System.out.println("result >" + result);
+        }
     }
 
     private void visitForNode(ASTNode node) throws Exception{
