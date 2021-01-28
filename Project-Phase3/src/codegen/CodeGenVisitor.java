@@ -553,8 +553,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         //it is if statement, so next child is expStmt which is the 0 child
         node.getChild(0).accept(this);
         if(node.getChild(0).getSymbolInfo().getType().getAlign() == 1) {
-            String result = (node.getChild(0).getChild(0).getChild(1).getChild(0)).toString();
-            textSegment += "\t\tbne " + regs.get(tempRegsNumber) + "," + result + ", " + ifFalseLabel + "\n";
+            textSegment += "\t\tbne " + regs.get(tempRegsNumber) + ", 0" + ", " + ifFalseLabel + "\n";
         }
         else{
             throw new Exception("Invalid Expression in if_exp");
@@ -575,14 +574,17 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitWhileNode(ASTNode node) throws Exception{
         String whileLabel = labelGenerator();
-
+        tempRegsNumber = 8;
         //while Exp_stmt is the first child of the while statement so,
         node.getChild(0).accept(this);
         //should check that it's an expression
         if(node.getChild(0).getSymbolInfo().getType().getAlign() == 1){
-            String result = (node.getChild(0).getChild(0).getChild(1).getChild(0)).toString();
-            System.out.println("result >" + result);
+//            String result = (node.getChild(0).getChild(0).getChild(1).getChild(0)).toString();
+            textSegment += "\t\tbne " + regs.get(tempRegsNumber) + ", 0"  + " " +  whileLabel + "\n";
         }
+        //after checking the exp_stmt in while, we should visit while body
+        node.getChild(1).accept(this);
+        textSegment += "\t\t j " + whileLabel + "\n";
     }
 
     private void visitForNode(ASTNode node) throws Exception{
