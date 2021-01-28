@@ -195,8 +195,10 @@ public class CodeGenVisitor implements SimpleVisitor {
             case CASE_STATEMENT:
                 break;
             case FOR_STATEMENT:
+                visitForNode(node);
                 break;
             case WHILE_STATEMENT:
+                visitWhileNode(node);
                 break;
             case PRINT_STATEMENT:
                 visitPrintNode(node);
@@ -565,6 +567,14 @@ public class CodeGenVisitor implements SimpleVisitor {
         } else if(!ifType.equals("if")){
             throw new Exception("invalid if");
         }
+    }
+
+    private void visitWhileNode(ASTNode node) throws Exception{
+
+    }
+
+    private void visitForNode(ASTNode node) throws Exception{
+
     }
 
 
