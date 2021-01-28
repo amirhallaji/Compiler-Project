@@ -1,9 +1,10 @@
+int f(int a , int b){
+    Print(a);
+    return a;
+}
 int main() {
-    int[] a ;
-    int[] b;
-    a = b;
-    a = NewArray(1,int);
-    b = NewArray(2,int);
-    a = NewArray(2,int);
+   int a;
+   a = ReadInteger();
+   Print(f(a,a));
 }
 

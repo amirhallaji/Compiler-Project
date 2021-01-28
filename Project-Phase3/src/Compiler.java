@@ -16,6 +16,13 @@ public class Compiler {
         Compiler compiler = new Compiler(source);
         compiler.run();
     }
+    public static void start(File read, Writer writer) throws Exception {
+        System.out.println(('a' + 1));
+        String source = "src/Tests/1.txt";
+
+        Compiler compiler = new Compiler(source);
+        compiler.run();
+    }
 
     private String source;
 

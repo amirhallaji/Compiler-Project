@@ -819,12 +819,12 @@ expr ::=
         :}
         | MINUS expr:e1
         {:
-            ASTNode t = new BaseASTNode(NodeType.NEGATIVE);
             RESULT = new ExpressionNode();
+            ASTNode t = new BaseASTNode(NodeType.NEGATIVE);
             t.addChild(e1);
             RESULT.addChild(t);
-            e1.setParent(t);
             t.setParent(RESULT);
+            e1.setParent(t);
         :}
         | expr:e1 LESS expr:e2
         {:

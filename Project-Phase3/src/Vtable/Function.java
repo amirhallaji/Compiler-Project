@@ -1,6 +1,7 @@
-package codegen;
+package Vtable;
 
-import AST.Type;
+import codegen.Scope;
+import codegen.SymbolInfo;
 
 import java.util.ArrayList;
 import java.util.List;
