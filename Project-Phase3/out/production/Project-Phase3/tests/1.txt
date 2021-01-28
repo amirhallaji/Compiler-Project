@@ -4,5 +4,5 @@ int c;
 int d;
 int[] f;
 int main() {
-    d = 1 + 2 * 3;
+    d =  16 / 4 % 3;
 }
