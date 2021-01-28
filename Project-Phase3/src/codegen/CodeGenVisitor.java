@@ -653,115 +653,56 @@ public class CodeGenVisitor implements SimpleVisitor {
     private void ArithmeticOp2(ASTNode node, String type) throws Exception {
         setParentSymbolInfo(node, node.getChild(0));
         SymbolInfo first = node.getSymbolInfo();
-        String firstType = first.getType().getSignature();
+        int firstType = first.getType().getAlign();
         String main_type = type;
+        int tempReg = firstType == 4 ? tempRegsNumber : tempfRegsNumber;
+        List<String> reg = firstType == 4 ? regs : fregs;
 
-        if (!firstType.equals(".word") && type.equals("mod")) {
-            throw new Exception("bad parameters for mod");
+
+        textSegment += "\t\tmove " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+        textSegment += "\t\tsw " + reg.get(tempReg + 1) + ", 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, 4\n";
+
+        if (firstType != 4 && type.equals("mod")) {
+            throw new Exception("bad parameters for mod operation");
         } else if (type.equals("mod")) {
             main_type = "div";
         }
 
-        String op = firstType.equals(".word") ? main_type + " " : main_type + ".s ";
-        String op2 = firstType.equals(".word") ? "move " : "mov.s ";
-
-        int tempReg = firstType.equals(".word") ? tempRegsNumber : tempfRegsNumber;
-        List<String> reg = firstType.equals(".word") ? regs : fregs;
-
-        ASTNode firstGrandChild = node.getChild(0).getChild(0);
-        ASTNode secondGrandChild = node.getChild(1).getChild(0);
-
-        boolean firstChildOp = !(firstGrandChild.getNodeType() == NodeType.LITERAL || firstGrandChild.getNodeType() == NodeType.LVALUE || firstGrandChild.getNodeType() == NodeType.NEGATIVE);
-        boolean secondChildOp = !(secondGrandChild.getNodeType() == NodeType.LITERAL || secondGrandChild.getNodeType() == NodeType.LVALUE || secondGrandChild.getNodeType() == NodeType.NEGATIVE);
-
-        if (firstChildOp && !secondChildOp) {
-//            textSegment += "\t\tmove $s0 $t0\n";
-        } else if (secondChildOp && !firstChildOp) {
-            textSegment += "\t\tmove $s0 $t0\n";
+        if (!(firstType == 4 || firstType == 8)) {
+            throw new Exception("bad parameters for type " + type);
         }
 
-//        textSegment += "\t\tmove $s1 $t1\n"; //DELETE
+        String op = firstType == 4 ? main_type + " " : main_type + ".s ";
+        String op2 = firstType == 4 ? "move " : "mov.s ";
 
-
-        if (node.getChild(0).getChild(0).getNodeType() == NodeType.LITERAL || node.getChild(0).getChild(0).getNodeType() == NodeType.LVALUE || node.getChild(0).getChild(0).getNodeType() == NodeType.NEGATIVE) {
-            textSegment += "\t\tmove $s1 $t1\n";
-            textSegment += "\t\t" + op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
-        }
-//        } else if(node.getChild(0).getChild(0).getNodeType() == NodeType.NEGATIVE || node.getChild(1).getChild(0).getNodeType() == NodeType.NEGATIVE){
-//            textSegment += "\t\t" + op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
-//        }
 
         setParentSymbolInfo(node, node.getChild(1));
         SymbolInfo second = node.getSymbolInfo();
         String secondType = second.getType().getSignature();
-//
-        if (firstChildOp && !secondChildOp) {
-//            textSegment += "\t\tmove $t0 $s0\n";
-        } else if (secondChildOp && !firstChildOp) {
-            textSegment += "\t\tmove $t0 $s0\n";
-        }
+
+        textSegment += "\t\taddi $sp, $sp, -4\n";
+        textSegment += "\t\tlw " + reg.get(tempReg + 1) + " 0($sp)\n";
 
 
         if (isTypesEqual(first, second)) {
-//            textSegment += "\t\tmove $t0 $s1\n"; ///IMPORTANT
-
-//            textSegment += "\t\tmove $t1, $s1\n";
             textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
             if (type.equals("mod")) {
                 textSegment += "\t\tmfhi $t1\n";
             }
-//            textSegment += "\t\tmove $s1, $t1\n";
-
         } else {
             throw new Exception("Type " + firstType + " & " + secondType + " are mismatched");
         }
-//        if (node.getChild(0).getChild(0).getNodeType() == NodeType.LITERAL || node.getChild(0).getChild(0).getNodeType() == NodeType.LVALUE || node.getChild(0).getChild(0).getNodeType() == NodeType.NEGATIVE) {
-//            textSegment += "\t\tmove $t1 $s1\n";
-//        }
 
         textSegment += "\t\t" + op2 + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
-
-//        if (node.getChild(0).getChild(0).getNodeType() == NodeType.LITERAL || node.getChild(0).getChild(0).getNodeType() == NodeType.LVALUE || node.getChild(0).getChild(0).getNodeType() == NodeType.NEGATIVE) {
-        textSegment += "\t\tmove $t0 $s1\n"; ///IMPORTANT
-//        }
-
-//        textSegment += "\t\tmove $t1 $t0\n";
     }
 
     private void visitSubtractionNode(ASTNode node) throws Exception {
-
-        ExpressionNode first = (ExpressionNode) node.getChild(0);
-        ExpressionNode second = (ExpressionNode) node.getChild(1);
-
-
         ArithmeticOp1(node, "sub");
-
-//        operations(first, second, "sub");
-//        visitAllChildren(node);
     }
 
     private void visitAdditionNode(ASTNode node) throws Exception {
-//        ExpressionNode first = (ExpressionNode) node.getChild(0);
-//        ExpressionNode second = (ExpressionNode) node.getChild(1);
-
         ArithmeticOp1(node, "add");
-
-
-//
-//        if (firstType.equals(secondType)) {
-//            if (firstType.equals(".word")) {
-//                operations(first, second, "add", false);
-//            } else if (firstType.equals(".float")) {
-//                operations(first, second, "add", true);
-//            }
-//        } else {
-//            System.err.println("Type Mismatch");
-//        }
-
-//        System.err.println(firstType + " " + secondType);
-
-
-//        visitAllChildren(node);
     }
 
 
@@ -770,143 +711,38 @@ public class CodeGenVisitor implements SimpleVisitor {
 
         setParentSymbolInfo(node, node.getChild(0));
         SymbolInfo first = node.getSymbolInfo();
-        String firstType = first.getType().getSignature();
+        int firstType = first.getType().getAlign();
 
 
-        String op = firstType.equals(".word") ? type + " " : type + ".s ";
-        String op2 = firstType.equals(".word") ? "add " : "add.s ";
-        String op3 = firstType.equals(".word") ? "sub " : "sub.s ";
-        String op4 = firstType.equals(".word") ? "move " : "mov.s ";
+        int tempReg = firstType == 4 ? tempRegsNumber : tempfRegsNumber;
+        List<String> reg = firstType == 4 ? regs : fregs;
 
+        textSegment += "\t\tmove " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+        textSegment += "\t\tsw " + reg.get(tempReg + 1) + ", 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, 4\n";
 
-        int tempReg = firstType.equals(".word") ? tempRegsNumber : tempfRegsNumber;
-        List<String> reg = firstType.equals(".word") ? regs : fregs;
-
-
-        ASTNode firstGrandChild = node.getChild(0).getChild(0);
-        ASTNode secondGrandChild = node.getChild(1).getChild(0);
-
-        boolean firstChildOp = !(firstGrandChild.getNodeType() == NodeType.LITERAL || firstGrandChild.getNodeType() == NodeType.LVALUE || firstGrandChild.getNodeType() == NodeType.NEGATIVE);
-        boolean secondChildOp = !(secondGrandChild.getNodeType() == NodeType.LITERAL || secondGrandChild.getNodeType() == NodeType.LVALUE || secondGrandChild.getNodeType() == NodeType.NEGATIVE);
-
-        if (firstChildOp && !secondChildOp) {
-//            textSegment += "\t\tmove $s0 $t0\n";
-        } else if (secondChildOp && !firstChildOp) {
-            textSegment += "\t\tmove $s0 $t0\n";
+        if (!(firstType == 4 || firstType == 8)) {
+            throw new Exception("bad parameters for this " + type);
         }
 
-//        textSegment += "\t\tmove $s0 $t0\n";
 
-//        textSegment += "\t\t" + op4 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
-
-
-        if (node.getChild(0).getChild(0).getNodeType() == NodeType.LITERAL || node.getChild(0).getChild(0).getNodeType() == NodeType.LVALUE) {
-            textSegment += "\t\t" + op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
-        }
-//        } else if(node.getChild(0).getChild(0).getNodeType() == NodeType.NEGATIVE || node.getChild(1).getChild(0).getNodeType() == NodeType.NEGATIVE){
-//            textSegment += "\t\tneg " + "\n";
-//        }
-
+        String op = firstType == 4 ? type + " " : type + ".s ";
+        String op2 = firstType == 4 ? "move " : "mov.s ";
 
         setParentSymbolInfo(node, node.getChild(1));
         SymbolInfo second = node.getSymbolInfo();
         String secondType = second.getType().getSignature();
 
-
-//        textSegment += "\t\tmove $t0 $s0\n";
-
-
-        if (firstChildOp && !secondChildOp) {
-//            textSegment += "\t\tmove $t0 $s0\n";
-        } else if (secondChildOp && !firstChildOp) {
-            textSegment += "\t\tmove $t0 $s0\n";
-
-        }
-
+        textSegment += "\t\taddi $sp, $sp, -4\n";
+        textSegment += "\t\tlw " + reg.get(tempReg + 1) + " 0($sp)\n";
 
         if (isTypesEqual(first, second)) {
-//            textSegment += "\t\tmove $t0 $s1\n";
-//            textSegment += "\t\tmove $t0 $s1\n";
-
-//            textSegment += "\t\tmove $t1, $s1\n";
-//                        textSegment += "\t\tmove $t1 $s1\n"; ///DELETE
-
             textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
-//            textSegment += "\t\tmove $s1, $t1\n";
-
         } else {
             throw new Exception("Type " + firstType + " & " + secondType + " are mismatched");
         }
-
-        textSegment += "\t\t" + op4 + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
-
+        textSegment += "\t\t" + op2 + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
     }
-
-    private void operations(ExpressionNode first, ExpressionNode second, String op, Boolean isFloat) throws
-            Exception {
-        boolean firstIsNegative = (first.getChild(0).getNodeType() == NodeType.NEGATIVE);
-        String op2 = firstIsNegative ? "sub" : "add";
-        String op3 = isFloat ? ".s" : " ";
-        first = firstIsNegative ? (ExpressionNode) first.getChild(0).getChild(0) : first;
-
-//        System.err.println(first.getSymbolInfo());
-
-
-        System.out.println(first);
-        System.out.println(second.getChild(0));
-//
-//        Literal idNode = (Literal) first.getChild(0);
-//        int varName = idNode.getType().getAlign();
-
-        if (first.getChild(0).getNodeType() == NodeType.LITERAL && second.getChild(0).getNodeType() == NodeType.LITERAL) {
-            System.err.println("4444444444");
-            textSegment += "\t\tli" + op3 + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
-            textSegment += "\t\tli" + op3 + regs.get(tempRegsNumber + 2) + ", " + second.getChild(0) + "\n";
-            textSegment += "\t\t" + op2 + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n"; //check
-            textSegment += "\t\t" + op + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 2) + "\n";
-        } else if (first.getChild(0).getNodeType() == NodeType.LITERAL) {
-            System.err.println("55555555555");
-            textSegment += "\t\tli" + op3 + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
-            textSegment += "\t\t" + op2 + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n"; //check
-            if (second.getChild(0).getNodeType() == NodeType.LVALUE) {
-                textSegment += "\t\tlw" + op3 + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) second.getChild(0).getChild(0)).getValue() + "\n";
-                textSegment += "\t\t" + op + " " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
-            }
-        } else if (second.getChild(0).getNodeType() == NodeType.LITERAL) {
-            System.err.println("66666666666");
-            textSegment += "\t\tli" + op3 + regs.get(tempRegsNumber + 1) + ", " + second.getChild(0) + "\n";
-            textSegment += "\t\t" + op + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
-            if (first.getChild(0).getNodeType() == NodeType.LVALUE) {
-                textSegment += "\t\tlw" + op3 + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
-                textSegment += "\t\t" + op2 + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";  //check
-            }
-        } else if (first.getChild(0).getNodeType() == NodeType.LVALUE && second.getChild(0).getNodeType() == NodeType.LVALUE) {
-            System.err.println("777777777777");
-            textSegment += "\t\tlw" + op3 + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
-            textSegment += "\t\tlw" + op3 + regs.get(tempRegsNumber + 2) + ", " + ((IdentifierNode) second.getChild(0).getChild(0)).getValue() + "\n";
-            textSegment += "\t\t" + op2 + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";  //check
-            textSegment += "\t\t" + op + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 2) + "\n";
-        } else if (first.getChild(0).getNodeType() == NodeType.LVALUE) {
-            System.err.println("8888888888888");
-            textSegment += "\t\tlw" + op3 + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) first.getChild(0).getChild(0)).getValue() + "\n";
-            textSegment += "\t\t" + op2 + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n"; //check
-            if (second.getChild(0).getNodeType() == NodeType.LITERAL) {
-                textSegment += "\t\tli" + op3 + regs.get(tempRegsNumber + 1) + ", " + second.getChild(0) + "\n";
-                textSegment += "\t\t" + op + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
-            }
-        } else if (second.getChild(0).getNodeType() == NodeType.LVALUE) {
-            System.err.println("9999999999999");
-            textSegment += "\t\tlw" + op3 + regs.get(tempRegsNumber + 1) + ", " + ((IdentifierNode) second.getChild(0).getChild(0)).getValue() + "\n";
-            textSegment += "\t\t" + op + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n";
-            if (first.getChild(0).getNodeType() == NodeType.LITERAL) {
-                textSegment += "\t\tli" + op3 + regs.get(tempRegsNumber + 1) + ", " + first.getChild(0) + "\n";
-                textSegment += "\t\t" + op2 + op3 + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber + 1) + "\n"; //check
-            }
-        } else {
-//            System.err.println("hoooooooooooooooooo");
-        }
-    }
-
 
     private void visitLValueNode(ASTNode node) throws Exception {
         node.getChild(0).accept(this);
