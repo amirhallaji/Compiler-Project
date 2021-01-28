@@ -12,7 +12,7 @@ public class Function {
     SymbolInfo returnType;
     Scope scope;
     List<SymbolInfo> argumentsType = new ArrayList<>();
-    String accessMode;
+    AccessMode accessMode = AccessMode.Public;
     public static Function currentFunction;
 
     public Function(String name) {
@@ -92,6 +92,22 @@ public class Function {
     @Override
     public int hashCode() {
         return Objects.hash(Name, scope);
+    }
+
+    public AccessMode getAccessMode() {
+        return accessMode;
+    }
+
+    public void setAccessMode(AccessMode accessMode) {
+        this.accessMode = accessMode;
+    }
+
+    public static Function getCurrentFunction() {
+        return currentFunction;
+    }
+
+    public static void setCurrentFunction(Function currentFunction) {
+        Function.currentFunction = currentFunction;
     }
 }
 

@@ -6,4 +6,5 @@ src/Tests/
 src/tests/
 src/*.jar
 src/report/
+*.class
 

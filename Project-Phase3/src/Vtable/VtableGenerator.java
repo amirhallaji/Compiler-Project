@@ -12,6 +12,7 @@ import java.util.List;
 public class VtableGenerator implements SimpleVisitor {
 
     public static List<Function> functions = new ArrayList<>();
+    public static List<ClassDecaf> classes = new ArrayList<>();
     private SymbolTable symbolTable = new SymbolTable();
 
     @Override
@@ -54,9 +55,25 @@ public class VtableGenerator implements SimpleVisitor {
             case VARIABLE_DECLARATION:
                 visitVariableDeclaration(node);
                 break;
+            case Class_DECLARATION:
+                visitClassDeclaration(node);
+                break;
             default:
                 visitAllChildren(node);
         }
+    }
+
+    private void visitClassDeclaration(ASTNode node) throws Exception {
+        //identifier
+        IdentifierNode idNode = (IdentifierNode) node.getChild(0);
+        String className = idNode.getValue();
+        ClassDecaf classDecaf = new ClassDecaf(className);
+        if (node.getChild(1).getNodeType().equals(NodeType.EXTEND)) {
+            IdentifierNode idNode1 = (IdentifierNode) node.getChild(1).getChild(0);
+            classDecaf.setParentClassName(idNode1.getValue());
+        }
+        node.getChild(node.getChildren().size() - 1).accept(this);
+
     }
 
     private void visitVariableDeclaration(ASTNode node) throws Exception {

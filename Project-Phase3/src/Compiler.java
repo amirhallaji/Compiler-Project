@@ -50,7 +50,7 @@ public class Compiler {
         PrintStream stream = new PrintStream(new FileOutputStream("src/Tests/Result.ll"));
 //        PrintStream stream = System.out;
         Program cu = parse();
-        performSemanticAnalysis(cu);
+        vtableAnalysis(cu);
         generateCode(cu, stream);
     }
 
@@ -70,7 +70,7 @@ public class Compiler {
         return parser.getRoot();
     }
 
-    private void performSemanticAnalysis(Program cu) throws Exception {
+    private void vtableAnalysis(Program cu) throws Exception {
         System.out.println("in type visitor");
         cu.accept(new VtableGenerator());
         System.out.println("TV done\n");
