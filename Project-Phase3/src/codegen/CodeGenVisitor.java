@@ -574,17 +574,21 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitWhileNode(ASTNode node) throws Exception{
         String whileLabel = labelGenerator();
+        String exitWhileLabel = labelGenerator();
+        String continueLabel = labelGenerator();
+        String breaklabel = labelGenerator();
         tempRegsNumber = 8;
         //while Exp_stmt is the first child of the while statement so,
         node.getChild(0).accept(this);
         //should check that it's an expression
         if(node.getChild(0).getSymbolInfo().getType().getAlign() == 1){
-//            String result = (node.getChild(0).getChild(0).getChild(1).getChild(0)).toString();
-            textSegment += "\t\tbne " + regs.get(tempRegsNumber) + ", 0"  + " " +  whileLabel + "\n";
+            textSegment += whileLabel + ":";
+            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0 " +  exitWhileLabel + "\n";
         }
         //after checking the exp_stmt in while, we should visit while body
         node.getChild(1).accept(this);
-        textSegment += "\t\t j " + whileLabel + "\n";
+        textSegment += "\t\tj " + whileLabel + "\n";
+        textSegment += exitWhileLabel + ":";
     }
 
     private void visitForNode(ASTNode node) throws Exception{
