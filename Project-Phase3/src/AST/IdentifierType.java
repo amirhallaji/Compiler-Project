@@ -4,8 +4,6 @@ public class IdentifierType implements Type {
     private String signature;
     private int align = 10;
 
-
-
     public IdentifierType(String signature) {
         this.signature = signature;
     }

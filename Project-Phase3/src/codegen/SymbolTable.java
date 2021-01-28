@@ -7,7 +7,7 @@ import java.util.HashMap;
  * A simple symbol table implementation.
  */
 
-class SymbolTable implements Symbol {
+public class SymbolTable implements Symbol {
     private ArrayList<Scope> allScopes = new ArrayList<>();
     private ArrayList<Scope> scopes = new ArrayList<>();
     private Scope currentScope;
@@ -16,7 +16,7 @@ class SymbolTable implements Symbol {
         return currentScope;
     }
 
-    void enterScope(String id) {
+    public void enterScope(String id) {
         Scope newScope = new Scope(id);
         scopes.add(newScope);
         allScopes.add(newScope);
@@ -24,7 +24,7 @@ class SymbolTable implements Symbol {
 
     }
 
-    void leaveCurrentScope() {
+    public void leaveCurrentScope() {
         if (currentScope != null)
             scopes.remove(currentScope);
         currentScope = scopes.get(scopes.size() - 1);
@@ -53,7 +53,7 @@ class SymbolTable implements Symbol {
         currentScope.getVariables().put(id, si);
     }
 
-    Symbol get(String id) throws Exception {
+    public Symbol get(String id) throws Exception {
         for (int i = scopes.size() - 1; i >= 0; i--) {
             if (scopes.get(i).getVariables().containsKey(id))
                 return scopes.get(i).getVariables().get(id);
@@ -69,7 +69,7 @@ class SymbolTable implements Symbol {
         return currentScope.getName();
     }
 
-    String getCurrentScopeName() {
+    public String getCurrentScopeName() {
         return currentScope.getName();
     }
 
@@ -84,4 +84,5 @@ class SymbolTable implements Symbol {
     public ArrayList<Scope> getScopes() {
         return scopes;
     }
+
 }

@@ -3,6 +3,7 @@ import AST.Program;
 //import codegen.CodeGenVisitor;
 import Parser.Parser;
 import Scanner.Scanner;
+import Vtable.VtableGenerator;
 import codegen.CodeGenVisitor;
 //import codegen.MethodVisitor;
 
@@ -16,6 +17,7 @@ public class Compiler {
         Compiler compiler = new Compiler(source);
         compiler.run();
     }
+
     public static void start(File read, Writer writer) throws Exception {
         System.out.println(('a' + 1));
         String source = "src/Tests/1.txt";
@@ -48,7 +50,7 @@ public class Compiler {
         PrintStream stream = new PrintStream(new FileOutputStream("src/Tests/Result.ll"));
 //        PrintStream stream = System.out;
         Program cu = parse();
-//        performSemanticAnalysis(cu);
+        performSemanticAnalysis(cu);
         generateCode(cu, stream);
     }
 
@@ -68,12 +70,13 @@ public class Compiler {
         return parser.getRoot();
     }
 
-    //    private void performSemanticAnalysis(Program cu) throws Exception {
-//        System.out.println("in type visitor");
-//        cu.accept(new MethodVisitor());
-//        System.out.println("TV done\n");
-//    }
-//
+    private void performSemanticAnalysis(Program cu) throws Exception {
+        System.out.println("in type visitor");
+        cu.accept(new VtableGenerator());
+        System.out.println("TV done\n");
+    }
+
+    //
     private void generateCode(Program cu, PrintStream stream) throws Exception {
         System.out.println("in code gen");
         cu.accept(new CodeGenVisitor(stream));

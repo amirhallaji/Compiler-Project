@@ -13,6 +13,7 @@ public class Function {
     Scope scope;
     List<SymbolInfo> argumentsType = new ArrayList<>();
     String accessMode;
+    public static Function currentFunction;
 
     public Function(String name) {
         Name = name;

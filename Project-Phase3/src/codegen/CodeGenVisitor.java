@@ -11,6 +11,7 @@ import java.util.List;
 
 import Vtable.Function;
 import AST.ClassNode;
+import Vtable.VtableGenerator;
 
 
 /**
@@ -22,7 +23,7 @@ public class CodeGenVisitor implements SimpleVisitor {
     private String className;
     private ClassNode classNode;
     private boolean returnGenerated;
-    private List<Function> functions = new ArrayList<>();
+    private List<Function> functions = VtableGenerator.functions;
     private HashMap<String, String> stringLiterals = new HashMap<>();
     private SymbolTable symbolTable = new SymbolTable();
     private int blockIndex;
@@ -994,6 +995,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             throw new Exception("Type " + varType + " & " + exprType + " Doesnt Match");
         }
     }
+
     private void visitExpressionNode(ASTNode node) throws Exception {
         tempRegsNumber = 8;
 
@@ -1017,7 +1019,7 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitArgumentsNode(ASTNode node) throws Exception {
         int argumentsLen = node.getChildren().size() * (-4);
-        Function function = functions.get(functions.size() - 1); //shak drm be in
+        Function function = Function.currentFunction;
         if (argumentsLen < 0)
             textSegment += "\t\taddi $sp,$sp," + argumentsLen + "\n";
         for (int i = argumentsLen / (-4); i >= 1; i--) {
@@ -1025,8 +1027,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             ArgumentNode.getChild(0).accept(this);
             IdentifierNode idNode = (IdentifierNode) ArgumentNode.getChild(0).getChild(1);
             String idName = idNode.getValue();
-            SymbolInfo si = (SymbolInfo) symbolTable.get(idName);
-            function.getArgumentsType().add(si);
+            SymbolInfo si = function.getArgumentsType().get(i - 1);
             switch (si.getType().getAlign()) {
                 case 1: //bool
                 case 4: // int
@@ -1137,20 +1138,17 @@ public class CodeGenVisitor implements SimpleVisitor {
         //identifier
         IdentifierNode idNode = (IdentifierNode) node.getChild(1);
         String methodName = idNode.getValue();
-        Function method = new Function(methodName, returnType, symbolTable.getCurrentScope());
-        if (functions.contains(method)) {
-            throw new Exception(methodName + " function declared before");
+        Function method_temp = new Function(methodName, returnType, symbolTable.getCurrentScope());
+        for (Function function : functions) {
+            if (function.equals(method_temp)) {
+                Function.currentFunction = function;
+                System.out.println(function);
+                break;
+            }
         }
-        functions.add(method);
         String label = symbolTable.getCurrentScopeName() + "_" + methodName;
-        if (symbolTable.getCurrentScopeName().equals("global") && methodName.equals("main"))
-            textSegment += "\t" + label + ":\n";
-        else
-            textSegment += "\t" + label + ":\n";
-
-
+        textSegment += "\t" + label + ":\n";
         symbolTable.enterScope(label);
-
         textSegment += "\t\tsw $ra,0($sp)\n";
         node.getChild(2).accept(this);
         textSegment += "\t\taddi $sp,$sp,4\n";

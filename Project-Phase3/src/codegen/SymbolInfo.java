@@ -39,12 +39,12 @@ public class SymbolInfo implements Symbol {
         return result;
     }
 
-    SymbolInfo(ASTNode node, Type type) {
+    public SymbolInfo(ASTNode node, Type type) {
         this.node = node;
         this.type = type;
     }
 
-    SymbolInfo(ASTNode node, PrimitiveType type) {
+    public SymbolInfo(ASTNode node, PrimitiveType type) {
         this.node = node;
         this.type = type;
     }

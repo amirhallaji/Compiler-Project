@@ -1,8 +1,0 @@
-int a;
-int b;
-int c;
-int d;
-int[] f;
-int main() {
-    d =  16 / 4 % 3;
-}
