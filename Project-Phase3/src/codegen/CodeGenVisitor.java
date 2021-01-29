@@ -930,7 +930,7 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void visitVariableDeclaration(ASTNode node) throws Exception {
-        if (!symbolTable.getCurrentScopeName().equals(ClassDecaf.currentClass.getName())) {
+        if (ClassDecaf.currentClass == null || !symbolTable.getCurrentScopeName().equals(ClassDecaf.currentClass.getName())) {
             IdentifierNode idNode = (IdentifierNode) node.getChild(1);
             String varName = idNode.getValue();
             String label = symbolTable.getCurrentScopeName() + "_" + varName + " :";
@@ -952,6 +952,7 @@ public class CodeGenVisitor implements SimpleVisitor {
             }
             symbolTable.put(varName, node.getSymbolInfo());
         }
+
     }
 
     private void visitUnaryOperation() {

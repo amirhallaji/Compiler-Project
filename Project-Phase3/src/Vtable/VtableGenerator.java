@@ -111,15 +111,17 @@ public class VtableGenerator implements SimpleVisitor {
         //identifier
         IdentifierNode idNode = (IdentifierNode) node.getChild(1);
         String fieldName = idNode.getValue();
-        if (symbolTable.getCurrentScopeName().equals(ClassDecaf.currentClass.getName())) {
-            Field field = new Field(fieldName);
-            field.setSymbolInfo(node.getSymbolInfo());
-            field.setAccessMode(Field.getCurrentAccessMode());
-            field.setClassDecaf(ClassDecaf.currentClass);
-            if (ClassDecaf.currentClass.getFields().contains(field))
-                throw new Exception(fieldName + " declared before");
-            else
-                ClassDecaf.currentClass.getFields().add(field);
+        if (ClassDecaf.currentClass != null) {
+            if (symbolTable.getCurrentScopeName().equals(ClassDecaf.currentClass.getName())) {
+                Field field = new Field(fieldName);
+                field.setSymbolInfo(node.getSymbolInfo());
+                field.setAccessMode(Field.getCurrentAccessMode());
+                field.setClassDecaf(ClassDecaf.currentClass);
+                if (ClassDecaf.currentClass.getFields().contains(field))
+                    throw new Exception(fieldName + " declared before");
+                else
+                    ClassDecaf.currentClass.getFields().add(field);
+            }
         }
 //        symbolTable.enterScope(label);
 //        node.getChild(2).accept(this);
