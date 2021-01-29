@@ -284,7 +284,23 @@ public class CodeGenVisitor implements SimpleVisitor {
     private void visitContinueNode(ASTNode node) {
     }
 
-    private void visitBreakNode(ASTNode node) {
+    private void visitBreakNode(ASTNode node) throws Exception{
+        ASTNode breakType = node.getParent().getParent().getParent().getParent().getParent();
+        System.out.println("node Type for Break => "+ breakType.getNodeType());
+
+        switch (breakType.getNodeType()){
+            case WHILE_STATEMENT:
+                System.out.println("while STMT");
+                break;
+            case FOR_STATEMENT:
+                System.out.println("for STMT");
+                break;
+            case SWITCH_STATEMENT:
+                System.out.println("switch STMT");
+                break;
+            default:
+                throw new Exception("Invalid break type");
+        }
     }
 
     private void visitBtoI(ASTNode node) throws Exception {
