@@ -4,10 +4,7 @@ import AST.*;
 
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import Vtable.ClassDecaf;
 import Vtable.Function;
@@ -32,6 +29,8 @@ public class CodeGenVisitor implements SimpleVisitor {
     private int arrayNumbers = 0;
 
 
+
+
     private int tempLiteralCounter = 0;
     private int tempLabelCounter = 0;
     private int tempRegsNumber = 8;
@@ -53,6 +52,8 @@ public class CodeGenVisitor implements SimpleVisitor {
             "$f17", "$f18", "$f19", "$f20", "$f21", "$f22", "$f23", "$f24", "$f25",
             "$f26", "$f27", "$f28", "$f29", "$f30", "$f31"
     );
+
+    private Stack<String> labels = new Stack<>();
 
 
     private static String dataSegment = ".data \n\ttrue: .asciiz \"true\"\n\tfalse : .asciiz \"false\"\n\n";
@@ -187,8 +188,10 @@ public class CodeGenVisitor implements SimpleVisitor {
                 visitExpressionNode(node);
                 break;
             case BREAK_STATEMENT:
+                visitBreakNode(node);
                 break;
             case CONTINUE_STATEMENT:
+                visitContinueNode(node);
                 break;
             case RETURN_STATEMENT:
                 visitReturnNode(node);
@@ -279,6 +282,14 @@ public class CodeGenVisitor implements SimpleVisitor {
         }
     }
 
+    private void visitContinueNode(ASTNode node) throws Exception {
+        textSegment += "\t\tj " + labels.peek() + "\n";
+    }
+
+    private void visitBreakNode(ASTNode node) {
+        textSegment += "\t\tj exit" + labels.peek() + "\n";
+    }
+
     private void visitBtoI(ASTNode node) throws Exception {
         setParentSymbolInfo(node, node.getChild(0));
         if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 1)) {
@@ -362,7 +373,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         SymbolInfo first = node.getSymbolInfo();
         int firstType = first.getType().getAlign();
 
-        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4 || node.getChild(0).getSymbolInfo().getType().getAlign() == 8)  && (!(type.equals("ne") || type.equals("eq")))) {
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4 || node.getChild(0).getSymbolInfo().getType().getAlign() == 8) && (!(type.equals("ne") || type.equals("eq")))) {
             throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
         }
 
@@ -403,19 +414,19 @@ public class CodeGenVisitor implements SimpleVisitor {
                         textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
                 }
 
-                textSegment += "\t\tbc1f L_CondFalse"+tempLabelCounter+"\n";
+                textSegment += "\t\tbc1f L_CondFalse" + tempLabelCounter + "\n";
                 if (!op.equals("c.ne.s ")) {
                     textSegment += "\t\tli $t0 1\n";
-                }else {
+                } else {
                     textSegment += "\t\tli $t0 0\n";
                 }
-                textSegment += "\t\tj L_CondEnd"+tempLabelCounter+"\n";
+                textSegment += "\t\tj L_CondEnd" + tempLabelCounter + "\n";
                 if (!op.equals("c.ne.s ")) {
-                    textSegment += "\t\tL_CondFalse" +tempLabelCounter+" : li $t0 0\n";
-                }else {
+                    textSegment += "\t\tL_CondFalse" + tempLabelCounter + " : li $t0 0\n";
+                } else {
                     textSegment += "\t\tL_CondFalse" + tempLabelCounter + ": li $t0 1\n";
                 }
-                textSegment += "\t\tL_CondEnd" + tempLabelCounter++ +":\n";
+                textSegment += "\t\tL_CondEnd" + tempLabelCounter++ + ":\n";
             } else {
                 textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
             }
@@ -719,7 +730,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         //it is if statement, so next child is expStmt which is the 0 child
         node.getChild(0).accept(this);
         if (node.getChild(0).getSymbolInfo().getType().getAlign() == 1) {
-            textSegment += "\t\tbne " + regs.get(tempRegsNumber) + ", 0" + ", " + ifFalseLabel + "\n";
+            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0" + ", " + ifFalseLabel + "\n";
         } else {
             throw new Exception("Invalid Expression in if_exp");
         }
@@ -738,35 +749,36 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void visitWhileNode(ASTNode node) throws Exception {
-        String whileLabel = labelGenerator();
-        String exitWhileLabel = labelGenerator();
-        String continueLabel = labelGenerator();
-        String breaklabel = labelGenerator();
-        tempRegsNumber = 8;
+        String label = labelGenerator();
+        labels.push(label);
         //while Exp_stmt is the first child of the while statement so,
+        textSegment += "\t\t" + label + ":" + "\n";
+
         node.getChild(0).accept(this);
         //should check that it's an expression
-        if (node.getChild(0).getSymbolInfo().getType().getAlign() == 1) {
-            textSegment += whileLabel + ":";
-            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0 " + exitWhileLabel + "\n";
-        }
+//        if (node.getChild(0).getSymbolInfo().getType().getAlign() == 1) {
+            textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
+//        }
         //after checking the exp_stmt in while, we should visit while body
         node.getChild(1).accept(this);
-        textSegment += "\t\tj " + whileLabel + "\n";
-        textSegment += exitWhileLabel + ":";
+        textSegment += "\t\tj " + label + "\n";
+        textSegment += "\t\texit" + label + ":\n";
+        labels.pop();
     }
 
     private void visitForNode(ASTNode node) throws Exception {
         String label = labelGenerator();
+        labels.push(label);
         setParentSymbolInfo(node, node.getChild(0));
-        textSegment += "\t\t"+label+":"+"\n";
+        textSegment += "\t\t" + label + ":" + "\n";
         setParentSymbolInfo(node, node.getChild(1));
-        textSegment += "\t\tbeq $t0, $zero exit"+label+"\n";
+        textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
 //        setParentSymbolInfo(node, node.getChild(2));
         node.getChild(2).accept(this);
         setParentSymbolInfo(node, node.getChild(3));
-        textSegment += "\t\tj "+label+"\n";
-        textSegment += "\t\texit"+label+":\n";
+        textSegment += "\t\tj " + label + "\n";
+        textSegment += "\t\texit" + label + ":\n";
+        labels.pop();
     }
 
 
