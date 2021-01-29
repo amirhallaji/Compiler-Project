@@ -187,8 +187,10 @@ public class CodeGenVisitor implements SimpleVisitor {
                 visitExpressionNode(node);
                 break;
             case BREAK_STATEMENT:
+                visitBreakNode(node);
                 break;
             case CONTINUE_STATEMENT:
+                visitContinueNode(node);
                 break;
             case RETURN_STATEMENT:
                 visitReturnNode(node);
@@ -277,6 +279,12 @@ public class CodeGenVisitor implements SimpleVisitor {
             default:
                 visitAllChildren(node);
         }
+    }
+
+    private void visitContinueNode(ASTNode node) {
+    }
+
+    private void visitBreakNode(ASTNode node) {
     }
 
     private void visitBtoI(ASTNode node) throws Exception {
