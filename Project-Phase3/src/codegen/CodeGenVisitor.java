@@ -883,11 +883,6 @@ public class CodeGenVisitor implements SimpleVisitor {
         int tempReg = firstType == 4 ? tempRegsNumber : tempfRegsNumber;
         List<String> reg = firstType == 4 ? regs : fregs;
 
-
-        textSegment += "\t\tmove " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
-        textSegment += "\t\tsw " + reg.get(tempReg + 1) + ", 0($sp)\n";
-        textSegment += "\t\taddi $sp, $sp, 4\n";
-
         if (firstType != 4 && type.equals("mod")) {
             throw new Exception("bad parameters for mod operation");
         } else if (type.equals("mod")) {
@@ -898,8 +893,19 @@ public class CodeGenVisitor implements SimpleVisitor {
             throw new Exception("bad parameters for type " + type);
         }
 
+
         String op = firstType == 4 ? main_type + " " : main_type + ".s ";
         String op2 = firstType == 4 ? "move " : "mov.s ";
+        String op3 = firstType == 4 ? "sw " : "s.s ";
+        String op4 = firstType == 4 ? "lw " : "l.s ";
+
+        textSegment += "\t\t" +op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+        textSegment += "\t\t"+op3+ reg.get(tempReg + 1) + ", 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, 4\n";
+
+
+
+
 
 
         setParentSymbolInfo(node, node.getChild(1));
@@ -907,7 +913,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         String secondType = second.getType().getSignature();
 
         textSegment += "\t\taddi $sp, $sp, -4\n";
-        textSegment += "\t\tlw " + reg.get(tempReg + 1) + " 0($sp)\n";
+        textSegment += "\t\t"+op4 + reg.get(tempReg + 1) + " 0($sp)\n";
 
 
         if (isTypesEqual(first, second)) {
@@ -942,24 +948,30 @@ public class CodeGenVisitor implements SimpleVisitor {
         int tempReg = firstType == 4 ? tempRegsNumber : tempfRegsNumber;
         List<String> reg = firstType == 4 ? regs : fregs;
 
-        textSegment += "\t\tmove " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
-        textSegment += "\t\tsw " + reg.get(tempReg + 1) + ", 0($sp)\n";
-        textSegment += "\t\taddi $sp, $sp, 4\n";
-
         if (!(firstType == 4 || firstType == 8)) {
             throw new Exception("bad parameters for this " + type);
         }
 
-
         String op = firstType == 4 ? type + " " : type + ".s ";
         String op2 = firstType == 4 ? "move " : "mov.s ";
+        String op3 = firstType == 4 ? "sw " : "s.s ";
+        String op4 = firstType == 4 ? "lw " : "l.s ";
+
+        textSegment += "\t\t" +op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+        textSegment += "\t\t"+op3+ reg.get(tempReg + 1) + ", 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, 4\n";
+
+
+
+
+
 
         setParentSymbolInfo(node, node.getChild(1));
         SymbolInfo second = node.getSymbolInfo();
         String secondType = second.getType().getSignature();
 
         textSegment += "\t\taddi $sp, $sp, -4\n";
-        textSegment += "\t\tlw " + reg.get(tempReg + 1) + " 0($sp)\n";
+        textSegment += "\t\t"+op4 + reg.get(tempReg + 1) + " 0($sp)\n";
 
         if (isTypesEqual(first, second)) {
             textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
