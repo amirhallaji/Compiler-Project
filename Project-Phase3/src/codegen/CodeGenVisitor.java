@@ -757,7 +757,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         node.getChild(0).accept(this);
         //should check that it's an expression
 //        if (node.getChild(0).getSymbolInfo().getType().getAlign() == 1) {
-            textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
+        textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
 //        }
         //after checking the exp_stmt in while, we should visit while body
         node.getChild(1).accept(this);
