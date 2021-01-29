@@ -4,10 +4,7 @@ import AST.*;
 
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import Vtable.ClassDecaf;
 import Vtable.Function;
@@ -54,6 +51,8 @@ public class CodeGenVisitor implements SimpleVisitor {
             "$f26", "$f27", "$f28", "$f29", "$f30", "$f31"
     );
 
+    private final Stack <String> breakLabel = new Stack<>();
+    private final Stack <String> continueLabel = new Stack<>();
 
     private static String dataSegment = ".data \n\ttrue: .asciiz \"true\"\n\tfalse : .asciiz \"false\"\n\n";
     private static String textSegment = "";
@@ -284,11 +283,11 @@ public class CodeGenVisitor implements SimpleVisitor {
     private void visitContinueNode(ASTNode node) {
     }
 
-    private void visitBreakNode(ASTNode node) throws Exception{
+    private void visitBreakNode(ASTNode node) throws Exception {
         ASTNode breakType = node.getParent().getParent().getParent().getParent().getParent();
-        System.out.println("node Type for Break => "+ breakType.getNodeType());
+        System.out.println("node Type for Break => " + breakType.getNodeType());
 
-        switch (breakType.getNodeType()){
+        switch (breakType.getNodeType()) {
             case WHILE_STATEMENT:
                 System.out.println("while STMT");
                 break;
@@ -386,7 +385,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         SymbolInfo first = node.getSymbolInfo();
         int firstType = first.getType().getAlign();
 
-        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4 || node.getChild(0).getSymbolInfo().getType().getAlign() == 8)  && (!(type.equals("ne") || type.equals("eq")))) {
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4 || node.getChild(0).getSymbolInfo().getType().getAlign() == 8) && (!(type.equals("ne") || type.equals("eq")))) {
             throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
         }
 
@@ -427,19 +426,19 @@ public class CodeGenVisitor implements SimpleVisitor {
                         textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
                 }
 
-                textSegment += "\t\tbc1f L_CondFalse"+tempLabelCounter+"\n";
+                textSegment += "\t\tbc1f L_CondFalse" + tempLabelCounter + "\n";
                 if (!op.equals("c.ne.s ")) {
                     textSegment += "\t\tli $t0 1\n";
-                }else {
+                } else {
                     textSegment += "\t\tli $t0 0\n";
                 }
-                textSegment += "\t\tj L_CondEnd"+tempLabelCounter+"\n";
+                textSegment += "\t\tj L_CondEnd" + tempLabelCounter + "\n";
                 if (!op.equals("c.ne.s ")) {
-                    textSegment += "\t\tL_CondFalse" +tempLabelCounter+" : li $t0 0\n";
-                }else {
+                    textSegment += "\t\tL_CondFalse" + tempLabelCounter + " : li $t0 0\n";
+                } else {
                     textSegment += "\t\tL_CondFalse" + tempLabelCounter + ": li $t0 1\n";
                 }
-                textSegment += "\t\tL_CondEnd" + tempLabelCounter++ +":\n";
+                textSegment += "\t\tL_CondEnd" + tempLabelCounter++ + ":\n";
             } else {
                 textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
             }
@@ -783,14 +782,14 @@ public class CodeGenVisitor implements SimpleVisitor {
     private void visitForNode(ASTNode node) throws Exception {
         String label = labelGenerator();
         setParentSymbolInfo(node, node.getChild(0));
-        textSegment += "\t\t"+label+":"+"\n";
+        textSegment += "\t\t" + label + ":" + "\n";
         setParentSymbolInfo(node, node.getChild(1));
-        textSegment += "\t\tbeq $t0, $zero exit"+label+"\n";
+        textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
 //        setParentSymbolInfo(node, node.getChild(2));
         node.getChild(2).accept(this);
         setParentSymbolInfo(node, node.getChild(3));
-        textSegment += "\t\tj "+label+"\n";
-        textSegment += "\t\texit"+label+":\n";
+        textSegment += "\t\tj " + label + "\n";
+        textSegment += "\t\texit" + label + ":\n";
     }
 
 
