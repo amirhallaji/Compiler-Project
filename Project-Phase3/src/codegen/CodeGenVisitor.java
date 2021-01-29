@@ -29,8 +29,6 @@ public class CodeGenVisitor implements SimpleVisitor {
     private int arrayNumbers = 0;
 
 
-
-
     private int tempLiteralCounter = 0;
     private int tempLabelCounter = 0;
     private int tempRegsNumber = 8;
@@ -89,6 +87,7 @@ public class CodeGenVisitor implements SimpleVisitor {
                 visitReadIntegerNode(node);
                 break;
             case READ_LINE:
+                visitReadLine(node);
                 break;
             case NEW_ARRAY:
                 visitNewArrayNode(node);
@@ -282,10 +281,19 @@ public class CodeGenVisitor implements SimpleVisitor {
         }
     }
 
+    private void visitReadLine(ASTNode node) {
+        String label = "userInput_" + labelGenerator();
+        dataSegment += "\t" + label + ":\t.space\t20";
+        SymbolInfo si = new SymbolInfo(node, PrimitiveType.INPUTSTRING);
+        node.setSymbolInfo(si);
+        textSegment += "\t\tli $v0, 8\n\t\tla $a0, " + label + "\n\t\tli $a1, 20\n\t\tsyscall\n";
+        textSegment += "\t\tmove $t0, $a0\n\n";
+    }
+
     private void visitContinueNode(ASTNode node) throws Exception {
-        if (labels.peek().charAt(labels.peek().length()-1)== 'F'){
+        if (labels.peek().charAt(labels.peek().length() - 1) == 'F') {
             textSegment += "\t\tj " + labels.peek() + "update\n";
-        }else {
+        } else {
             textSegment += "\t\tj " + labels.peek() + "\n";
         }
     }
@@ -600,20 +608,19 @@ public class CodeGenVisitor implements SimpleVisitor {
     private void visitNegative(ASTNode node) throws Exception {
         setParentSymbolInfo(node, node.getChild(0));
         int type = 4;
-        if (node.getChild(0).getChild(0).getNodeType() == NodeType.LVALUE){
+        if (node.getChild(0).getChild(0).getNodeType() == NodeType.LVALUE) {
             IdentifierNode idNode = (IdentifierNode) node.getChild(0).getChild(0).getChild(0);
             String varName = idNode.getValue();
             SymbolInfo varType = (SymbolInfo) symbolTable.get(varName);
             type = varType.getType().getAlign();
-        }else if (node.getChild(0).getChild(0).getNodeType() == NodeType.LITERAL){
+        } else if (node.getChild(0).getChild(0).getNodeType() == NodeType.LITERAL) {
             Literal literalNode = (Literal) node.getChild(0).getChild(0);
             type = literalNode.getType().getAlign();
         }
 
         if (type == 4) {
             textSegment += "\t\tneg $t0, $t0\n";
-        }
-        else if (type == 8){
+        } else if (type == 8) {
             textSegment += "\t\tneg.s $f0, $f0\n";
         }
     }
@@ -631,7 +638,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         dataSegment += "\t" + label + ": .space " + (literalNumber + 1) * 4 + "\n";
         textSegment += "\t\tla $t0, " + label + "\n";
         textSegment += "\t\tli $t2, " + literalNumber + "\n";
-        textSegment += "\t\tsw $t2, " + label + "\n";
+        textSegment += "\t\tsw $t2, 0($t0)\n";
     }
 
     private void visitLiteralNode(ASTNode node) {
@@ -666,14 +673,11 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void visitReturnNode(ASTNode node) throws Exception {
-        ASTNode func = node.getParent().getParent().getParent().getParent();
-        IdentifierNode idNode = (IdentifierNode) func.getChild(1);
-        String varName = idNode.getValue();
-        Function method = findFunction(varName);
-        SymbolInfo returnType = func.getChild(0).getSymbolInfo();
+        Function method = Function.currentFunction;
+        SymbolInfo returnType = method.getReturnType();
         node.getChild(0).accept(this);
         if (!isTypesEqual(returnType, node.getChild(0).getSymbolInfo()))
-            throw new Exception("Return type of " + varName + " is incorrect");
+            throw new Exception("Return type of " + method.getName() + " is incorrect");
 
     }
 
@@ -833,6 +837,7 @@ public class CodeGenVisitor implements SimpleVisitor {
                     textSegment += "\t\tsyscall\n";
                     break;
                 case 6://string
+                case 12:
                     textSegment += "\t\tli $v0, 4\n";
                     textSegment += "\t\tadd $a0, $t0, $zero\n";
                     textSegment += "\t\tsyscall\n";
@@ -899,13 +904,9 @@ public class CodeGenVisitor implements SimpleVisitor {
         String op3 = firstType == 4 ? "sw " : "s.s ";
         String op4 = firstType == 4 ? "lw " : "l.s ";
 
-        textSegment += "\t\t" +op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
-        textSegment += "\t\t"+op3+ reg.get(tempReg + 1) + ", 0($sp)\n";
+        textSegment += "\t\t" + op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+        textSegment += "\t\t" + op3 + reg.get(tempReg + 1) + ", 0($sp)\n";
         textSegment += "\t\taddi $sp, $sp, 4\n";
-
-
-
-
 
 
         setParentSymbolInfo(node, node.getChild(1));
@@ -913,7 +914,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         String secondType = second.getType().getSignature();
 
         textSegment += "\t\taddi $sp, $sp, -4\n";
-        textSegment += "\t\t"+op4 + reg.get(tempReg + 1) + " 0($sp)\n";
+        textSegment += "\t\t" + op4 + reg.get(tempReg + 1) + " 0($sp)\n";
 
 
         if (isTypesEqual(first, second)) {
@@ -957,13 +958,9 @@ public class CodeGenVisitor implements SimpleVisitor {
         String op3 = firstType == 4 ? "sw " : "s.s ";
         String op4 = firstType == 4 ? "lw " : "l.s ";
 
-        textSegment += "\t\t" +op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
-        textSegment += "\t\t"+op3+ reg.get(tempReg + 1) + ", 0($sp)\n";
+        textSegment += "\t\t" + op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+        textSegment += "\t\t" + op3 + reg.get(tempReg + 1) + ", 0($sp)\n";
         textSegment += "\t\taddi $sp, $sp, 4\n";
-
-
-
-
 
 
         setParentSymbolInfo(node, node.getChild(1));
@@ -971,7 +968,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         String secondType = second.getType().getSignature();
 
         textSegment += "\t\taddi $sp, $sp, -4\n";
-        textSegment += "\t\t"+op4 + reg.get(tempReg + 1) + " 0($sp)\n";
+        textSegment += "\t\t" + op4 + reg.get(tempReg + 1) + " 0($sp)\n";
 
         if (isTypesEqual(first, second)) {
             textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
@@ -1015,15 +1012,14 @@ public class CodeGenVisitor implements SimpleVisitor {
                 SymbolInfo varType = node.getChild(0).getSymbolInfo();
                 node.getChild(1).accept(this);
                 SymbolInfo varType2 = node.getChild(1).getSymbolInfo();
-                System.out.println(varType2.getDimensionArray());
                 if (varType2.getType().getAlign() == 4) {//int
                     if (varType.getDimensionArray() > 0) {
                         textSegment += "\t\tli $t4, 4\n";
+                        textSegment += "\t\taddi $t0, $t0, 1\n";
                         textSegment += "\t\tlw $t2, 0($a3)\n";
                         textSegment += "\t\tblt $t2, $t0, runtime_error\n";
-                        textSegment += "\t\tbeq $t2, $t0, runtime_error\n";
                         textSegment += "\t\tmul $t0, $t0, $t4\n";
-                        textSegment += "\t\tadd $a0, $s4, $t0\n";
+                        textSegment += "\t\tadd $a0, $a3, $t0\n";
                         textSegment += "\t\tlw $t0, 0($a0)\n";
                     } else
                         throw new Exception("error in array assign - type is not array");
@@ -1216,7 +1212,6 @@ public class CodeGenVisitor implements SimpleVisitor {
         for (Function function : functions) {
             if (function.equals(method_temp)) {
                 Function.currentFunction = function;
-                System.out.println(function);
                 break;
             }
         }

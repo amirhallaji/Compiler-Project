@@ -12,12 +12,10 @@ public enum PrimitiveType implements Type {
     DOUBLE(".float", 8),
     //todo
     VOID("void", 0),
-    STRING(".ascii", 6);
-
+    STRING(".ascii", 6),
+    INPUTSTRING(".space", 12);
     private final String signature;
     private final int align;
-
-
 
 
     PrimitiveType(String signature, int align) {
