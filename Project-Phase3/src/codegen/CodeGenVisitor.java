@@ -283,7 +283,11 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void visitContinueNode(ASTNode node) throws Exception {
-        textSegment += "\t\tj " + labels.peek() + "\n";
+        if (labels.peek().charAt(labels.peek().length()-1)== 'F'){
+            textSegment += "\t\tj " + labels.peek() + "update\n";
+        }else {
+            textSegment += "\t\tj " + labels.peek() + "\n";
+        }
     }
 
     private void visitBreakNode(ASTNode node) {
@@ -768,6 +772,7 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitForNode(ASTNode node) throws Exception {
         String label = labelGenerator();
+        label += "F";
         labels.push(label);
         setParentSymbolInfo(node, node.getChild(0));
         textSegment += "\t\t" + label + ":" + "\n";
@@ -775,6 +780,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
 //        setParentSymbolInfo(node, node.getChild(2));
         node.getChild(2).accept(this);
+        textSegment += "\t\t" + label + "update:\n";
         setParentSymbolInfo(node, node.getChild(3));
         textSegment += "\t\tj " + label + "\n";
         textSegment += "\t\texit" + label + ":\n";
