@@ -12,6 +12,7 @@ public class ClassDecaf {
     List<Field> fields = new ArrayList<>();
     int objectSize = 0;
     String parentClassName = "";
+    public static ClassDecaf currentClass;
 
     public ClassDecaf(String name) {
         this.name = name;
@@ -78,5 +79,15 @@ public class ClassDecaf {
 
     public void setParentClassName(String parentClassName) {
         this.parentClassName = parentClassName;
+    }
+
+    @Override
+    public String toString() {
+        return "ClassDecaf{" +
+                "name='" + name + '\'' +
+                ", methods=" + methods +
+                ", fields=" + fields +
+                ", parentClassName='" + parentClassName + '\'' +
+                '}';
     }
 }

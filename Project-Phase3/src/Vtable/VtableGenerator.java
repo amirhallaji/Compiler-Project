@@ -58,9 +58,32 @@ public class VtableGenerator implements SimpleVisitor {
             case Class_DECLARATION:
                 visitClassDeclaration(node);
                 break;
+            case FIELD_DECLARATION:
+                visitFieldDeclaration(node);
+                break;
             default:
                 visitAllChildren(node);
         }
+    }
+
+    private void visitFieldDeclaration(ASTNode node) throws Exception {
+        AccessMode accessMode = AccessMode.Public;
+        if (node.getChild(0).getNodeType().equals(NodeType.METHOD_ACCESS)) {
+            switch (node.getChild(0).getChild(0).getNodeType()) {
+                case PRIVATE_ACCESS:
+                    accessMode = AccessMode.Private;
+                    break;
+                case PUBLIC_ACCESS:
+                    accessMode = AccessMode.Public;
+                    break;
+                case PROTECTED_ACCESS:
+                    accessMode = AccessMode.Protected;
+                    break;
+            }
+            node.getChild(1).accept(this);
+        } else
+            node.getChild(0).accept(this);
+
     }
 
     private void visitClassDeclaration(ASTNode node) throws Exception {
@@ -72,18 +95,46 @@ public class VtableGenerator implements SimpleVisitor {
             IdentifierNode idNode1 = (IdentifierNode) node.getChild(1).getChild(0);
             classDecaf.setParentClassName(idNode1.getValue());
         }
-        node.getChild(node.getChildren().size() - 1).accept(this);
+        ClassDecaf.currentClass = classDecaf;
+        classes.add(classDecaf);
+        symbolTable.enterScope(classDecaf.getName());
+        if (node.getChild(node.getChildren().size() - 1).getNodeType().equals(NodeType.FIELDS)) {
+            node.getChild(node.getChildren().size() - 1).accept(this);
+            ClassDecaf.currentClass.setObjectSize(ClassDecaf.currentClass.getFields().size() * 4);
+        }
+        symbolTable.leaveCurrentScope();
 
     }
 
     private void visitVariableDeclaration(ASTNode node) throws Exception {
         setParentSymbolInfo(node, node.getChild(0));
+        //identifier
+        IdentifierNode idNode = (IdentifierNode) node.getChild(1);
+        String fieldName = idNode.getValue();
+        if (symbolTable.getCurrentScopeName().equals(ClassDecaf.currentClass.getName())) {
+            Field field = new Field(fieldName);
+            field.setSymbolInfo(node.getSymbolInfo());
+            field.setAccessMode(Field.getCurrentAccessMode());
+            field.setClassDecaf(ClassDecaf.currentClass);
+            if (ClassDecaf.currentClass.getFields().contains(field))
+                throw new Exception(fieldName + " declared before");
+            else
+                ClassDecaf.currentClass.getFields().add(field);
+        }
+//        symbolTable.enterScope(label);
+//        node.getChild(2).accept(this);
+//        symbolTable.leaveCurrentScope();
+//        if (symbolTable.getCurrentScopeName().equals("global")) {
+//            method.setAccessMode(AccessMode.Public);
+//        } else {
+//            method.setAccessMode(Field.currentAccessMode);
+//            ClassDecaf.currentClass.getMethods().add(method);
+//        }
     }
 
     private void visitStartNode(ASTNode node) throws Exception {
         symbolTable.enterScope("global");
         visitAllChildren(node);
-        System.out.println(functions);
         boolean isMainExist = false;
         for (Function function : functions) {
             if (function.getName().equals("main") && function.getScope().getName().equals("global")) {
@@ -95,6 +146,25 @@ public class VtableGenerator implements SimpleVisitor {
         }
         if (!isMainExist)
             throw new Exception("main does not exist");
+        for (ClassDecaf aClass : classes) {
+            if (!aClass.getParentClassName().equals("")) {
+                for (ClassDecaf bclassDecaf : classes) {
+                    if (aClass.getParentClassName().equals(bclassDecaf.getName())) {
+                        aClass.setParentClass(bclassDecaf);
+                        for (Field field : bclassDecaf.getFields()) {
+                            if (aClass.getFields().contains(field))
+                                throw new Exception("the variable declared in parent class");
+                            else
+                                aClass.getFields().addAll(bclassDecaf.getFields());
+                        }
+
+                    }
+                }
+                if (aClass.getParentClass() == null)
+                    throw new Exception("parent does not exist");
+            }
+        }
+        System.out.println(classes);
     }
 
     private void visitMethodDeclarationNode(ASTNode node) throws Exception {
@@ -109,11 +179,18 @@ public class VtableGenerator implements SimpleVisitor {
             throw new Exception(methodName + " function declared before");
         }
         functions.add(method);
+
         Function.currentFunction = method;
         String label = symbolTable.getCurrentScopeName() + "_" + methodName;
         symbolTable.enterScope(label);
         node.getChild(2).accept(this);
         symbolTable.leaveCurrentScope();
+        if (symbolTable.getCurrentScopeName().equals("global")) {
+            method.setAccessMode(AccessMode.Public);
+        } else {
+            method.setAccessMode(Field.currentAccessMode);
+            ClassDecaf.currentClass.getMethods().add(method);
+        }
     }
 
     private void visitArgumentsNode(ASTNode node) throws Exception {
@@ -124,7 +201,6 @@ public class VtableGenerator implements SimpleVisitor {
             ArgumentNode.accept(this);
             function.getArgumentsType().add(ArgumentNode.getChild(0).getSymbolInfo());
         }
-        System.out.println("args: " + function.getArgumentsType());
     }
 
     private void visitAllChildren(ASTNode node) throws Exception {
