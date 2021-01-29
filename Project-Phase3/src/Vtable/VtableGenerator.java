@@ -166,7 +166,6 @@ public class VtableGenerator implements SimpleVisitor {
                     throw new Exception("parent does not exist");
             }
         }
-        System.out.println(classes);
     }
 
     private void visitMethodDeclarationNode(ASTNode node) throws Exception {

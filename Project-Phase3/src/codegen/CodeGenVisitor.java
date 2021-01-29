@@ -283,7 +283,7 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitReadLine(ASTNode node) {
         String label = "userInput_" + labelGenerator();
-        dataSegment += "\t" + label + ":\t.space\t20";
+        dataSegment += "\t" + label + ":\t.space\t40\n";
         SymbolInfo si = new SymbolInfo(node, PrimitiveType.INPUTSTRING);
         node.setSymbolInfo(si);
         textSegment += "\t\tli $v0, 8\n\t\tla $a0, " + label + "\n\t\tli $a1, 20\n\t\tsyscall\n";
@@ -678,7 +678,9 @@ public class CodeGenVisitor implements SimpleVisitor {
         node.getChild(0).accept(this);
         if (!isTypesEqual(returnType, node.getChild(0).getSymbolInfo()))
             throw new Exception("Return type of " + method.getName() + " is incorrect");
-
+        textSegment += "\t\taddi $sp,$sp,-4\n";
+        textSegment += "\t\tlw $ra,0($sp)\n";
+        textSegment += "\t\tjr $ra\n";
     }
 
     private void visitCallNode(ASTNode node) throws Exception {
@@ -1146,7 +1148,13 @@ public class CodeGenVisitor implements SimpleVisitor {
 
 
     private void visitBlockNode(ASTNode node) throws Exception {
-        visitAllChildren(node);
+        if (node.getParent().getNodeType() != NodeType.METHOD_DECLARATION) {
+            symbolTable.enterScope("block_" + blockIndex++);
+            visitAllChildren(node);
+            symbolTable.leaveCurrentScope();
+        } else {
+            visitAllChildren(node);
+        }
     }
 
     private void visitVariableDeclaration(ASTNode node) throws Exception {

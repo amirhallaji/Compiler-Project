@@ -23,7 +23,7 @@ do
     program_code="$filename.d"
     report_filename="$filename.report.txt"
     echo "Running Test $filename -------------------------------------"
-        javac -cp "java-cup-11b.jar:java-cup-11b-runtime.jar:jflex-full-1.7.0.jar:" Main.java Model/*.java
+        javac -cp "java-cup-11b.jar:java-cup-11b-runtime.jar:jflex-full-1.7.0.jar:" Main.java
     if [ $? -eq 1 ]; then
         echo "Code did not Compiler"
     else

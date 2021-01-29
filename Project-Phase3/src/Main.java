@@ -3,6 +3,7 @@ import java.io.File;
 import AST.ASTNode;
 import AST.Program;
 import Scanner.Scanner;
+import Vtable.VtableGenerator;
 import codegen.CodeGenVisitor;
 
 import java.io.*;
@@ -94,15 +95,37 @@ class Compiler_test {
         try {
             cu = parse();
         } catch (Exception e) {
-            writer.print("parser exception");
+            String textSegment = "";
+            textSegment += ".data\n";
+            textSegment += "\terror: .asciiz \"Lexical Error\"\n";
+            textSegment += ".text\n" + "\t.globl main\n\n";
+            textSegment += "\tmain:\n";
+            textSegment += "\t\tli $v0, 4\n";
+            textSegment += "\t\tla $a0, error\n";
+            textSegment += "\t\tsyscall\n";
+            textSegment += "\t\t#END OF PROGRAM\n";
+            textSegment += "\t\tli $v0,10\n\t\tsyscall\n";
+            writer.print(textSegment);
             return;
         }
 
-//        performSemanticAnalysis(cu);
+
         try {
+            vtableAnalysis(cu);
             generateCode(cu);
         } catch (Exception e) {
-            writer.print("code gen exception");
+            String textSegment = "";
+            textSegment += ".data\n";
+            textSegment += "\terror: .asciiz \"Semantic Error\"\n";
+            textSegment += ".text\n" + "\t.globl main\n\n";
+            textSegment += "\tmain:\n";
+            textSegment += "\t\tli $v0, 4\n";
+            textSegment += "\t\tla $a0, error\n";
+            textSegment += "\t\tsyscall\n";
+            textSegment += "\t\t#END OF PROGRAM\n";
+            textSegment += "\t\tli $v0,10\n\t\tsyscall\n";
+            writer.print(textSegment);
+            return;
         }
     }
 
@@ -122,12 +145,12 @@ class Compiler_test {
         return parser.getRoot();
     }
 
-    //    private void performSemanticAnalysis(Program cu) throws Exception {
-//        System.out.println("in type visitor");
-//        cu.accept(new MethodVisitor());
-//        System.out.println("TV done\n");
-//    }
-//
+    private void vtableAnalysis(Program cu) throws Exception {
+        System.out.println("in type visitor");
+        cu.accept(new VtableGenerator());
+        System.out.println("TV done\n");
+    }
+
     private void generateCode(Program cu) throws Exception {
         System.out.println("in code gen");
         cu.accept(new CodeGenVisitor(writer));
