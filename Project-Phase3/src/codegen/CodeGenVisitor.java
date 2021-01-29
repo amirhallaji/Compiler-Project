@@ -757,7 +757,16 @@ public class CodeGenVisitor implements SimpleVisitor {
     }
 
     private void visitForNode(ASTNode node) throws Exception {
-
+        String label = labelGenerator();
+        setParentSymbolInfo(node, node.getChild(0));
+        textSegment += "\t\t"+label+":"+"\n";
+        setParentSymbolInfo(node, node.getChild(1));
+        textSegment += "\t\tbeq $t0, $zero exit"+label+"\n";
+//        setParentSymbolInfo(node, node.getChild(2));
+        node.getChild(2).accept(this);
+        setParentSymbolInfo(node, node.getChild(3));
+        textSegment += "\t\tj "+label+"\n";
+        textSegment += "\t\texit"+label+":\n";
     }
 
 
