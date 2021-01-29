@@ -31,6 +31,9 @@ public class CodeGenVisitor implements SimpleVisitor {
     private int blockIndex;
     private int arrayNumbers = 0;
 
+
+    private int tempLiteralCounter = 0;
+    private int tempLabelCounter = 0;
     private int tempRegsNumber = 8;
     private int tempfRegsNumber = 0;
     List<String> regs = Arrays.asList(
@@ -77,6 +80,7 @@ public class CodeGenVisitor implements SimpleVisitor {
                 break;
             case MOD:
                 visitModNode(node);
+                break;
             case NEGATIVE:
                 visitNegative(node);
                 break;
@@ -91,12 +95,16 @@ public class CodeGenVisitor implements SimpleVisitor {
             case NEW_IDENTIFIER:
                 break;
             case ITOB:
+                visitItoB(node);
                 break;
             case ITOD:
+                visitItoD(node);
                 break;
             case DTOI:
+                visitDtoI(node);
                 break;
             case BTOI:
+                visitBtoI(node);
                 break;
             case LVALUE:
                 visitLValueNode(node);
@@ -125,10 +133,13 @@ public class CodeGenVisitor implements SimpleVisitor {
                 visitNotEqualNode(node);
                 break;
             case BOOLEAN_AND:
+                visitAndNode(node);
                 break;
             case BOOLEAN_NOT:
+                visitNotNode(node);
                 break;
             case BOOLEAN_OR:
+                visitOrNode(node);
                 break;
             case BOOLEAN_TYPE:
                 node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
@@ -268,150 +279,306 @@ public class CodeGenVisitor implements SimpleVisitor {
         }
     }
 
-    private void visitGreaterThanEqualNode(ASTNode node) throws Exception {
-        node.getChild(0).accept(this);
-        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
-            case 4: //int
-                textSegment += "\t\tmove $t1, $t0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tsge $t0, $t0, $t1\n";
-                break;
-            case 8: //double //TODO
-                textSegment += "\t\tmov.s $f1, $f0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tc.le.s $f1, $f0\n";
-                textSegment += "\t\tmovf $t0, $zero\n";
-                break;
-            default:
-                throw new Exception("invalid types for equal");
+    private void visitBtoI(ASTNode node) throws Exception {
+        setParentSymbolInfo(node, node.getChild(0));
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 1)) {
+            throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
         }
-        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
-            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
-        else
-            throw new Exception("types does not match");
+        node.getSymbolInfo().setType(PrimitiveType.INT);
+    }
+
+    private void visitItoB(ASTNode node) throws Exception {
+        setParentSymbolInfo(node, node.getChild(0));
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4)) {
+            throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
+        }
+        node.getSymbolInfo().setType(PrimitiveType.BOOL);
+    }
+
+    private void visitDtoI(ASTNode node) throws Exception {
+        setParentSymbolInfo(node, node.getChild(0));
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 8)) {
+            throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
+        }
+        node.getSymbolInfo().setType(PrimitiveType.INT);
+        textSegment += "\t\tcvt.w.s $f0 $f0\n";
+        textSegment += "\t\tmfc1 $t0 $f0\n";
+    }
+
+    private void visitItoD(ASTNode node) throws Exception {
+        setParentSymbolInfo(node, node.getChild(0));
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4)) {
+            throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
+        }
+        node.getSymbolInfo().setType(PrimitiveType.DOUBLE);
+
+        textSegment += "\t\tmtc1 $t0 $f0\n";
+        textSegment += "\t\tcvt.s.w $f0 $f0\n";
+
+    }
+
+    private void visitOrNode(ASTNode node) throws Exception {
+        LogicalOp(node, "or");
+    }
+
+    private void LogicalOp(ASTNode node, String op) throws Exception {
+        setParentSymbolInfo(node, node.getChild(0));
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 1)) {
+            throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
+        }
+
+        textSegment += "\t\t" + "move $t1" + ", " + "$t0" + "\n";
+        textSegment += "\t\t" + "sw " + "$t1" + ", 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, 4\n";
+
+        setParentSymbolInfo(node, node.getChild(1));
+
+        textSegment += "\t\taddi $sp, $sp, -4\n";
+        textSegment += "\t\t" + "lw " + "$t1" + ", 0($sp)\n";
+
+        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo())) {
+            textSegment += "\t\t" + op + " $t1, $t1, $t0\n";
+        }
+
+        textSegment += "\t\t" + "move $t0, $t1\n";
+    }
+
+    private void visitNotNode(ASTNode node) throws Exception {
+        setParentSymbolInfo(node, node.getChild(0));
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 1)) {
+            throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
+        }
+        textSegment += "\t\t" + "xori $t1, $t1, 1\n";
+        textSegment += "\t\t" + "move $t0, $t1\n";
+    }
+
+    private void visitAndNode(ASTNode node) throws Exception {
+        LogicalOp(node, "and");
+    }
+
+    private void LogicalOp2(ASTNode node, String type) throws Exception {
+
+        setParentSymbolInfo(node, node.getChild(0));
+        SymbolInfo first = node.getSymbolInfo();
+        int firstType = first.getType().getAlign();
+
+        if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4 || node.getChild(0).getSymbolInfo().getType().getAlign() == 8)  && (!(type.equals("ne") || type.equals("eq")))) {
+            throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
+        }
+
+
+        int tempReg = firstType != 8 ? tempRegsNumber : tempfRegsNumber;
+        List<String> reg = firstType != 8 ? regs : fregs;
+
+        String op = firstType != 8 ? "s" + type + " " : "c." + type + ".s ";
+        String op2 = firstType != 8 ? "move " : "mov.s ";
+        String op3 = firstType != 8 ? "sw " : "swc1 ";
+        String op4 = firstType != 8 ? "lw " : "lwc1 ";
+
+        textSegment += "\t\t" + op2 + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+        textSegment += "\t\t" + op3 + reg.get(tempReg + 1) + ", 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, 4\n";
+
+
+        setParentSymbolInfo(node, node.getChild(1));
+        SymbolInfo second = node.getSymbolInfo();
+        String secondType = second.getType().getSignature();
+
+        textSegment += "\t\taddi $sp, $sp, -4\n";
+        textSegment += "\t\t" + op4 + reg.get(tempReg + 1) + " 0($sp)\n";
+
+        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo())) {
+            if (node.getChild(0).getSymbolInfo().getType().getAlign() == 8) {
+                switch (op) {
+                    case "c.gt.s ":
+                        textSegment += "\t\t" + "c.lt.s " + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
+                        break;
+                    case "c.ge.s ":
+                        textSegment += "\t\t" + "c.le.s " + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
+                        break;
+                    case "c.ne.s ":
+                        textSegment += "\t\t" + "c.eq.s " + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
+                        break;
+                    default:
+                        textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+                }
+
+                textSegment += "\t\tbc1f L_CondFalse"+tempLabelCounter+"\n";
+                if (!op.equals("c.ne.s ")) {
+                    textSegment += "\t\tli $t0 1\n";
+                }else {
+                    textSegment += "\t\tli $t0 0\n";
+                }
+                textSegment += "\t\tj L_CondEnd"+tempLabelCounter+"\n";
+                if (!op.equals("c.ne.s ")) {
+                    textSegment += "\t\tL_CondFalse" +tempLabelCounter+" : li $t0 0\n";
+                }else {
+                    textSegment += "\t\tL_CondFalse" + tempLabelCounter + ": li $t0 1\n";
+                }
+                textSegment += "\t\tL_CondEnd" + tempLabelCounter++ +":\n";
+            } else {
+                textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
+            }
+            node.getSymbolInfo().setType(PrimitiveType.BOOL);
+        } else {
+            throw new Exception("Type " + firstType + " & " + secondType + " are mismatched");
+        }
+        textSegment += "\t\t" + op2 + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
+    }
+
+    private void visitGreaterThanEqualNode(ASTNode node) throws Exception {
+        LogicalOp2(node, "ge");
+//        node.getChild(0).accept(this);
+//        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
+//            case 4: //int
+//                textSegment += "\t\tmove $t1, $t0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tsge $t0, $t0, $t1\n";
+//                break;
+//            case 8: //double //TODO
+//                textSegment += "\t\tmov.s $f1, $f0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tc.le.s $f1, $f0\n";
+//                textSegment += "\t\tmovf $t0, $zero\n";
+//                break;
+//            default:
+//                throw new Exception("invalid types for equal");
+//        }
+//        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
+//            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
+//        else
+//            throw new Exception("types does not match");
     }
 
     private void visitGreaterThanNode(ASTNode node) throws Exception {
-        node.getChild(0).accept(this);
-        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
-            case 4: //int
-                textSegment += "\t\tmove $t1, $t0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tsgt $t0, $t0, $t1\n";
-                break;
-            case 8: //double //TODO
-                textSegment += "\t\tmov.s $f1, $f0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tc.lt.s $f1, $f0\n";
-                textSegment += "\t\tmovf $t0, $zero\n";
-                break;
-            default:
-                throw new Exception("invalid types for equal");
-        }
-        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
-            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
-        else
-            throw new Exception("types does not match");
+        LogicalOp2(node, "gt");
+//        node.getChild(0).accept(this);
+//        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
+//            case 4: //int
+//                textSegment += "\t\tmove $t1, $t0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tsgt $t0, $t0, $t1\n";
+//                break;
+//            case 8: //double //TODO
+//                textSegment += "\t\tmov.s $f1, $f0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tc.lt.s $f1, $f0\n";
+//                textSegment += "\t\tmovf $t0, $zero\n";
+//                break;
+//            default:
+//                throw new Exception("invalid types for equal");
+//        }
+//        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
+//            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
+//        else
+//            throw new Exception("types does not match");
 
     }
 
     private void visitLessThanEqualNode(ASTNode node) throws Exception {
-        node.getChild(0).accept(this);
-        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
-            case 4: //int
-                textSegment += "\t\tmove $t1, $t0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tsle $t0, $t0, $t1\n";
-                break;
-            case 8: //double //TODO
-                textSegment += "\t\tmov.s $f1, $f0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tc.le.s $f0, $f1\n";
-                textSegment += "\t\tmovf $t0, $zero\n";
-                break;
-            default:
-                throw new Exception("invalid types for equal");
-        }
-        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
-            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
-        else
-            throw new Exception("types does not match");
+        LogicalOp2(node, "le");
+//        node.getChild(0).accept(this);
+//        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
+//            case 4: //int
+//                textSegment += "\t\tmove $t1, $t0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tsle $t0, $t0, $t1\n";
+//                break;
+//            case 8: //double //TODO
+//                textSegment += "\t\tmov.s $f1, $f0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tc.le.s $f0, $f1\n";
+//                textSegment += "\t\tmovf $t0, $zero\n";
+//                break;
+//            default:
+//                throw new Exception("invalid types for equal");
+//        }
+//        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
+//            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
+//        else
+//            throw new Exception("types does not match");
     }
 
     private void visitLessThanNode(ASTNode node) throws Exception {
-        node.getChild(0).accept(this);
-        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
-            case 4: //int
-                textSegment += "\t\tmove $t1, $t0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tslt $t0, $t0, $t1\n";
-                break;
-            case 8: //double //TODO
-                textSegment += "\t\tmov.s $f1, $f0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tc.lt.s $f0, $f1\n";
-                textSegment += "\t\tmovf $t0, $zero\n";
-                break;
-            default:
-                throw new Exception("invalid types for equal");
-        }
-        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
-            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
-        else
-            throw new Exception("types does not match");
+        LogicalOp2(node, "lt");
+
+//        node.getChild(0).accept(this);
+//        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
+//            case 4: //int
+//                textSegment += "\t\tmove $t1, $t0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tslt $t0, $t0, $t1\n";
+//                break;
+//            case 8: //double //TODO
+//                textSegment += "\t\tmov.s $f1, $f0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tc.lt.s $f0, $f1\n";
+//                textSegment += "\t\tmovf $t0, $zero\n";
+//                break;
+//            default:
+//                throw new Exception("invalid types for equal");
+//        }
+//        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
+//            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
+//        else
+//            throw new Exception("types does not match");
     }
 
     private void visitNotEqualNode(ASTNode node) throws Exception {
-        node.getChild(0).accept(this);
-        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
-            case 4: //int
-            case 6://string
-            case 10: //class
-                textSegment += "\t\tmove $t1, $t0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tsne $t0, $t0, $t1\n";
-                textSegment += "\t\tmovf $t0, $zero\n";
-                break;
-            case 8: //double //TODO
-                textSegment += "\t\tmov.s $f1, $f0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tc.eq.s $f0, $f1\n";
-                textSegment += "\t\tmovt $t0, $zero\n";
-                break;
-            default:
-                throw new Exception("invalid types for equal");
-        }
-        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
-            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
-        else
-            throw new Exception("types does not match");
+        LogicalOp2(node, "ne");
+
+//        node.getChild(0).accept(this);
+//        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
+//            case 4: //int
+//            case 6://string
+//            case 10: //class
+//                textSegment += "\t\tmove $t1, $t0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tsne $t0, $t0, $t1\n";
+//                textSegment += "\t\tmovf $t0, $zero\n";
+//                break;
+//            case 8: //double //TODO
+//                textSegment += "\t\tmov.s $f1, $f0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tc.eq.s $f0, $f1\n";
+//                textSegment += "\t\tmovt $t0, $zero\n";
+//                break;
+//            default:
+//                throw new Exception("invalid types for equal");
+//        }
+//        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
+//            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
+//        else
+//            throw new Exception("types does not match");
 
     }
 
     private void visitEqualNode(ASTNode node) throws Exception {
-        node.getChild(0).accept(this);
-        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
-            case 4: //int
-            case 6://string
-            case 10: //class
-                textSegment += "\t\tmove $t1, $t0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tseq $t0, $t0, $t1\n";
-                break;
-            case 8: //double //TODO
-                textSegment += "\t\tmov.s $f1, $f0\n";
-                node.getChild(1).accept(this);
-                textSegment += "\t\tc.eq.s $f0, $f1\n";
-                textSegment += "\t\tmovf $t0, $zero\n";
-                break;
+        LogicalOp2(node, "eq");
 
-            default:
-                throw new Exception("invalid types for equal");
-        }
-        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
-            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
-        else
-            throw new Exception("types does not match");
+//        node.getChild(0).accept(this);
+//        switch (node.getChild(0).getSymbolInfo().getType().getAlign()) {
+//            case 4: //int
+//            case 6://string
+//            case 10: //class
+//                textSegment += "\t\tmove $t1, $t0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tseq $t0, $t0, $t1\n";
+//                break;
+//            case 8: //double //TODO
+//                textSegment += "\t\tmov.s $f1, $f0\n";
+//                node.getChild(1).accept(this);
+//                textSegment += "\t\tc.eq.s $f0, $f1\n";
+//                textSegment += "\t\tmovf $t0, $zero\n";
+//                break;
+//
+//            default:
+//                throw new Exception("invalid types for equal");
+//        }
+//        if (isTypesEqual(node.getChild(0).getSymbolInfo(), node.getChild(1).getSymbolInfo()))
+//            node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.BOOL));
+//        else
+//            throw new Exception("types does not match");
     }
 
     private void visitNegative(ASTNode node) throws Exception {
@@ -454,7 +621,8 @@ public class CodeGenVisitor implements SimpleVisitor {
                 node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.STRING));
                 break;
             case 1: //bool
-
+                String bool_type = node.toString().equals("true") ? "1" : "0";
+                textSegment += "\t\tli " + regs.get(tempRegsNumber) + ", " + bool_type + "\n";
                 break;
             case 4: //int
                 textSegment += "\t\tli " + regs.get(tempRegsNumber) + ", " + node + "\n";
@@ -626,8 +794,8 @@ public class CodeGenVisitor implements SimpleVisitor {
                     textSegment += "\t\tsyscall\n";
                     break;
                 case 8://float
-                    textSegment += "\t\tli $v0, 3\n";
-                    textSegment += "\t\tmov.s\t$f12, $f0\n";
+                    textSegment += "\t\tli $v0, 2\n";
+                    textSegment += "\t\tmov.d\t$f12, $f0\n";
                     textSegment += "\t\tsyscall\n";
                     break;
                 default:
@@ -750,7 +918,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         textSegment += "\t\tlw " + reg.get(tempReg + 1) + " 0($sp)\n";
 
         if (isTypesEqual(first, second)) {
-            textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + ", " + reg.get(tempReg + 1) + "\n";
+            textSegment += "\t\t" + op + reg.get(tempReg + 1) + ", " + reg.get(tempReg + 1) + ", " + reg.get(tempReg) + "\n";
         } else {
             throw new Exception("Type " + firstType + " & " + secondType + " are mismatched");
         }
