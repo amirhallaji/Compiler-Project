@@ -742,7 +742,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         //it is if statement, so next child is expStmt which is the 0 child
         node.getChild(0).accept(this);
         if (node.getChild(0).getSymbolInfo().getType().getAlign() == 1) {
-            textSegment += "\t\tbne " + regs.get(tempRegsNumber) + ", 0" + ", " + ifFalseLabel + "\n";
+            textSegment += "\t\tbeq " + regs.get(tempRegsNumber) + ", 0" + ", " + ifFalseLabel + "\n";
         } else {
             throw new Exception("Invalid Expression in if_exp");
         }
