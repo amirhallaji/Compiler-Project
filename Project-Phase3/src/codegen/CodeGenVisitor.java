@@ -363,8 +363,9 @@ public class CodeGenVisitor implements SimpleVisitor {
         if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 1)) {
             throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
         }
-        textSegment += "\t\t" + "xori $t1, $t1, 1\n";
-        textSegment += "\t\t" + "move $t0, $t1\n";
+//        textSegment += "\t\t" + "move $t0, $t0\n";
+        textSegment += "\t\t" + "xori $t0, $t0, 1\n";
+//        textSegment += "\t\t" + "move $t0, $t1\n";
     }
 
     private void visitAndNode(ASTNode node) throws Exception {
@@ -598,10 +599,23 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitNegative(ASTNode node) throws Exception {
         setParentSymbolInfo(node, node.getChild(0));
+        int type = 4;
+        if (node.getChild(0).getChild(0).getNodeType() == NodeType.LVALUE){
+            IdentifierNode idNode = (IdentifierNode) node.getChild(0).getChild(0).getChild(0);
+            String varName = idNode.getValue();
+            SymbolInfo varType = (SymbolInfo) symbolTable.get(varName);
+            type = varType.getType().getAlign();
+        }else if (node.getChild(0).getChild(0).getNodeType() == NodeType.LITERAL){
+            Literal literalNode = (Literal) node.getChild(0).getChild(0);
+            type = literalNode.getType().getAlign();
+        }
 
-        textSegment += "\t\tneg " + regs.get(tempRegsNumber) + ", " + regs.get(tempRegsNumber) + "\n";
-
-//        node.getChild();
+        if (type == 4) {
+            textSegment += "\t\tneg $t0, $t0\n";
+        }
+        else if (type == 8){
+            textSegment += "\t\tneg.s $f0, $f0\n";
+        }
     }
 
     private void visitNewArrayNode(ASTNode node) throws Exception {
@@ -643,7 +657,10 @@ public class CodeGenVisitor implements SimpleVisitor {
                 textSegment += "\t\tli " + regs.get(tempRegsNumber) + ", " + node + "\n";
                 break;
             case 8: //double
-                textSegment += "\t\tli.s " + fregs.get(tempfRegsNumber) + ", " + node + "\n";
+                dataSegment += "\t" + symbolTable.getCurrentScopeName() + "_temp" + tempLiteralCounter + ": .float " + node + "\n";
+                textSegment += "\t\tla $a0, " + symbolTable.getCurrentScopeName() + "_temp" + (tempLiteralCounter++) + '\n';
+                textSegment += "\t\tl.s $f0, 0($a0)\n";
+//                textSegment += "\t\tli.s " + fregs.get(tempfRegsNumber) + ", " + node + "\n";
                 break;
         }
     }
