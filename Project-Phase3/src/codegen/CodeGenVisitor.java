@@ -279,10 +279,10 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitReadLine(ASTNode node) {
         String label = "userInput_" + labelGenerator();
-        dataSegment += "\t" + label + ":\t.space\t40\n";
+        dataSegment += "\t" + label + ":\t.space\t60\n";
         SymbolInfo si = new SymbolInfo(node, PrimitiveType.INPUTSTRING);
         node.setSymbolInfo(si);
-        textSegment += "\t\tli $v0, 8\n\t\tla $a0, " + label + "\n\t\tli $a1, 20\n\t\tsyscall\n";
+        textSegment += "\t\tli $v0, 8\n\t\tla $a0, " + label + "\n\t\tli $a1, 60\n\t\tsyscall\n";
         textSegment += "\t\tmove $t0, $a0\n\n";
     }
 
@@ -311,7 +311,7 @@ public class CodeGenVisitor implements SimpleVisitor {
         if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4)) {
             throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
         }
-        textSegment += "\t\tbeq $t0 ,0 ItoB"+DtoItoBLabel+"\n";
+        textSegment += "\t\tbeq $t0 ,0 ItoB" + DtoItoBLabel + "\n";
 
         textSegment += "\t\tli $t0, 1\n";
         textSegment += "\t\tj exit_ItoB" + DtoItoBLabel + "\n";
@@ -320,7 +320,6 @@ public class CodeGenVisitor implements SimpleVisitor {
         textSegment += "\t\tli $t0, 0\n";
 
         textSegment += "exit_ItoB" + (DtoItoBLabel++) + ":\n";
-
 
 
         node.getSymbolInfo().setType(PrimitiveType.BOOL);
@@ -342,14 +341,12 @@ public class CodeGenVisitor implements SimpleVisitor {
         textSegment += "\t\taddi $sp, $sp, 4\n";
 
 
-
         textSegment += "\t\tmov.s $f1, $f0\n";
         textSegment += "\t\tcvt.w.s $f1, $f1\n";
 
         textSegment += "\t\tmfc1 $t0 $f1\n";
         textSegment += "\t\tmtc1 $t0 $f1\n";
         textSegment += "\t\tcvt.s.w $f1 $f1\n";
-
 
 
         textSegment += "\t\tsub.s $f1, $f0, $f1\n";
@@ -362,17 +359,17 @@ public class CodeGenVisitor implements SimpleVisitor {
 
 
         textSegment += "\t\tc.eq.s $f1 $f2\n";
-        textSegment += "\t\tbc1t "+"half_DtoI"+ DtoItoBLabel +"\n";
-        textSegment += "\t\tbc1f "+"nhalf_DtoI"+ DtoItoBLabel +"\n";
+        textSegment += "\t\tbc1t " + "half_DtoI" + DtoItoBLabel + "\n";
+        textSegment += "\t\tbc1f " + "nhalf_DtoI" + DtoItoBLabel + "\n";
 
 
-        textSegment += "half_DtoI"+ DtoItoBLabel +":\n";
+        textSegment += "half_DtoI" + DtoItoBLabel + ":\n";
         textSegment += "\t\tceil.w.s $f0 $f0\n";
         textSegment += "\t\tmfc1 $t0 $f0\n";
-        textSegment += "\t\tj exit_DtoI"+ DtoItoBLabel +"\n";
+        textSegment += "\t\tj exit_DtoI" + DtoItoBLabel + "\n";
 
 
-        textSegment += "nhalf_DtoI"+ DtoItoBLabel +":\n";
+        textSegment += "nhalf_DtoI" + DtoItoBLabel + ":\n";
 
 
         //textSegment += "\t\tli.s $f3, -0.5\n";
@@ -381,17 +378,17 @@ public class CodeGenVisitor implements SimpleVisitor {
         textSegment += "\t\tl.s $f2, 0($a0)\n";
 
         textSegment += "\t\tc.eq.s $f1 $f2\n";
-        textSegment += "\t\tbc1f "+"else_DtoI"+ DtoItoBLabel +"\n";
+        textSegment += "\t\tbc1f " + "else_DtoI" + DtoItoBLabel + "\n";
         textSegment += "\t\tcvt.w.s $f0 $f0\n";
         textSegment += "\t\tmfc1 $t0 $f0\n";
-        textSegment += "\t\tj exit_DtoI"+ DtoItoBLabel +"\n";
+        textSegment += "\t\tj exit_DtoI" + DtoItoBLabel + "\n";
 
-        textSegment += "else_DtoI"+ DtoItoBLabel +":\n";
+        textSegment += "else_DtoI" + DtoItoBLabel + ":\n";
 
         textSegment += "\t\tround.w.s $f0 $f0\n";
         textSegment += "\t\tmfc1 $t0 $f0\n";
 
-        textSegment += "exit_DtoI"+(DtoItoBLabel++)+":\n";
+        textSegment += "exit_DtoI" + (DtoItoBLabel++) + ":\n";
 
         textSegment += "\t\taddi $sp, $sp, -4\n";
         textSegment += "\t\tl.s $f2, 0($sp)\n";
@@ -838,10 +835,9 @@ public class CodeGenVisitor implements SimpleVisitor {
         }
 
 
-
         node.getChild(1).accept(this);
 
-        textSegment += "\t\tj " +ifFalseLabel+"exit"+ "\n";
+        textSegment += "\t\tj " + ifFalseLabel + "exit" + "\n";
 
 
         textSegment += ifFalseLabel + ":\n";
@@ -931,9 +927,10 @@ public class CodeGenVisitor implements SimpleVisitor {
 
 
     private void visitPrintNode(ASTNode node) throws Exception {
+        Type exprType = PrimitiveType.INPUTSTRING;
         for (ASTNode child : node.getChild(0).getChildren()) {
             child.accept(this);
-            Type exprType = child.getSymbolInfo().getType();
+            exprType = child.getSymbolInfo().getType();
             switch (exprType.getAlign()) {
                 case 1: //bool
                     String generatedLabel = labelGenerator();
@@ -972,8 +969,10 @@ public class CodeGenVisitor implements SimpleVisitor {
                     break;
             }
         }
-        textSegment += "\t\t#print new Line\n";
-        textSegment += "\t\taddi $a0, $0, 0xA\n\t\taddi $v0, $0, 0xB\n\t\tsyscall \n";
+        if (exprType.getAlign() != 12) {
+            textSegment += "\t\t#print new Line\n";
+            textSegment += "\t\taddi $a0, $0, 0xA\n\t\taddi $v0, $0, 0xB\n\t\tsyscall \n";
+        }
     }
 
 

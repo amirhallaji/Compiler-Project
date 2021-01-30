@@ -674,9 +674,7 @@ forStmt ::=
 
 returnStmt ::= 
             RETURN COLON
-                {:
-                    RESULT = new BaseASTNode(NodeType.RETURN_STATEMENT);
-                :}
+   zz
              |RETURN expr:e COLON
                 {:
                     RESULT = new BaseASTNode(NodeType.RETURN_STATEMENT);
@@ -751,7 +749,7 @@ expr ::=
             ASTNode t = new BaseASTNode(NodeType.THIS);
             RESULT.addChild(t);
             t.setParent(RESULT);
-        :} 
+        :}
         | call:c
          {:
             RESULT = new ExpressionNode();
