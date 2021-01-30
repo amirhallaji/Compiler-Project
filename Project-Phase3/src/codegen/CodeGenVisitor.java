@@ -725,7 +725,6 @@ public class CodeGenVisitor implements SimpleVisitor {
                     label = "StringLiteral_" + stringLiterals.keySet().size() + 1;
                     stringLiterals.put(str_raw, label);
                     dataSegment += "\t" + label + ": .asciiz " + str + "\n";
-                    System.out.println("key : " + str_raw + "label : " + label);
                 } else
                     label = stringLiterals.get(str_raw);
                 textSegment += "\t\tla $t0, " + label + "\n";

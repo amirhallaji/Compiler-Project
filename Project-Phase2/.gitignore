@@ -1,5 +1,16 @@
-
+*.class
 *.iml
 .idea/
 out/
+Parser/out/
+Parser/.idea/
+Parser/src/*.jar
+Parser/src/out/
+Parser/src/report/
+Parser/src/tests/
+Parser/src/run
+Parser/src/run.sh
+Parser/src/run2.sh
+
+
 

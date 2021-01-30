@@ -2,4 +2,11 @@
 *.iml
 .idea/
 out/
-
+Scanner/lib/
+*.class
+Scanner/src/out
+Scanner/src/tests
+Scanner/src/report
+Scanner/src/comp.py
+Scanner/src/run.sh
+target/
