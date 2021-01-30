@@ -29,8 +29,10 @@ public class CodeGenVisitor implements SimpleVisitor {
     private int arrayNumbers = 0;
 
 
+    private int DtoItoBLabel = 0;
     private int tempLiteralCounter = 0;
     private int tempLabelCounter = 0;
+
     private int tempRegsNumber = 8;
     private int tempfRegsNumber = 0;
     List<String> regs = Arrays.asList(
@@ -309,6 +311,18 @@ public class CodeGenVisitor implements SimpleVisitor {
         if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 4)) {
             throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
         }
+        textSegment += "\t\tbeq $t0 ,0 ItoB"+DtoItoBLabel+"\n";
+
+        textSegment += "\t\tli $t0, 1\n";
+        textSegment += "\t\tj exit_ItoB" + DtoItoBLabel + "\n";
+
+        textSegment += "ItoB" + DtoItoBLabel + ":\n";
+        textSegment += "\t\tli $t0, 0\n";
+
+        textSegment += "exit_ItoB" + (DtoItoBLabel++) + ":\n";
+
+
+
         node.getSymbolInfo().setType(PrimitiveType.BOOL);
     }
 
@@ -317,9 +331,73 @@ public class CodeGenVisitor implements SimpleVisitor {
         if (!(node.getChild(0).getSymbolInfo().getType().getAlign() == 8)) {
             throw new Exception("Invalid type for " + node.getNodeType().toString() + " operation");
         }
+
+
         node.getSymbolInfo().setType(PrimitiveType.INT);
+
+
+        textSegment += "\t\ts.s $f1, 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, 4\n";
+        textSegment += "\t\ts.s $f2, 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, 4\n";
+
+
+
+        textSegment += "\t\tmov.s $f1, $f0\n";
+        textSegment += "\t\tcvt.w.s $f1, $f1\n";
+
+        textSegment += "\t\tmfc1 $t0 $f1\n";
+        textSegment += "\t\tmtc1 $t0 $f1\n";
+        textSegment += "\t\tcvt.s.w $f1 $f1\n";
+
+
+
+        textSegment += "\t\tsub.s $f1, $f0, $f1\n";
+
+
+        //textSegment += "\t\tli.s $f2, 0.5\n";
+        dataSegment += "\t" + symbolTable.getCurrentScopeName() + "_temp" + tempLiteralCounter + ": .float " + "0.5" + "\n";
+        textSegment += "\t\tla $a0, " + symbolTable.getCurrentScopeName() + "_temp" + (tempLiteralCounter++) + '\n';
+        textSegment += "\t\tl.s $f2, 0($a0)\n";
+
+
+        textSegment += "\t\tc.eq.s $f1 $f2\n";
+        textSegment += "\t\tbc1t "+"half_DtoI"+ DtoItoBLabel +"\n";
+        textSegment += "\t\tbc1f "+"nhalf_DtoI"+ DtoItoBLabel +"\n";
+
+
+        textSegment += "half_DtoI"+ DtoItoBLabel +":\n";
+        textSegment += "\t\tceil.w.s $f0 $f0\n";
+        textSegment += "\t\tmfc1 $t0 $f0\n";
+        textSegment += "\t\tj exit_DtoI"+ DtoItoBLabel +"\n";
+
+
+        textSegment += "nhalf_DtoI"+ DtoItoBLabel +":\n";
+
+
+        //textSegment += "\t\tli.s $f3, -0.5\n";
+        dataSegment += "\t" + symbolTable.getCurrentScopeName() + "_temp" + tempLiteralCounter + ": .float " + "-0.5" + "\n";
+        textSegment += "\t\tla $a0, " + symbolTable.getCurrentScopeName() + "_temp" + (tempLiteralCounter++) + '\n';
+        textSegment += "\t\tl.s $f2, 0($a0)\n";
+
+        textSegment += "\t\tc.eq.s $f1 $f2\n";
+        textSegment += "\t\tbc1f "+"else_DtoI"+ DtoItoBLabel +"\n";
         textSegment += "\t\tcvt.w.s $f0 $f0\n";
         textSegment += "\t\tmfc1 $t0 $f0\n";
+        textSegment += "\t\tj exit_DtoI"+ DtoItoBLabel +"\n";
+
+        textSegment += "else_DtoI"+ DtoItoBLabel +":\n";
+
+        textSegment += "\t\tround.w.s $f0 $f0\n";
+        textSegment += "\t\tmfc1 $t0 $f0\n";
+
+        textSegment += "exit_DtoI"+(DtoItoBLabel++)+":\n";
+
+        textSegment += "\t\taddi $sp, $sp, -4\n";
+        textSegment += "\t\tl.s $f2, 0($sp)\n";
+        textSegment += "\t\taddi $sp, $sp, -4\n";
+        textSegment += "\t\tl.s $f1, 0($sp)\n";
+
     }
 
     private void visitItoD(ASTNode node) throws Exception {
