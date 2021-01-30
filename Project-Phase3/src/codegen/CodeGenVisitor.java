@@ -279,10 +279,10 @@ public class CodeGenVisitor implements SimpleVisitor {
 
     private void visitReadLine(ASTNode node) {
         String label = "userInput_" + labelGenerator();
-        dataSegment += "\t" + label + ":\t.space\t60\n";
+        dataSegment += "\t" + label + ":\t.space\t600\n";
         SymbolInfo si = new SymbolInfo(node, PrimitiveType.INPUTSTRING);
         node.setSymbolInfo(si);
-        textSegment += "\t\tli $v0, 8\n\t\tla $a0, " + label + "\n\t\tli $a1, 60\n\t\tsyscall\n";
+        textSegment += "\t\tli $v0, 8\n\t\tla $a0, " + label + "\n\t\tli $a1, 600\n\t\tsyscall\n";
         textSegment += "\t\tmove $t0, $a0\n\n";
     }
 
@@ -716,6 +716,9 @@ public class CodeGenVisitor implements SimpleVisitor {
         switch (literalNode.getType().getAlign()) {
             case 6: //string
                 String str = ((StringLiteralNode) literalNode).getValue();
+                System.out.println(str);
+                str = str.replace("\\t","\\\\t");
+                str = str.replace("\\n","\\\\n");
                 String str_raw = str.substring(1, str.length() - 1);
                 String label = "";
                 if (!stringLiterals.keySet().contains(str_raw)) {
