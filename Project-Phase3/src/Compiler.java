@@ -8,8 +8,13 @@ import codegen.CodeGenVisitor;
 //import codegen.MethodVisitor;
 
 import java.io.*;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Compiler {
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
     public static void main(String[] args) throws Exception {
         System.out.println(('a' + 1));
         String source = "src/Tests/1.txt";
@@ -26,17 +31,20 @@ public class Compiler {
         compiler.run();
     }
 
-    private String source;
+    private static String source;
 
     private Compiler(String source) {
         this.source = source;
     }
 
     private void run() throws Exception {
-        processFile();
+//        processFile();
+        MyTImerTask tImerTask = new MyTImerTask();
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(tImerTask, 0, 10*1000);
     }
 
-    private void printTree(ASTNode node) {
+    private static void printTree(ASTNode node) {
         for (ASTNode child : node.getChildren()) {
             System.out.println(child + " ---------> " + node);
         }
@@ -55,7 +63,7 @@ public class Compiler {
     }
 
 
-    private Program parse() throws Exception {
+    public static Program parse() throws Exception {
         System.out.println("parsing");
         FileInputStream inStream = new FileInputStream(source);
         DataInputStream distress = new DataInputStream(new BufferedInputStream(inStream));
@@ -70,14 +78,14 @@ public class Compiler {
         return parser.getRoot();
     }
 
-    private void vtableAnalysis(Program cu) throws Exception {
+    public static void vtableAnalysis(Program cu) throws Exception {
         System.out.println("in type visitor");
         cu.accept(new VtableGenerator());
         System.out.println("TV done\n");
     }
 
     //
-    private void generateCode(Program cu, PrintStream stream) throws Exception {
+    public static void generateCode(Program cu, PrintStream stream) throws Exception {
         System.out.println("in code gen");
         cu.accept(new CodeGenVisitor(stream));
         stream.close();
