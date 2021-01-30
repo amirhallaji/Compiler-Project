@@ -38,7 +38,7 @@ HexNumber = "0"[xX][0-9a-fA-F]*
 
 FloatNumber = \d+\.\d*([eE]([+-])?\d+)?
 
-string = \"[^(\\n|\\r)]~\"
+string = \"~\"
 
 Brackets = "\[" {WhiteSpace}*"\]"
 

@@ -198,12 +198,6 @@ public class CodeGenVisitor implements SimpleVisitor {
             case IF_STATEMENT:
                 visitIfStatement(node);
                 break;
-            case REPEAT_STATEMENT:
-                break;
-            case SWITCH_STATEMENT:
-                break;
-            case CASE_STATEMENT:
-                break;
             case FOR_STATEMENT:
                 visitForNode(node);
                 break;
@@ -830,7 +824,7 @@ public class CodeGenVisitor implements SimpleVisitor {
 //            node.getChild(3).accept(this);
                 textSegment += "\t\tj " + label + "\n";
                 textSegment += "\t\texit" + label + ":\n";
-            }else {
+            } else {
 //                node.getChild(0).accept(this);
                 textSegment += "\t\t" + label + ":" + "\n";
                 node.getChild(0).accept(this);
