@@ -648,11 +648,14 @@ public class CodeGenVisitor implements SimpleVisitor {
             case 6: //string
                 String str = ((StringLiteralNode) literalNode).getValue();
                 String str_raw = str.substring(1, str.length() - 1);
-                String label = "StringLiteral_" + stringLiterals.keySet().size() + 1;
+                String label = "";
                 if (!stringLiterals.keySet().contains(str_raw)) {
+                    label = "StringLiteral_" + stringLiterals.keySet().size() + 1;
                     stringLiterals.put(str_raw, label);
                     dataSegment += "\t" + label + ": .asciiz " + str + "\n";
-                }
+                    System.out.println("key : " + str_raw + "label : " + label);
+                } else
+                    label = stringLiterals.get(str_raw);
                 textSegment += "\t\tla $t0, " + label + "\n";
                 node.setSymbolInfo(new SymbolInfo(node, PrimitiveType.STRING));
                 break;
@@ -762,7 +765,12 @@ public class CodeGenVisitor implements SimpleVisitor {
             throw new Exception("Invalid Expression in if_exp");
         }
 
+
+
         node.getChild(1).accept(this);
+
+        textSegment += "\t\tj " +ifFalseLabel+"exit"+ "\n";
+
 
         textSegment += ifFalseLabel + ":\n";
 
@@ -773,6 +781,8 @@ public class CodeGenVisitor implements SimpleVisitor {
         } else if (!ifType.equals("if")) {
             throw new Exception("invalid if");
         }
+
+        textSegment += ifFalseLabel + "exit:\n";
     }
 
     private void visitWhileNode(ASTNode node) throws Exception {
