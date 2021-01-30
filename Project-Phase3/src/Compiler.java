@@ -39,9 +39,9 @@ public class Compiler {
 
     private void run() throws Exception {
 //        processFile();
-        MyTImerTask tImerTask = new MyTImerTask();
+        MyTimerTask timertask = new MyTimerTask();
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(tImerTask, 0, 10*1000);
+        timer.scheduleAtFixedRate(timertask, 0, 10*1000); //period in milli seconds
     }
 
     private static void printTree(ASTNode node) {

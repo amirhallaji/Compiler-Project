@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.TimerTask;
 
-public class MyTImerTask extends TimerTask {
+public class MyTimerTask extends TimerTask {
     @Override
     public void run() {
         try {
@@ -15,8 +15,6 @@ public class MyTImerTask extends TimerTask {
             Compiler.vtableAnalysis(cu);
             Compiler.generateCode(cu, stream);
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
