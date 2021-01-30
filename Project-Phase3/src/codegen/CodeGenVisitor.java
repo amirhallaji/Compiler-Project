@@ -797,16 +797,53 @@ public class CodeGenVisitor implements SimpleVisitor {
         String label = labelGenerator();
         label += "F";
         labels.push(label);
-        setParentSymbolInfo(node, node.getChild(0));
-        textSegment += "\t\t" + label + ":" + "\n";
-        setParentSymbolInfo(node, node.getChild(1));
-        textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
-//        setParentSymbolInfo(node, node.getChild(2));
-        node.getChild(2).accept(this);
-        textSegment += "\t\t" + label + "update:\n";
-        setParentSymbolInfo(node, node.getChild(3));
-        textSegment += "\t\tj " + label + "\n";
-        textSegment += "\t\texit" + label + ":\n";
+
+        int n_child = node.getChildren().size();
+        if (n_child == 4) {
+            node.getChild(0).accept(this);
+            textSegment += "\t\t" + label + ":" + "\n";
+            node.getChild(1).accept(this);
+            textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
+            node.getChild(2).accept(this);
+            textSegment += "\t\t" + label + "update:\n";
+            node.getChild(3).accept(this);
+            textSegment += "\t\tj " + label + "\n";
+            textSegment += "\t\texit" + label + ":\n";
+        } else if (n_child == 3) {
+            if (node.getChild(0).getChild(0).getNodeType().equals(NodeType.ASSIGN)) {
+                node.getChild(0).accept(this);
+                textSegment += "\t\t" + label + ":" + "\n";
+                node.getChild(1).accept(this);
+                textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
+                node.getChild(2).accept(this);
+                textSegment += "\t\t" + label + "update:\n";
+//            node.getChild(3).accept(this);
+                textSegment += "\t\tj " + label + "\n";
+                textSegment += "\t\texit" + label + ":\n";
+            }else {
+//                node.getChild(0).accept(this);
+                textSegment += "\t\t" + label + ":" + "\n";
+                node.getChild(0).accept(this);
+                textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
+                node.getChild(1).accept(this);
+                textSegment += "\t\t" + label + "update:\n";
+                node.getChild(2).accept(this);
+                textSegment += "\t\tj " + label + "\n";
+                textSegment += "\t\texit" + label + ":\n";
+            }
+        } else if (n_child == 2) {
+//            node.getChild(0).accept(this);
+            textSegment += "\t\t" + label + ":" + "\n";
+            node.getChild(0).accept(this);
+            textSegment += "\t\tbeq $t0, $zero exit" + label + "\n";
+            node.getChild(1).accept(this);
+            textSegment += "\t\t" + label + "update:\n";
+//            node.getChild(3).accept(this);
+            textSegment += "\t\tj " + label + "\n";
+            textSegment += "\t\texit" + label + ":\n";
+        }
+
+
         labels.pop();
     }
 
