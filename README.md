@@ -21,10 +21,10 @@ enough to be used to write some interesting programs.
 
 ## Phases
 
-| Scanner 	| [![Scanner](icons/download.svg)](https://github.com/hamedkhaledi/Compiler-Projects/blob/master/Description/ProjcetDcsp.pdf)	|
+| Scanner 	| [![Scanner](icons/download.svg)](https://github.com/hamedkhaledi/Compiler-Projects/blob/master/Description/Scanner.pdf)	|
 |:---------:|:-----:|
-|  Parser 	| [![Scanner](icons/download.svg)](https://github.com/hamedkhaledi/Compiler-Projects/blob/master/Description/ProjcetDcsp.pdf) 	|
-| Codegen 	| [![Scanner](icons/download.svg)](https://github.com/hamedkhaledi/Compiler-Projects/blob/master/Description/ProjcetDcsp.pdf) 	|
+|  Parser 	| [![Scanner](icons/download.svg)](https://github.com/hamedkhaledi/Compiler-Projects/blob/master/Description/Parser.pdf) 	|
+| Codegen 	| [![Scanner](icons/download.svg)](https://github.com/hamedkhaledi/Compiler-Projects/blob/master/Description/CodeGeneration.pdf) 	|
 
 # How To Run
 
