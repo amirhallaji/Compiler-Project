@@ -1,6 +1,9 @@
 <!-- About Decaf -->
+<link href="icons/style.css" rel="stylesheet"/>
 
-<p>
+
+<p align="center">
+    <img src="icons/decaf.jpg">
     <h1 align="center"><u>Decaf Compiler</u></h1>
     <h3 align="center">Compiler Project Fall 1399 - Shahid Beheshti University</h3>
 <!-- About Decaf -->
@@ -44,6 +47,10 @@ cd src/
 java -jar java-cup-11b.jar parser.cup
 ```
 
+## 3- Compile Compiler
+```commandline
+javac -cp "java-cup-11b.jar:java-cup-11b-runtime.jar:jflex-full-1.7.0.jar Main.java"
+```
 ## Contributers
 
 
