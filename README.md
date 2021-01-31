@@ -3,9 +3,12 @@
 
 
 <p align="center">
-    <img src="icons/decaf.jpg" height="320" width="480">
     <h1 align="center"><u>Decaf Compiler</u></h1>
-    <h3 align="center">Compiler Project Fall 1399 - Shahid Beheshti University</h3>
+    <h4 align="center">Compiler Project Fall 1399 - Shahid Beheshti University</h4>
+</p>
+<p align="center">
+        <img src="icons/decaf.jpg" height="320" width="480" align="center">
+</p>
 <!-- About Decaf -->
 
 ## About Decaf Language
