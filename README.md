@@ -6,10 +6,10 @@
 <!-- About Decaf -->
 
 ## About Decaf Language
-
 Decaf is a simple object oriented language similar to C/C++/Java.
 The features of this language has been simplified to be implemented easier. Yet, it's still powerful
 enough to be used to write some interesting programs.
+
 ----------
 
 ## Project Description
