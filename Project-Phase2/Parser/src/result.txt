@@ -1,0 +1,2669 @@
+Running Test t001-class1 -------------------------------------
+Code Compiled Successfully
+in : tests/t001-class1.in
+out : out/t001-class1.out
+Student
+age
+gpa
+first_name
+last_name
+initialize
+age
+18
+gpa
+10.0
+getAge
+age
+setName
+new_name
+first_name
+new_name
+report
+first_name
+" "
+last_name
+"  Age: "
+age
+main
+s
+Student
+t
+t
+Student
+t
+initialize
+s
+t
+setName
+s
+Code Executed Successfuly!
+/usr/bin/python3
+---- test failed !
+
+Running Test t002-class2 -------------------------------------
+Code Compiled Successfully
+in : tests/t002-class2.in
+out : out/t002-class2.out
+A
+a
+B
+b
+C
+A
+do_job
+main
+C
+c
+A
+a
+c
+C
+c
+do_job
+a
+c
+c
+99
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t003-class3 -------------------------------------
+Code Compiled Successfully
+in : tests/t003-class3.in
+out : out/t003-class3.out
+A
+B
+C
+D
+E
+A
+B
+D
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t004-class4 -------------------------------------
+Code Compiled Successfully
+in : tests/t004-class4.in
+out : out/t004-class4.out
+Sweet
+Popsicle
+Extends
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t005-expr1 -------------------------------------
+Code Compiled Successfully
+in : tests/t005-expr1.in
+out : out/t005-expr1.out
+main
+a
+b
+a
+5
+2
+1
+8
+b
+2
+a
+4
+1
+3
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t006-expr2 -------------------------------------
+Code Compiled Successfully
+in : tests/t006-expr2.in
+out : out/t006-expr2.out
+getSomeValue
+something
+main
+a
+b
+c
+d
+d
+1.2E5
+5.
+1.
+c
+a
+b
+100
+a
+b
+a
+b
+20
+a
+10
+b
+a
+b
+5
+getSomething
+Code Executed Successfuly!
+/usr/bin/python3
+---- test failed !
+
+Running Test t007-expr3 -------------------------------------
+Code Compiled Successfully
+in : tests/t007-expr3.in
+out : out/t007-expr3.out
+main
+a
+a
+2
+1
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t008-function1 -------------------------------------
+Code Compiled Successfully
+in : tests/t008-function1.in
+out : out/t008-function1.out
+func1
+a
+b
+a
+b
+func2
+a
+r
+i
+i
+1
+i
+r
+i
+i
+1
+a
+read_input_and_check
+a
+a
+0
+a
+a
+100
+a
+1
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t009-function2 -------------------------------------
+Code Compiled Successfully
+in : tests/t009-function2.in
+out : out/t009-function2.out
+da_function
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t010-function3 -------------------------------------
+Code Compiled Successfully
+in : tests/t010-function3.in
+out : out/t010-function3.out
+getClass
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t011-interface1 -------------------------------------
+Code Compiled Successfully
+in : tests/t011-interface1.in
+out : out/t011-interface1.out
+Flying
+fly
+getAltitude
+setAltitude
+alt
+Bird
+Flying
+altitude
+fly
+"Flying Now!"
+getAltitude
+altitude
+setAltitude
+alt
+altitude
+alt
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t012-interface2 -------------------------------------
+Code Compiled Successfully
+in : tests/t012-interface2.in
+out : out/t012-interface2.out
+Test
+print
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t013-program1 -------------------------------------
+Code Compiled Successfully
+in : tests/t013-program1.in
+out : out/t013-program1.out
+a
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t014-stmt1 -------------------------------------
+Code Compiled Successfully
+in : tests/t014-stmt1.in
+out : out/t014-stmt1.out
+main
+x
+y
+i
+j
+x
+10
+x
+0
+x
+x
+1
+x
+10
+i
+0
+i
+x
+i
+i
+1
+y
+y
+x
+2
+y
+x
+"Result is "
+y
+0
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t015-stmt2 -------------------------------------
+Code Compiled Successfully
+in : tests/t015-stmt2.in
+out : out/t015-stmt2.out
+main
+a
+a
+a
+5
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t016-variable1 -------------------------------------
+Code Compiled Successfully
+in : tests/t016-variable1.in
+out : out/t016-variable1.out
+main
+a
+a
+10
+a
+1
+c
+d
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t017-variable2 -------------------------------------
+Code Compiled Successfully
+in : tests/t017-variable2.in
+out : out/t017-variable2.out
+combine
+x
+y
+z
+s
+s
+"hi!"
+z
+x
+y
+2
+z
+1
+main
+array
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t018-function1 -------------------------------------
+Code Compiled Successfully
+in : tests/t018-function1.in
+out : out/t018-function1.out
+func
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t019-function2 -------------------------------------
+Code Compiled Successfully
+in : tests/t019-function2.in
+out : out/t019-function2.out
+func
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t020-function3 -------------------------------------
+Code Compiled Successfully
+in : tests/t020-function3.in
+out : out/t020-function3.out
+id
+func
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t021-function4 -------------------------------------
+Code Compiled Successfully
+in : tests/t021-function4.in
+out : out/t021-function4.out
+func
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t022-function5 -------------------------------------
+Code Compiled Successfully
+in : tests/t022-function5.in
+out : out/t022-function5.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t023-function6 -------------------------------------
+Code Compiled Successfully
+in : tests/t023-function6.in
+out : out/t023-function6.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t024-function7 -------------------------------------
+Code Compiled Successfully
+in : tests/t024-function7.in
+out : out/t024-function7.out
+test
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t025-function8 -------------------------------------
+Code Compiled Successfully
+in : tests/t025-function8.in
+out : out/t025-function8.out
+func
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t026-function9 -------------------------------------
+Code Compiled Successfully
+in : tests/t026-function9.in
+out : out/t026-function9.out
+func
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t027-function10 -------------------------------------
+Code Compiled Successfully
+in : tests/t027-function10.in
+out : out/t027-function10.out
+CLASS
+func
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t028-function11 -------------------------------------
+Code Compiled Successfully
+in : tests/t028-function11.in
+out : out/t028-function11.out
+IF
+func
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t029-function12 -------------------------------------
+Code Compiled Successfully
+in : tests/t029-function12.in
+out : out/t029-function12.out
+func
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t030-function13 -------------------------------------
+Code Compiled Successfully
+in : tests/t030-function13.in
+out : out/t030-function13.out
+type
+func
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t031-function14 -------------------------------------
+Code Compiled Successfully
+in : tests/t031-function14.in
+out : out/t031-function14.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t032-function15 -------------------------------------
+Code Compiled Successfully
+in : tests/t032-function15.in
+out : out/t032-function15.out
+func
+a
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t033-function16 -------------------------------------
+Code Compiled Successfully
+in : tests/t033-function16.in
+out : out/t033-function16.out
+func
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t034-function17 -------------------------------------
+Code Compiled Successfully
+in : tests/t034-function17.in
+out : out/t034-function17.out
+func
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t035-function18 -------------------------------------
+Code Compiled Successfully
+in : tests/t035-function18.in
+out : out/t035-function18.out
+func
+a
+b
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t036-function19 -------------------------------------
+Code Compiled Successfully
+in : tests/t036-function19.in
+out : out/t036-function19.out
+func
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t037-function20 -------------------------------------
+Code Compiled Successfully
+in : tests/t037-function20.in
+out : out/t037-function20.out
+func
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t038-function21 -------------------------------------
+Code Compiled Successfully
+in : tests/t038-function21.in
+out : out/t038-function21.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t039-function22 -------------------------------------
+Code Compiled Successfully
+in : tests/t039-function22.in
+out : out/t039-function22.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t040-expr1 -------------------------------------
+Code Compiled Successfully
+in : tests/t040-expr1.in
+out : out/t040-expr1.out
+main
+id1
+id2
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t041-expr2 -------------------------------------
+Code Compiled Successfully
+in : tests/t041-expr2.in
+out : out/t041-expr2.out
+main
+id
+5
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t042-expr3 -------------------------------------
+Code Compiled Successfully
+in : tests/t042-expr3.in
+out : out/t042-expr3.out
+main
+a
+a
+0
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t043-expr4 -------------------------------------
+Code Compiled Successfully
+in : tests/t043-expr4.in
+out : out/t043-expr4.out
+main
+id
+0
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t044-expr5 -------------------------------------
+Code Compiled Successfully
+in : tests/t044-expr5.in
+out : out/t044-expr5.out
+main
+id
+id
+999
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t045-expr6 -------------------------------------
+Code Compiled Successfully
+in : tests/t045-expr6.in
+out : out/t045-expr6.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t046-expr7 -------------------------------------
+Code Compiled Successfully
+in : tests/t046-expr7.in
+out : out/t046-expr7.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t047-expr8 -------------------------------------
+Code Compiled Successfully
+in : tests/t047-expr8.in
+out : out/t047-expr8.out
+main
+4
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t048-expr9 -------------------------------------
+Code Compiled Successfully
+in : tests/t048-expr9.in
+out : out/t048-expr9.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t049-expr10 -------------------------------------
+Code Compiled Successfully
+in : tests/t049-expr10.in
+out : out/t049-expr10.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t050-expr11 -------------------------------------
+Code Compiled Successfully
+in : tests/t050-expr11.in
+out : out/t050-expr11.out
+main
+1
+2
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t051-expr12 -------------------------------------
+Code Compiled Successfully
+in : tests/t051-expr12.in
+out : out/t051-expr12.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t052-expr13 -------------------------------------
+Code Compiled Successfully
+in : tests/t052-expr13.in
+out : out/t052-expr13.out
+main
+2
+2
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t053-expr14 -------------------------------------
+Code Compiled Successfully
+in : tests/t053-expr14.in
+out : out/t053-expr14.out
+main
+id
+id
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t054-expr15 -------------------------------------
+Code Compiled Successfully
+in : tests/t054-expr15.in
+out : out/t054-expr15.out
+main
+id
+id
+id
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t055-expr16 -------------------------------------
+Code Compiled Successfully
+in : tests/t055-expr16.in
+out : out/t055-expr16.out
+main
+2
+"string"
+1.5E5
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t056-expr17 -------------------------------------
+Code Compiled Successfully
+in : tests/t056-expr17.in
+out : out/t056-expr17.out
+main
+5
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t057-expr18 -------------------------------------
+Code Compiled Successfully
+in : tests/t057-expr18.in
+out : out/t057-expr18.out
+main
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+1
+2
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t058-expr19 -------------------------------------
+Code Compiled Successfully
+in : tests/t058-expr19.in
+out : out/t058-expr19.out
+main
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+a
+b
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t059-expr20 -------------------------------------
+Code Compiled Successfully
+in : tests/t059-expr20.in
+out : out/t059-expr20.out
+main
+id
+5
+9
+c
+4
+9
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+a
+b
+c
+d
+e
+f
+g
+1
+6
+6
+1
+11
+11
+121
+123321
+232
+2
+5
+a
+b
+b
+a
+ab
+x
+y
+y
+x
+a
+2
+b
+2
+b
+4
+a
+b
+id
+5
+9
+c
+4
+9
+1
+6
+6
+1
+11
+11
+121
+123321
+232
+2
+5
+a
+b
+b
+a
+ab
+x
+y
+y
+x
+a
+2
+b
+2
+b
+4
+a
+b
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t060-expr21 -------------------------------------
+Code Compiled Successfully
+in : tests/t060-expr21.in
+out : out/t060-expr21.out
+main
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t061-expr22 -------------------------------------
+Code Compiled Successfully
+in : tests/t061-expr22.in
+out : out/t061-expr22.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t062-expr23 -------------------------------------
+Code Compiled Successfully
+in : tests/t062-expr23.in
+out : out/t062-expr23.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t063-expr24 -------------------------------------
+Code Compiled Successfully
+in : tests/t063-expr24.in
+out : out/t063-expr24.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t064-expr25 -------------------------------------
+Code Compiled Successfully
+in : tests/t064-expr25.in
+out : out/t064-expr25.out
+main
+a
+b
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t065-expr26 -------------------------------------
+Code Compiled Successfully
+in : tests/t065-expr26.in
+out : out/t065-expr26.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t066-expr27 -------------------------------------
+Code Compiled Successfully
+in : tests/t066-expr27.in
+out : out/t066-expr27.out
+main
+a
+b
+2
+a
+b
+d
+c
+a
+e
+a
+b
+c
+d
+a
+b
+c
+d
+e
+f
+g
+123456
+2
+t1
+1
+t2
+t2
+a
+b
+b
+c
+k
+f
+a
+b
+b
+c
+a
+a
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t067-expr28 -------------------------------------
+Code Compiled Successfully
+in : tests/t067-expr28.in
+out : out/t067-expr28.out
+main
+a
+b
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t068-expr29 -------------------------------------
+Code Compiled Successfully
+in : tests/t068-expr29.in
+out : out/t068-expr29.out
+main
+b
+b
+b
+b
+2
+2
+b
+2
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t069-expr30 -------------------------------------
+Code Compiled Successfully
+in : tests/t069-expr30.in
+out : out/t069-expr30.out
+main
+that
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t070-expr31 -------------------------------------
+Code Compiled Successfully
+in : tests/t070-expr31.in
+out : out/t070-expr31.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t071-expr32 -------------------------------------
+Code Compiled Successfully
+in : tests/t071-expr32.in
+out : out/t071-expr32.out
+main
+a
+b
+c
+b
+k
+b
+d
+a
+b
+a
+b
+tautology
+condition
+max
+condition
+max
+paradox
+condition
+max
+condition
+max
+h
+a
+3
+a
+3
+m
+2
+id
+k
+b
+c
+x
+y
+y
+x
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t072-expr33 -------------------------------------
+Code Compiled Successfully
+in : tests/t072-expr33.in
+out : out/t072-expr33.out
+main
+paradox
+condition
+max
+condition
+max
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t073-expr34 -------------------------------------
+Code Compiled Successfully
+in : tests/t073-expr34.in
+out : out/t073-expr34.out
+main
+id
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t074-expr35 -------------------------------------
+Code Compiled Successfully
+in : tests/t074-expr35.in
+out : out/t074-expr35.out
+main
+2
+5
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t075-expr36 -------------------------------------
+Code Compiled Successfully
+in : tests/t075-expr36.in
+out : out/t075-expr36.out
+main
+call
+Code Executed Successfuly!
+/usr/bin/python3
+---- test failed !
+
+Running Test t076-expr37 -------------------------------------
+Code Compiled Successfully
+in : tests/t076-expr37.in
+out : out/t076-expr37.out
+main
+dict
+key
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t077-expr38 -------------------------------------
+Code Compiled Successfully
+in : tests/t077-expr38.in
+out : out/t077-expr38.out
+main
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t078-expr39 -------------------------------------
+Code Compiled Successfully
+in : tests/t078-expr39.in
+out : out/t078-expr39.out
+main
+ident
+Code Executed Successfuly!
+/usr/bin/python3
+---- test failed !
+
+Running Test t079-expr40 -------------------------------------
+Code Compiled Successfully
+in : tests/t079-expr40.in
+out : out/t079-expr40.out
+main
+id
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t080-expr41 -------------------------------------
+Code Compiled Successfully
+in : tests/t080-expr41.in
+out : out/t080-expr41.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t081-expr42 -------------------------------------
+Code Compiled Successfully
+in : tests/t081-expr42.in
+out : out/t081-expr42.out
+main
+1
+2
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t082-expr43 -------------------------------------
+Code Compiled Successfully
+in : tests/t082-expr43.in
+out : out/t082-expr43.out
+main
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t083-expr44 -------------------------------------
+Code Compiled Successfully
+in : tests/t083-expr44.in
+out : out/t083-expr44.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t084-expr45 -------------------------------------
+Code Compiled Successfully
+in : tests/t084-expr45.in
+out : out/t084-expr45.out
+main
+a
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t085-expr46 -------------------------------------
+Code Compiled Successfully
+in : tests/t085-expr46.in
+out : out/t085-expr46.out
+main
+4
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t086-expr47 -------------------------------------
+Code Compiled Successfully
+in : tests/t086-expr47.in
+out : out/t086-expr47.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t087-expr48 -------------------------------------
+Code Compiled Successfully
+in : tests/t087-expr48.in
+out : out/t087-expr48.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t088-expr49 -------------------------------------
+Code Compiled Successfully
+in : tests/t088-expr49.in
+out : out/t088-expr49.out
+main
+s
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t089-expr50 -------------------------------------
+Code Compiled Successfully
+in : tests/t089-expr50.in
+out : out/t089-expr50.out
+main
+"string"
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t090-expr51 -------------------------------------
+Code Compiled Successfully
+in : tests/t090-expr51.in
+out : out/t090-expr51.out
+main
+c
+id
+c
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t091-expr52 -------------------------------------
+Code Compiled Successfully
+in : tests/t091-expr52.in
+out : out/t091-expr52.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t092-expr53 -------------------------------------
+Code Compiled Successfully
+in : tests/t092-expr53.in
+out : out/t092-expr53.out
+main
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t093-expr54 -------------------------------------
+Code Compiled Successfully
+in : tests/t093-expr54.in
+out : out/t093-expr54.out
+main
+id
+id
+2
+4
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t094-expr55 -------------------------------------
+Code Compiled Successfully
+in : tests/t094-expr55.in
+out : out/t094-expr55.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t095-expr56 -------------------------------------
+Code Compiled Successfully
+in : tests/t095-expr56.in
+out : out/t095-expr56.out
+main
+array1
+expr
+array2
+2
+4
+array3
+count
+Code Executed Successfuly!
+/usr/bin/python3
+---- test failed !
+
+Running Test t096-expr57 -------------------------------------
+Code Compiled Successfully
+in : tests/t096-expr57.in
+out : out/t096-expr57.out
+main
+k
+42
+Answer
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t097-expr58 -------------------------------------
+Code Compiled Successfully
+in : tests/t097-expr58.in
+out : out/t097-expr58.out
+main
+expr
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t098-expr59 -------------------------------------
+Code Compiled Successfully
+in : tests/t098-expr59.in
+out : out/t098-expr59.out
+main
+id
+0
+1
+2
+3
+id
+1
+a
+b
+c
+expr
+1
+id
+0
+2
+id
+1
+2
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t099-expr60 -------------------------------------
+Code Compiled Successfully
+in : tests/t099-expr60.in
+out : out/t099-expr60.out
+main
+expr
+expr
+call
+Code Executed Successfuly!
+/usr/bin/python3
+---- test failed !
+
+Running Test t100-expr61 -------------------------------------
+Code Compiled Successfully
+in : tests/t100-expr61.in
+out : out/t100-expr61.out
+main
+sum
+1
+2
+3
+mult_
+value
+5
+test
+status
+2
+type
+INTEGER
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t101-expr62 -------------------------------------
+Code Compiled Successfully
+in : tests/t101-expr62.in
+out : out/t101-expr62.out
+main
+2
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t102-expr63 -------------------------------------
+Code Compiled Successfully
+in : tests/t102-expr63.in
+out : out/t102-expr63.out
+main
+a
+b
+c
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t103-expr64 -------------------------------------
+Code Compiled Successfully
+in : tests/t103-expr64.in
+out : out/t103-expr64.out
+main
+5
+6
+a
+b
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t104-variable1 -------------------------------------
+Code Compiled Successfully
+in : tests/t104-variable1.in
+out : out/t104-variable1.out
+main
+a
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t105-variable2 -------------------------------------
+Code Compiled Successfully
+in : tests/t105-variable2.in
+out : out/t105-variable2.out
+main
+s
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t106-variable3 -------------------------------------
+Code Compiled Successfully
+in : tests/t106-variable3.in
+out : out/t106-variable3.out
+main
+type
+t
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t107-variable4 -------------------------------------
+Code Compiled Successfully
+in : tests/t107-variable4.in
+out : out/t107-variable4.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t108-variable5 -------------------------------------
+Code Compiled Successfully
+in : tests/t108-variable5.in
+out : out/t108-variable5.out
+main
+arr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t109-variable6 -------------------------------------
+Code Compiled Successfully
+in : tests/t109-variable6.in
+out : out/t109-variable6.out
+main
+type
+t_arr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t110-variable7 -------------------------------------
+Code Compiled Successfully
+in : tests/t110-variable7.in
+out : out/t110-variable7.out
+main
+test
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t111-variable8 -------------------------------------
+Code Compiled Successfully
+in : tests/t111-variable8.in
+out : out/t111-variable8.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t112-variable9 -------------------------------------
+Code Compiled Successfully
+in : tests/t112-variable9.in
+out : out/t112-variable9.out
+main
+type
+5
+arr
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t113-variable10 -------------------------------------
+Code Compiled Successfully
+in : tests/t113-variable10.in
+out : out/t113-variable10.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t114-variable11 -------------------------------------
+Code Compiled Successfully
+in : tests/t114-variable11.in
+out : out/t114-variable11.out
+main
+type
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t115-variable12 -------------------------------------
+Code Compiled Successfully
+in : tests/t115-variable12.in
+out : out/t115-variable12.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t116-variable13 -------------------------------------
+Code Compiled Successfully
+in : tests/t116-variable13.in
+out : out/t116-variable13.out
+main
+max
+enough
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t117-variable14 -------------------------------------
+Code Compiled Successfully
+in : tests/t117-variable14.in
+out : out/t117-variable14.out
+main
+max
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t118-variable15 -------------------------------------
+Code Compiled Successfully
+in : tests/t118-variable15.in
+out : out/t118-variable15.out
+global
+type
+id
+names
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t119-variable16 -------------------------------------
+Code Compiled Successfully
+in : tests/t119-variable16.in
+out : out/t119-variable16.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t120-variable17 -------------------------------------
+Code Compiled Successfully
+in : tests/t120-variable17.in
+out : out/t120-variable17.out
+main
+type
+j
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t121-variable18 -------------------------------------
+Code Compiled Successfully
+in : tests/t121-variable18.in
+out : out/t121-variable18.out
+main
+type
+t
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t122-variable19 -------------------------------------
+Code Compiled Successfully
+in : tests/t122-variable19.in
+out : out/t122-variable19.out
+main
+g
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t123-variable20 -------------------------------------
+Code Compiled Successfully
+in : tests/t123-variable20.in
+out : out/t123-variable20.out
+main
+rogue
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t124-variable21 -------------------------------------
+Code Compiled Successfully
+in : tests/t124-variable21.in
+out : out/t124-variable21.out
+main
+type
+cautious
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t125-variable22 -------------------------------------
+Code Compiled Successfully
+in : tests/t125-variable22.in
+out : out/t125-variable22.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t126-variable23 -------------------------------------
+Code Compiled Successfully
+in : tests/t126-variable23.in
+out : out/t126-variable23.out
+main
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t127-variable24 -------------------------------------
+Code Compiled Successfully
+in : tests/t127-variable24.in
+out : out/t127-variable24.out
+valid
+invalid
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t128-variable25 -------------------------------------
+Code Compiled Successfully
+in : tests/t128-variable25.in
+out : out/t128-variable25.out
+main
+type
+k
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t129-stmt1 -------------------------------------
+Code Compiled Successfully
+in : tests/t129-stmt1.in
+out : out/t129-stmt1.out
+main
+expr
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t130-stmt2 -------------------------------------
+Code Compiled Successfully
+in : tests/t130-stmt2.in
+out : out/t130-stmt2.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t131-stmt3 -------------------------------------
+Code Compiled Successfully
+in : tests/t131-stmt3.in
+out : out/t131-stmt3.out
+main
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t132-stmt4 -------------------------------------
+Code Compiled Successfully
+in : tests/t132-stmt4.in
+out : out/t132-stmt4.out
+main
+expr
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t133-stmt5 -------------------------------------
+Code Compiled Successfully
+in : tests/t133-stmt5.in
+out : out/t133-stmt5.out
+main
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t134-stmt6 -------------------------------------
+Code Compiled Successfully
+in : tests/t134-stmt6.in
+out : out/t134-stmt6.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t135-stmt7 -------------------------------------
+Code Compiled Successfully
+in : tests/t135-stmt7.in
+out : out/t135-stmt7.out
+main
+expr
+expr
+a
+b
+a
+b
+expr
+a
+b
+expr
+type
+Code Executed Successfuly!
+/usr/bin/python3
+---- test failed !
+
+Running Test t136-stmt8 -------------------------------------
+Code Compiled Successfully
+in : tests/t136-stmt8.in
+out : out/t136-stmt8.out
+main
+expr
+expr
+expr
+expr
+call_saul
+Code Executed Successfuly!
+/usr/bin/python3
+---- test failed !
+
+Running Test t137-stmt9 -------------------------------------
+Code Compiled Successfully
+in : tests/t137-stmt9.in
+out : out/t137-stmt9.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t138-stmt10 -------------------------------------
+Code Compiled Successfully
+in : tests/t138-stmt10.in
+out : out/t138-stmt10.out
+main
+expr
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t139-stmt11 -------------------------------------
+Code Compiled Successfully
+in : tests/t139-stmt11.in
+out : out/t139-stmt11.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t140-stmt12 -------------------------------------
+Code Compiled Successfully
+in : tests/t140-stmt12.in
+out : out/t140-stmt12.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t141-stmt13 -------------------------------------
+Code Compiled Successfully
+in : tests/t141-stmt13.in
+out : out/t141-stmt13.out
+main
+expr
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t142-stmt14 -------------------------------------
+Code Compiled Successfully
+in : tests/t142-stmt14.in
+out : out/t142-stmt14.out
+main
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t143-stmt15 -------------------------------------
+Code Compiled Successfully
+in : tests/t143-stmt15.in
+out : out/t143-stmt15.out
+main
+break_
+expr
+a
+a
+1
+expr
+expr
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t144-stmt16 -------------------------------------
+Code Compiled Successfully
+in : tests/t144-stmt16.in
+out : out/t144-stmt16.out
+main
+expr
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t145-stmt17 -------------------------------------
+Code Compiled Successfully
+in : tests/t145-stmt17.in
+out : out/t145-stmt17.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t146-stmt18 -------------------------------------
+Code Compiled Successfully
+in : tests/t146-stmt18.in
+out : out/t146-stmt18.out
+main
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t147-stmt19 -------------------------------------
+Code Compiled Successfully
+in : tests/t147-stmt19.in
+out : out/t147-stmt19.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t148-stmt20 -------------------------------------
+Code Compiled Successfully
+in : tests/t148-stmt20.in
+out : out/t148-stmt20.out
+main
+expr
+expr
+expr
+expr
+expr
+expr
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t149-stmt21 -------------------------------------
+Code Compiled Successfully
+in : tests/t149-stmt21.in
+out : out/t149-stmt21.out
+main
+expr
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t150-stmt22 -------------------------------------
+Code Compiled Successfully
+in : tests/t150-stmt22.in
+out : out/t150-stmt22.out
+main
+expr
+a
+b
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t151-stmt23 -------------------------------------
+Code Compiled Successfully
+in : tests/t151-stmt23.in
+out : out/t151-stmt23.out
+main
+expr
+expr
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t152-stmt24 -------------------------------------
+Code Compiled Successfully
+in : tests/t152-stmt24.in
+out : out/t152-stmt24.out
+main
+BREAK
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t153-stmt25 -------------------------------------
+Code Compiled Successfully
+in : tests/t153-stmt25.in
+out : out/t153-stmt25.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t154-stmt26 -------------------------------------
+Code Compiled Successfully
+in : tests/t154-stmt26.in
+out : out/t154-stmt26.out
+main
+expr
+RETURN
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t155-stmt27 -------------------------------------
+Code Compiled Successfully
+in : tests/t155-stmt27.in
+out : out/t155-stmt27.out
+main
+RETURN
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t156-stmt28 -------------------------------------
+Code Compiled Successfully
+in : tests/t156-stmt28.in
+out : out/t156-stmt28.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t157-stmt29 -------------------------------------
+Code Compiled Successfully
+in : tests/t157-stmt29.in
+out : out/t157-stmt29.out
+main
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t158-stmt30 -------------------------------------
+Code Compiled Successfully
+in : tests/t158-stmt30.in
+out : out/t158-stmt30.out
+main
+expr
+expr
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t159-stmt31 -------------------------------------
+Code Compiled Successfully
+in : tests/t159-stmt31.in
+out : out/t159-stmt31.out
+main
+expr
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t160-stmt32 -------------------------------------
+Code Compiled Successfully
+in : tests/t160-stmt32.in
+out : out/t160-stmt32.out
+main
+condition
+i
+i
+0
+i
+j
+i
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t161-class1 -------------------------------------
+Code Compiled Successfully
+in : tests/t161-class1.in
+out : out/t161-class1.out
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t162-class2 -------------------------------------
+Code Compiled Successfully
+in : tests/t162-class2.in
+out : out/t162-class2.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t163-class3 -------------------------------------
+Code Compiled Successfully
+in : tests/t163-class3.in
+out : out/t163-class3.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t164-class4 -------------------------------------
+Code Compiled Successfully
+in : tests/t164-class4.in
+out : out/t164-class4.out
+id
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t165-class5 -------------------------------------
+Code Compiled Successfully
+in : tests/t165-class5.in
+out : out/t165-class5.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t166-class6 -------------------------------------
+Code Compiled Successfully
+in : tests/t166-class6.in
+out : out/t166-class6.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t167-class7 -------------------------------------
+Code Compiled Successfully
+in : tests/t167-class7.in
+out : out/t167-class7.out
+id
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t168-class8 -------------------------------------
+Code Compiled Successfully
+in : tests/t168-class8.in
+out : out/t168-class8.out
+id
+a
+b
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t169-class9 -------------------------------------
+Code Compiled Successfully
+in : tests/t169-class9.in
+out : out/t169-class9.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t170-class10 -------------------------------------
+Code Compiled Successfully
+in : tests/t170-class10.in
+out : out/t170-class10.out
+a
+b
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t171-class11 -------------------------------------
+Code Compiled Successfully
+in : tests/t171-class11.in
+out : out/t171-class11.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t172-class12 -------------------------------------
+Code Compiled Successfully
+in : tests/t172-class12.in
+out : out/t172-class12.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t173-class13 -------------------------------------
+Code Compiled Successfully
+in : tests/t173-class13.in
+out : out/t173-class13.out
+id
+a
+b
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t174-class14 -------------------------------------
+Code Compiled Successfully
+in : tests/t174-class14.in
+out : out/t174-class14.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t175-class15 -------------------------------------
+Code Compiled Successfully
+in : tests/t175-class15.in
+out : out/t175-class15.out
+id
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t176-class16 -------------------------------------
+Code Compiled Successfully
+in : tests/t176-class16.in
+out : out/t176-class16.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t177-class17 -------------------------------------
+Code Compiled Successfully
+in : tests/t177-class17.in
+out : out/t177-class17.out
+id
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t178-class18 -------------------------------------
+Code Compiled Successfully
+in : tests/t178-class18.in
+out : out/t178-class18.out
+id
+a
+b
+id
+a
+b
+c
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t179-class19 -------------------------------------
+Code Compiled Successfully
+in : tests/t179-class19.in
+out : out/t179-class19.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t180-class20 -------------------------------------
+Code Compiled Successfully
+in : tests/t180-class20.in
+out : out/t180-class20.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t181-class21 -------------------------------------
+Code Compiled Successfully
+in : tests/t181-class21.in
+out : out/t181-class21.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t182-class22 -------------------------------------
+Code Compiled Successfully
+in : tests/t182-class22.in
+out : out/t182-class22.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t183-class23 -------------------------------------
+Code Compiled Successfully
+in : tests/t183-class23.in
+out : out/t183-class23.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t184-class24 -------------------------------------
+Code Compiled Successfully
+in : tests/t184-class24.in
+out : out/t184-class24.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t185-class25 -------------------------------------
+Code Compiled Successfully
+in : tests/t185-class25.in
+out : out/t185-class25.out
+id
+func
+field
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t186-interface1 -------------------------------------
+Code Compiled Successfully
+in : tests/t186-interface1.in
+out : out/t186-interface1.out
+id
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t187-interface2 -------------------------------------
+Code Compiled Successfully
+in : tests/t187-interface2.in
+out : out/t187-interface2.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t188-interface3 -------------------------------------
+Code Compiled Successfully
+in : tests/t188-interface3.in
+out : out/t188-interface3.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t189-interface4 -------------------------------------
+Code Compiled Successfully
+in : tests/t189-interface4.in
+out : out/t189-interface4.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t190-interface5 -------------------------------------
+Code Compiled Successfully
+in : tests/t190-interface5.in
+out : out/t190-interface5.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t191-interfaces6 -------------------------------------
+Code Compiled Successfully
+in : tests/t191-interfaces6.in
+out : out/t191-interfaces6.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t192-prototype1 -------------------------------------
+Code Compiled Successfully
+in : tests/t192-prototype1.in
+out : out/t192-prototype1.out
+id
+func
+func
+func
+type
+func
+func
+type
+arg
+arg2
+func
+boolean
+input
+boolean
+func
+parameter
+list
+type
+func
+type
+other
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t193-prototype2 -------------------------------------
+Code Compiled Successfully
+in : tests/t193-prototype2.in
+out : out/t193-prototype2.out
+id
+func
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t194-prototype3 -------------------------------------
+Code Compiled Successfully
+in : tests/t194-prototype3.in
+out : out/t194-prototype3.out
+id
+func
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t195-prototype4 -------------------------------------
+Code Compiled Successfully
+in : tests/t195-prototype4.in
+out : out/t195-prototype4.out
+id
+valid
+a
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t196-prototype5 -------------------------------------
+Code Compiled Successfully
+in : tests/t196-prototype5.in
+out : out/t196-prototype5.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t197-prototype6 -------------------------------------
+Code Compiled Successfully
+in : tests/t197-prototype6.in
+out : out/t197-prototype6.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t198-prototype7 -------------------------------------
+Code Compiled Successfully
+in : tests/t198-prototype7.in
+out : out/t198-prototype7.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t199-prototype8 -------------------------------------
+Code Compiled Successfully
+in : tests/t199-prototype8.in
+out : out/t199-prototype8.out
+id
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t200-block1 -------------------------------------
+Code Compiled Successfully
+in : tests/t200-block1.in
+out : out/t200-block1.out
+main
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t201-block2 -------------------------------------
+Code Compiled Successfully
+in : tests/t201-block2.in
+out : out/t201-block2.out
+main
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t202-block3 -------------------------------------
+Code Compiled Successfully
+in : tests/t202-block3.in
+out : out/t202-block3.out
+main
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t203-block4 -------------------------------------
+Code Compiled Successfully
+in : tests/t203-block4.in
+out : out/t203-block4.out
+main
+expr
+expr
+id
+cond
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t204-block5 -------------------------------------
+Code Compiled Successfully
+in : tests/t204-block5.in
+out : out/t204-block5.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t205-block6 -------------------------------------
+Code Compiled Successfully
+in : tests/t205-block6.in
+out : out/t205-block6.out
+main
+a
+a
+2
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t206-block7 -------------------------------------
+Code Compiled Successfully
+in : tests/t206-block7.in
+out : out/t206-block7.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t207-block8 -------------------------------------
+Code Compiled Successfully
+in : tests/t207-block8.in
+out : out/t207-block8.out
+main
+a
+a
+b
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t208-block9 -------------------------------------
+Code Compiled Successfully
+in : tests/t208-block9.in
+out : out/t208-block9.out
+main
+a
+a
+2
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t209-block10 -------------------------------------
+Code Compiled Successfully
+in : tests/t209-block10.in
+out : out/t209-block10.out
+main
+test
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t210-program1 -------------------------------------
+Code Compiled Successfully
+in : tests/t210-program1.in
+out : out/t210-program1.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t211-program2 -------------------------------------
+Code Compiled Successfully
+in : tests/t211-program2.in
+out : out/t211-program2.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t212-program3 -------------------------------------
+Code Compiled Successfully
+in : tests/t212-program3.in
+out : out/t212-program3.out
+a
+a
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t213-program4 -------------------------------------
+Code Compiled Successfully
+in : tests/t213-program4.in
+out : out/t213-program4.out
+ET
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t214-program5 -------------------------------------
+Code Compiled Successfully
+in : tests/t214-program5.in
+out : out/t214-program5.out
+ET
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t215-program6 -------------------------------------
+Code Compiled Successfully
+in : tests/t215-program6.in
+out : out/t215-program6.out
+id
+id
+id
+global
+main
+id
+id
+id
+id
+id
+id
+sub_global
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t216-program7 -------------------------------------
+Code Compiled Successfully
+in : tests/t216-program7.in
+out : out/t216-program7.out
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t217-program8 -------------------------------------
+Code Compiled Successfully
+in : tests/t217-program8.in
+out : out/t217-program8.out
+main
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t218-simple1 -------------------------------------
+Code Compiled Successfully
+in : tests/t218-simple1.in
+out : out/t218-simple1.out
+Person
+first_name
+last_name
+age
+report
+age
+18
+first_name
+" "
+last_name
+main
+Person
+p
+p
+Person
+p
+report
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t219-simple2 -------------------------------------
+Code Compiled Successfully
+in : tests/t219-simple2.in
+out : out/t219-simple2.out
+main
+argc
+argv
+a
+b
+c
+"Please enter the first number: "
+a
+"Please enter the second number: "
+b
+b
+0
+"NO NO NO NO... I can't divide by zero!"
+c
+a
+b
+"The result of "
+a
+" / "
+b
+" is "
+c
+yes
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Running Test t220-simple3 -------------------------------------
+Code Compiled Successfully
+in : tests/t220-simple3.in
+out : out/t220-simple3.out
+Sounding
+makeSound
+Flying
+fly
+altitude
+Animal
+name
+size
+getSize
+size
+Lion
+Animal
+Sounding
+makeSound
+"Roar"
+initialize
+name
+"Lion"
+size
+250
+Sparrow
+Animal
+Flying
+Sounding
+makeSound
+"Chirp"
+fly
+altitude
+"Flying at "
+altitude
+" meters high!"
+initialize
+name
+"Sparrow"
+size
+7
+main
+Animal
+a
+Sparrow
+s
+Lion
+l
+Sounding
+sd
+Flying
+fl
+s
+Sparrow
+s
+initialize
+l
+Lion
+l
+initialize
+sd
+s
+"The sound of this one is: "
+s
+makeSound
+sd
+l
+"And the sound of this one is: "
+s
+makeSound
+fl
+s
+"This one can fly! Here from itself: "
+fl
+Code Executed Successfuly!
+/usr/bin/python3
+++++ test passed
+Passed : 212
+Failed : 8

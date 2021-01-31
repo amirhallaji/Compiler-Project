@@ -7,4 +7,9 @@ src/tests/
 src/*.jar
 src/report/
 *.class
+src/libs/
+src/out/
+src/*.jar
+src/run2.sh
+src/comp.py
 

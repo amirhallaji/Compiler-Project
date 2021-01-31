@@ -1,1 +1,0 @@
-difference in line #1: file: out/t07.out -----> content: OK <> file: tests/t07.out -----> content: Syntax Error 
